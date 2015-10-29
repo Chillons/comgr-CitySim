@@ -96,3 +96,10 @@ build/
 .gradle
 
 !lib/*
+/bin/
+
+# Eclipse
+.classpath
+.metadata/
+.project
+.settings/
