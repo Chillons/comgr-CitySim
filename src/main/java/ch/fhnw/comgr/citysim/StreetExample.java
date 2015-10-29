@@ -61,7 +61,7 @@ public final class StreetExample {
 	
 	public static final int[][] strasse = { 
 			{ GRAS, GRAS, STREET, GRAS }, 
-			{ GRAS, STREET, AMPEL, STREET}, 
+			{ STREET, STREET, AMPEL, STREET}, 
 			{ GRAS, GRAS,STREET,GRAS} };
 
 	public static void main(String[] args) {
@@ -86,9 +86,9 @@ public final class StreetExample {
 
 		// Create view
 		// Neues Config machen
-		new DefaultView(controller, 100, 100, 500, 500, new IView.Config(ViewType.INTERACTIVE_VIEW, 0, new IView.ViewFlag[0]), "Simple Sphere");
+		IView view = new DefaultView(controller, 100, 100, 500, 500, new IView.Config(ViewType.INTERACTIVE_VIEW, 0, new IView.ViewFlag[0]), "Simple Sphere");
 		
-		
+		ICamera camera = new Camera(new Vec3(0, -5, 5), Vec3.ZERO);
 
 		// Create scene and add triangle
 		IScene scene = new DefaultScene(controller);
@@ -97,12 +97,10 @@ public final class StreetExample {
 		IMesh colDreick = makeColoredTriangle(2);
 		scene.add3DObject(colDreick);
 		
-		//IMesh bla = makeField(0,0, STREET);
-		//scene.add3DObject(makeColoredTriangle(0));
-		//scene.add3DObject(makeField(0,0, GRAS));
-		//scene.add3DObject(makeField(1,1));
-		//bla.setTransform(Mat4.translate(1, 1, 0));
-		//scene.add3DObject(bla);
+		
+		scene.add3DObject(camera);
+		controller.setCamera(view, camera);
+	
 		
 		float startX = -(strasse[0].length / 2.0f);
 		float startY = -(strasse.length / 2.0f);
@@ -132,9 +130,17 @@ public final class StreetExample {
 		float[] colors = null;
 		
 		if (color == STREET) {
-			colors = new float[] {.5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1};			
+			colors = new float[] {.5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1};
+			float[] texCoords = { 0, 0, 1, 0, 1, 1,  0, 0, 1, 1, 0, 1 };
+			IMaterial m = new ColorMapMaterial(RGBA.WHITE, new Texture(StreetExample.class.getResource("/assets/road.jpg")), true);
+			IGeometry g = DefaultGeometry.createVCM(Primitive.TRIANGLES, vertices, colors, texCoords);
+			return new DefaultMesh(m, g);
 		} else if (color == GRAS) {
-			colors = new float[] {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1};
+			colors = new float[] {.5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1};
+			float[] texCoords = { 0, 0, 1, 0, 1, 1,  0, 0, 1, 1, 0, 1 };
+			IMaterial m = new ColorMapMaterial(RGBA.WHITE, new Texture(StreetExample.class.getResource("/assets/grass.jpg")), true);
+			IGeometry g = DefaultGeometry.createVCM(Primitive.TRIANGLES, vertices, colors, texCoords);
+			return new DefaultMesh(m, g);
 		} else if (color == AMPEL) {
 			colors = new float[] {.5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1};
 			float[] texCoords = { 0, 0, 1, 0, 1, 1,  0, 0, 1, 1, 0, 1 };
