@@ -91,5 +91,8 @@ hs_err_pid*
 # Maven classes
 target/
 out/
+build/
+
+.gradle
 
 !lib/*
