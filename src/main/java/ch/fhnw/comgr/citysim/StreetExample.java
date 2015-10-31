@@ -54,123 +54,88 @@ import ch.fhnw.util.math.Vec3;
 public final class StreetExample {
 	
 	public static final int GRAS = 0;
-	public static final int STREET_H = 1;
-	public static final int STREET_V = 2;
-	public static final int AMPEL = 3;
+	public static final int STREET_EAST_WEST = 1;
+	public static final int STREET_NORTH_SOUTH = 2;
+	public static final int CROSSING = 3;
+	public static final int STREET_NORTH_EAST = 4;
+	public static final int STREET_NORTH_WEST = 5;
+	public static final int STREET_SOUTH_EAST = 6;
+	public static final int STREET_SOUTH_WEST = 7;
+	
 	
 	
 	public static final int[][] strasse = { 
-			{ GRAS, GRAS, STREET_V, GRAS }, 
-			{ STREET_H, STREET_H, AMPEL, STREET_H}, 
-			{ GRAS, GRAS,STREET_V,GRAS} };
+			{ STREET_SOUTH_EAST, 	STREET_EAST_WEST, 	STREET_EAST_WEST, 	STREET_EAST_WEST, 	STREET_SOUTH_WEST }, 
+			{ STREET_NORTH_SOUTH, 	GRAS, 				GRAS,	 			GRAS, 				STREET_NORTH_SOUTH }, 
+			{ CROSSING,  			STREET_EAST_WEST, 	STREET_EAST_WEST, 	STREET_EAST_WEST, 	CROSSING },
+			{ STREET_NORTH_SOUTH, 	GRAS, 				GRAS,	 			GRAS, 				STREET_NORTH_SOUTH },
+			{ STREET_NORTH_EAST, 	STREET_EAST_WEST,	STREET_EAST_WEST,	STREET_EAST_WEST,	STREET_NORTH_WEST} };
 
-	public static float[] vertices = { 
-			0, 0, 0, 
-			1, 0, 0, 
-			1, 1, 0, 
-			
-			0, 0, 0, 
-			1, 1, 0, 
-			0, 1, 0 };
 	
 	public static void main(String[] args) {
 		new StreetExample();
-	}
-
-	private static IMesh makeColoredTriangle(float off) {
-		float[] vertices = { off + 0, 0, 
-				off + 0, 0, 
-				off + 0, 0.5f, 
-				off + 0.5f, 0, 0.5f };
-		float[] colors = { 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1 };
-
-		DefaultGeometry g = DefaultGeometry.createVC(Primitive.TRIANGLES, vertices, colors);
-		return new DefaultMesh(new ColorMaterial(RGBA.WHITE, true), g, IMesh.Queue.DEPTH);
 	}
 
 	// Setup the whole thing
 	public StreetExample() {
 		// Create controller
 		IController controller = new DefaultController();
+		controller.run(time -> {
+			// Create view
+			// Neues Config machen
+			IView view = new DefaultView(controller, 100, 100, 500, 500, new IView.Config(ViewType.INTERACTIVE_VIEW, 0, new IView.ViewFlag[0]), "Simple Sphere");
+			
+			ICamera camera = new Camera(new Vec3(0, -5, 5), Vec3.ZERO);
 
-		// Create view
-		// Neues Config machen
-		IView view = new DefaultView(controller, 100, 100, 500, 500, new IView.Config(ViewType.INTERACTIVE_VIEW, 0, new IView.ViewFlag[0]), "Simple Sphere");
+			// Create scene and add triangle
+			IScene scene = new DefaultScene(controller);
+			
+			controller.setScene(scene);
+			
+			scene.add3DObject(camera);
+			controller.setCamera(view, camera);
 		
-		ICamera camera = new Camera(new Vec3(0, -5, 5), Vec3.ZERO);
-
-		// Create scene and add triangle
-		IScene scene = new DefaultScene(controller);
-		controller.setScene(scene);
-
-		IMesh colDreick = makeColoredTriangle(2);
-		scene.add3DObject(colDreick);
-		
-		
-		scene.add3DObject(camera);
-		controller.setCamera(view, camera);
-	
-		
-		float startX = -(strasse[0].length / 2.0f);
-		float startY = -(strasse.length / 2.0f);
-		
-		for (int i = 0; i < strasse.length; i++) {
-			for (int j = 0; j < strasse[i].length; j++) {
-				IMesh tmp = makeField(strasse[i][j]);
-				tmp.setName("Feld " + i + " " + j);
-				tmp.setTransform(Mat4.translate(startX+j, startY+i, 0));
-				scene.add3DObject(tmp);
+			
+			float startX = -(strasse[0].length / 2.0f);
+			float startY = (strasse.length / 2.0f);
+			
+			for (int i = 0; i < strasse.length; i++) {
+				for (int j = 0; j < strasse[i].length; j++) {
+					IMesh tmp = makeField(strasse[i][j]);
+					tmp.setName("Feld " + i + " " + j);
+					tmp.setTransform(Mat4.translate(startX+j, startY-i, 0));
+					scene.add3DObject(tmp);
+				}
 			}
-		}
-		
+		});
 	}
 	
 	private static IMesh makeField(int type) {
 		switch (type) {
 		case GRAS:
-			return makeGrass();
-		case STREET_H:
-			return makeStreetHorizontal();
-		case STREET_V:
-			return makeStreetVertical();
-		case AMPEL:
-			return makeAmpel();
+			return makeField("/assets/grass.jpg");
+		case STREET_EAST_WEST:
+			return makeField("/assets/roadEW.jpg");
+		case STREET_NORTH_SOUTH:
+			return makeField("/assets/roadNS.jpg");
+		case CROSSING:
+			return makeField("/assets/roadNEWS.jpg");
+		case STREET_NORTH_EAST:
+			return makeField("/assets/roadNE.jpg");
+		case STREET_NORTH_WEST:
+			return makeField("/assets/roadNW.jpg");
+		case STREET_SOUTH_EAST:
+			return makeField("/assets/roadSE.jpg");
+		case STREET_SOUTH_WEST:
+			return makeField("/assets/roadSW.jpg");
 		}
 		return null;
 	}
 	
-	
-	private static IMesh makeStreetHorizontal() {
-		float[] colors = new float[] {.5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1};
-		float[] texCoords = { 0, 0, 1, 0, 1, 1,  0, 0, 1, 1, 0, 1 };
-		IMaterial m = new ColorMapMaterial(RGBA.WHITE, new Texture(StreetExample.class.getResource("/assets/road.jpg")), true);
-		IGeometry g = DefaultGeometry.createVCM(Primitive.TRIANGLES, vertices, colors, texCoords);
-		return new DefaultMesh(m, g);
-		
-	}
-	
-	private static IMesh makeStreetVertical() {
-		float[] colors = new float[] {.5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1};
-		float[] texCoords = { 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1 };
-		IMaterial m = new ColorMapMaterial(RGBA.WHITE, new Texture(StreetExample.class.getResource("/assets/road.jpg")), true);
-		IGeometry g = DefaultGeometry.createVCM(Primitive.TRIANGLES, vertices, colors, texCoords);
-		return new DefaultMesh(m, g);
-		
-	}
-	
-	private static IMesh makeGrass() {
-		float[] colors = new float[] {.5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1};
-		float[] texCoords = { 0, 0, 1, 0, 1, 1,  0, 0, 1, 1, 0, 1 };
-		IMaterial m = new ColorMapMaterial(RGBA.WHITE, new Texture(StreetExample.class.getResource("/assets/grass.jpg")), true);
-		IGeometry g = DefaultGeometry.createVCM(Primitive.TRIANGLES, vertices, colors, texCoords);
+	private static IMesh makeField(String asset) {
+		IMaterial m = new ColorMapMaterial(RGBA.WHITE, new Texture(StreetExample.class.getResource(asset)), true);
+		IGeometry g = Util.getDefaultGeometry();
 		return new DefaultMesh(m, g);
 	}
 	
-	private static IMesh makeAmpel() {
-		float[] colors = new float[] {.5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1, .5f, .5f, .5f, 1};
-		float[] texCoords = { 0, 0, 1, 0, 1, 1,  0, 0, 1, 1, 0, 1 };
-		IMaterial m = new ColorMapMaterial(RGBA.WHITE, new Texture(StreetExample.class.getResource("/assets/fhnw_logo.jpg")), true);
-		IGeometry g = DefaultGeometry.createVCM(Primitive.TRIANGLES, vertices, colors, texCoords);
-		return new DefaultMesh(m, g);
-	}
 }
