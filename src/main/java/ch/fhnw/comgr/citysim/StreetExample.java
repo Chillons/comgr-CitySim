@@ -1,55 +1,34 @@
-/*
- * Copyright (c) 2013 - 2015 Stefan Muller Arisona, Simon Schubiger, Samuel von Stachelski
- * Copyright (c) 2013 - 2015 FHNW & ETH Zurich
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *  Redistributions of source code must retain the above copyright notice,
- *   this list of conditions and the following disclaimer.
- *  Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *  Neither the name of FHNW / ETH Zurich nor the names of its contributors may
- *   be used to endorse or promote products derived from this software without
- *   specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 
 package ch.fhnw.comgr.citysim;
 
+import java.awt.event.KeyEvent;
+
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.controller.IController;
+import ch.fhnw.ether.controller.event.IEventScheduler;
 import ch.fhnw.ether.scene.DefaultScene;
 import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.camera.Camera;
 import ch.fhnw.ether.scene.camera.ICamera;
 import ch.fhnw.ether.scene.mesh.DefaultMesh;
 import ch.fhnw.ether.scene.mesh.IMesh;
+import ch.fhnw.ether.scene.mesh.MeshLibrary;
 import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry.Primitive;
 import ch.fhnw.ether.scene.mesh.material.ColorMapMaterial;
 import ch.fhnw.ether.scene.mesh.material.ColorMaterial;
+import ch.fhnw.ether.scene.mesh.material.CustomMaterial;
 import ch.fhnw.ether.scene.mesh.material.IMaterial;
 import ch.fhnw.ether.scene.mesh.material.Texture;
+import ch.fhnw.ether.ui.Button;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.ether.view.IView.ViewType;
 import ch.fhnw.ether.view.gl.DefaultView;
 import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
+import java.util.logging.Logger;
 
 public final class StreetExample {
 	
@@ -61,7 +40,15 @@ public final class StreetExample {
 	public static final int STREET_NORTH_WEST = 5;
 	public static final int STREET_SOUTH_EAST = 6;
 	public static final int STREET_SOUTH_WEST = 7;
-	
+	private final static Logger LOGGER = Logger.getLogger(StreetExample.class.getName());
+	private IMesh car;
+	float startX = -(strasse[0].length / 2.0f);
+	float startY = (strasse.length / 2.0f);
+	float positionX = startX;
+	float positionY = startY;
+	float directionX = 0;
+	float directionY = 0;
+	private static Field[][] fields;
 	
 	
 	public static final int[][] strasse = { 
@@ -71,7 +58,7 @@ public final class StreetExample {
 			{ STREET_NORTH_SOUTH, 	GRAS, 				GRAS,	 			GRAS, 				STREET_NORTH_SOUTH },
 			{ STREET_NORTH_EAST, 	STREET_EAST_WEST,	STREET_EAST_WEST,	STREET_EAST_WEST,	STREET_NORTH_WEST} };
 
-	
+		
 	public static void main(String[] args) {
 		new StreetExample();
 	}
@@ -83,7 +70,7 @@ public final class StreetExample {
 		controller.run(time -> {
 			// Create view
 			// Neues Config machen
-			IView view = new DefaultView(controller, 100, 100, 500, 500, new IView.Config(ViewType.INTERACTIVE_VIEW, 0, new IView.ViewFlag[0]), "Simple Sphere");
+			IView view = new DefaultView(controller, 100, 100, 500, 500, new IView.Config(ViewType.INTERACTIVE_VIEW, 0, new IView.ViewFlag[0]), "City Sim");
 			
 			ICamera camera = new Camera(new Vec3(0, -5, 5), Vec3.ZERO);
 
@@ -94,48 +81,136 @@ public final class StreetExample {
 			
 			scene.add3DObject(camera);
 			controller.setCamera(view, camera);
-		
-			
-			float startX = -(strasse[0].length / 2.0f);
-			float startY = (strasse.length / 2.0f);
-			
+
+			//////////////////////
+			/////// CITY ////////
+			//////////////////////
+			fields = new Field[strasse.length][strasse[0].length];
 			for (int i = 0; i < strasse.length; i++) {
 				for (int j = 0; j < strasse[i].length; j++) {
-					IMesh tmp = makeField(strasse[i][j]);
-					tmp.setName("Feld " + i + " " + j);
-					tmp.setTransform(Mat4.translate(startX+j, startY-i, 0));
-					scene.add3DObject(tmp);
+					Field field = createField(strasse[i][j]);
+					field.setGridPositionX(i);
+					field.setGridPositionY(j);
+					field.setName("Feld " + i + " " + j);
+					field.setTransform(Mat4.translate(startX+j, startY-i, 0f));
+					field.savePosition();
+					fields[i][j] = field;
+					scene.add3DObject(field);
 				}
+			}
+			
+			
+			//////////////////////
+			/////// CAR //////////
+			//////////////////////
+			car = MeshLibrary.createCube();
+			scene.add3DObject(car);
+			controller.getUI().addWidget(new Button(0, 1, "left", "", KeyEvent.VK_ESCAPE, (button, v) -> {
+				directionX = -0.01f;
+				directionY =0;
+			}));
+			controller.getUI().addWidget(new Button(2, 1, "right", "", KeyEvent.VK_ESCAPE, (button, v) -> {
+				directionX = 0.01f;
+				directionY =0;
+			}));
+			controller.getUI().addWidget(new Button(1, 2, "up", "", KeyEvent.VK_ESCAPE, (button, v) -> {
+				directionX = 0;
+				directionY = 0.01f;
+			}));
+			controller.getUI().addWidget(new Button(1, 0, "down", "", KeyEvent.VK_ESCAPE, (button, v) -> {
+				directionX = 0;
+				directionY = -0.01f;
+			}));
+			controller.getUI().addWidget(new Button(1, 1, "stop", "", KeyEvent.VK_ESCAPE, (button, v) -> {
+				directionX = 0;
+				directionY = 0;
+			}));
+		});
+		
+			
+		controller.animate(new IEventScheduler.IAnimationAction() {		
+			@Override
+			public void run(double time, double interval) {
+
+				// Limit Position X
+				if(positionX >= fields[0][0].getStartPositionX()){
+					positionX += directionX;
+				}else{
+					positionX = fields[0][0].getStartPositionX();
+				}
+				
+				if(positionX <= fields[0][4].getStopPositionX()){
+					positionX += directionX;
+				}else{
+					positionX = fields[0][4].getStopPositionX();
+				}
+				
+				
+				
+				if(positionY <= fields[0][0].getStopPositionY()){
+					positionY += directionY;
+				}else{
+					positionY = fields[0][0].getStopPositionY();
+				}
+				
+				if(positionY >= fields[4][0].getStartPositionY()){
+					positionY += directionY;
+				}else{
+					positionY = fields[4][0].getStartPositionY();
+				}			
+				
+
+				
+	            //Mat4 transform = Mat4.multiply(Mat4.scale(0.5f), Mat4.translate(positionX, positionY, 0.5f));         
+				Mat4 transform = Mat4.multiply(Mat4.translate(positionX, positionY, 0f));         
+	            car.setTransform(transform);
+				getLocalisation(positionX, positionY);
+
 			}
 		});
 	}
+		
 	
-	private static IMesh makeField(int type) {
+	private static void getLocalisation(float positionX, float positionY){
+		for (int i = 0; i < fields.length; i++) {			
+			for (int j = 0; j < fields[i].length; j++) {
+				if(positionX >= fields[i][j].getStartPositionX() && positionX <= fields[i][j].getStopPositionX()){
+					if(positionY >= fields[i][j].getStartPositionY() && positionY <= fields[i][j].getStopPositionY()){
+						LOGGER.info("Localisation ist: " + fields[i][j].getName());
+					}
+				}
+			}
+		}		
+	}
+	
+	
+	private static Field createField(int type){
 		switch (type) {
 		case GRAS:
-			return makeField("/assets/grass.jpg");
+			return createField("/assets/grass.jpg");
 		case STREET_EAST_WEST:
-			return makeField("/assets/roadEW.jpg");
+			return createField("/assets/roadEW.jpg");
 		case STREET_NORTH_SOUTH:
-			return makeField("/assets/roadNS.jpg");
+			return createField("/assets/roadNS.jpg");
 		case CROSSING:
-			return makeField("/assets/roadNEWS.jpg");
+			return createField("/assets/roadNEWS.jpg");
 		case STREET_NORTH_EAST:
-			return makeField("/assets/roadNE.jpg");
+			return createField("/assets/roadNE.jpg");
 		case STREET_NORTH_WEST:
-			return makeField("/assets/roadNW.jpg");
+			return createField("/assets/roadNW.jpg");
 		case STREET_SOUTH_EAST:
-			return makeField("/assets/roadSE.jpg");
+			return createField("/assets/roadSE.jpg");
 		case STREET_SOUTH_WEST:
-			return makeField("/assets/roadSW.jpg");
+			return createField("/assets/roadSW.jpg");
 		}
 		return null;
 	}
 	
-	private static IMesh makeField(String asset) {
+			
+	private static Field createField(String asset) {
 		IMaterial m = new ColorMapMaterial(RGBA.WHITE, new Texture(StreetExample.class.getResource(asset)), true);
 		IGeometry g = Util.getDefaultGeometry();
-		return new DefaultMesh(m, g);
+		return new Field(m, g);
 	}
-	
+		
 }
