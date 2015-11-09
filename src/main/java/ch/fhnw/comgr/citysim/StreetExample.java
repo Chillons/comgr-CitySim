@@ -40,23 +40,28 @@ public final class StreetExample {
 	public static final int STREET_NORTH_WEST = 5;
 	public static final int STREET_SOUTH_EAST = 6;
 	public static final int STREET_SOUTH_WEST = 7;
+	
 	private final static Logger LOGGER = Logger.getLogger(StreetExample.class.getName());
-	private IMesh car;
+	private Car car;
+	private CityBoard cityboard;
+	
 	float startX = -(strasse[0].length / 2.0f);
 	float startY = (strasse.length / 2.0f);
 	float positionX = startX;
 	float positionY = startY;
 	float directionX = 0;
 	float directionY = 0;
-	private static Field[][] fields;
+
+
 	
 	
 	public static final int[][] strasse = { 
-			{ STREET_SOUTH_EAST, 	STREET_EAST_WEST, 	STREET_EAST_WEST, 	STREET_EAST_WEST, 	STREET_SOUTH_WEST }, 
-			{ STREET_NORTH_SOUTH, 	GRAS, 				GRAS,	 			GRAS, 				STREET_NORTH_SOUTH }, 
-			{ CROSSING,  			STREET_EAST_WEST, 	STREET_EAST_WEST, 	STREET_EAST_WEST, 	CROSSING },
-			{ STREET_NORTH_SOUTH, 	GRAS, 				GRAS,	 			GRAS, 				STREET_NORTH_SOUTH },
-			{ STREET_NORTH_EAST, 	STREET_EAST_WEST,	STREET_EAST_WEST,	STREET_EAST_WEST,	STREET_NORTH_WEST} };
+			{ GRAS, 				GRAS, 				STREET_SOUTH_EAST }, 
+			{ STREET_SOUTH_WEST, 	GRAS, 				STREET_NORTH_SOUTH}, 
+			{ STREET_NORTH_SOUTH, 	GRAS, 				STREET_NORTH_SOUTH }, 
+			{ CROSSING,  			STREET_EAST_WEST, 	CROSSING },
+			{ STREET_NORTH_SOUTH, 	GRAS, 		 		STREET_NORTH_SOUTH },
+			{ STREET_NORTH_WEST, 	GRAS,				STREET_NORTH_EAST} };
 
 		
 	public static void main(String[] args) {
@@ -70,41 +75,32 @@ public final class StreetExample {
 		controller.run(time -> {
 			// Create view
 			// Neues Config machen
-			IView view = new DefaultView(controller, 100, 100, 500, 500, new IView.Config(ViewType.INTERACTIVE_VIEW, 0, new IView.ViewFlag[0]), "City Sim");
-			
+			IView view = new DefaultView(controller, 100, 100, 500, 500, new IView.Config(ViewType.INTERACTIVE_VIEW, 0, new IView.ViewFlag[0]), "City Sim");		
 			ICamera camera = new Camera(new Vec3(0, -5, 5), Vec3.ZERO);
 
 			// Create scene and add triangle
-			IScene scene = new DefaultScene(controller);
-			
+			IScene scene = new DefaultScene(controller);			
 			controller.setScene(scene);
 			
 			scene.add3DObject(camera);
 			controller.setCamera(view, camera);
 
-			//////////////////////
+
 			/////// CITY ////////
-			//////////////////////
-			fields = new Field[strasse.length][strasse[0].length];
-			for (int i = 0; i < strasse.length; i++) {
-				for (int j = 0; j < strasse[i].length; j++) {
-					Field field = createField(strasse[i][j]);
-					field.setGridPositionX(i);
-					field.setGridPositionY(j);
-					field.setName("Feld " + i + " " + j);
-					field.setTransform(Mat4.translate(startX+j, startY-i, 0f));
-					field.savePosition();
-					fields[i][j] = field;
-					scene.add3DObject(field);
+			cityboard = new CityBoard(strasse);	
+			for (int i = 0; i < cityboard.getFields().length; i++) {
+				for (int j = 0; j < cityboard.getFields()[0].length; j++) {
+					scene.add3DObject(cityboard.getFields()[i][j]);		
 				}
 			}
-			
-			
-			//////////////////////
-			/////// CAR //////////
-			//////////////////////
-			car = MeshLibrary.createCube();
+						
+			/////// CAR //////////			
+			car = new Car();
 			scene.add3DObject(car);
+			
+			
+			
+			
 			controller.getUI().addWidget(new Button(0, 1, "left", "", KeyEvent.VK_ESCAPE, (button, v) -> {
 				directionX = -0.01f;
 				directionY =0;
@@ -131,9 +127,11 @@ public final class StreetExample {
 		controller.animate(new IEventScheduler.IAnimationAction() {		
 			@Override
 			public void run(double time, double interval) {
-
+				positionX += directionX;
+				positionY += directionY;
+				
 				// Limit Position X
-				if(positionX >= fields[0][0].getStartPositionX()){
+				/* if(positionX >= fields[0][0].getStartPositionX()){
 					positionX += directionX;
 				}else{
 					positionX = fields[0][0].getStartPositionX();
@@ -157,60 +155,19 @@ public final class StreetExample {
 					positionY += directionY;
 				}else{
 					positionY = fields[4][0].getStartPositionY();
-				}			
+				}	*/	
 				
 
 				
-	            //Mat4 transform = Mat4.multiply(Mat4.scale(0.5f), Mat4.translate(positionX, positionY, 0.5f));         
-				Mat4 transform = Mat4.multiply(Mat4.translate(positionX, positionY, 0f));         
-	            car.setTransform(transform);
-				getLocalisation(positionX, positionY);
+	            Mat4 transform = Mat4.multiply(Mat4.translate(positionX, positionY, 0.5f), Mat4.scale(0.5f));            
+				//Mat4 transform = Mat4.multiply(Mat4.scale(0.5f));         
+		           
+				car.setTransform(transform);
+				//cityboard.getActualField(positionX, positionY);
 
 			}
-		});
+		});	
 	}
 		
-	
-	private static void getLocalisation(float positionX, float positionY){
-		for (int i = 0; i < fields.length; i++) {			
-			for (int j = 0; j < fields[i].length; j++) {
-				if(positionX >= fields[i][j].getStartPositionX() && positionX <= fields[i][j].getStopPositionX()){
-					if(positionY >= fields[i][j].getStartPositionY() && positionY <= fields[i][j].getStopPositionY()){
-						LOGGER.info("Localisation ist: " + fields[i][j].getName());
-					}
-				}
-			}
-		}		
-	}
-	
-	
-	private static Field createField(int type){
-		switch (type) {
-		case GRAS:
-			return createField("/assets/grass.jpg");
-		case STREET_EAST_WEST:
-			return createField("/assets/roadEW.jpg");
-		case STREET_NORTH_SOUTH:
-			return createField("/assets/roadNS.jpg");
-		case CROSSING:
-			return createField("/assets/roadNEWS.jpg");
-		case STREET_NORTH_EAST:
-			return createField("/assets/roadNE.jpg");
-		case STREET_NORTH_WEST:
-			return createField("/assets/roadNW.jpg");
-		case STREET_SOUTH_EAST:
-			return createField("/assets/roadSE.jpg");
-		case STREET_SOUTH_WEST:
-			return createField("/assets/roadSW.jpg");
-		}
-		return null;
-	}
-	
-			
-	private static Field createField(String asset) {
-		IMaterial m = new ColorMapMaterial(RGBA.WHITE, new Texture(StreetExample.class.getResource(asset)), true);
-		IGeometry g = Util.getDefaultGeometry();
-		return new Field(m, g);
-	}
 		
 }

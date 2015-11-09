@@ -3,19 +3,21 @@ package ch.fhnw.comgr.citysim;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import ch.fhnw.ether.scene.attribute.IAttribute;
 import ch.fhnw.ether.scene.mesh.DefaultMesh;
 import ch.fhnw.ether.scene.mesh.IMesh;
+import ch.fhnw.ether.scene.mesh.MeshLibrary;
 import ch.fhnw.ether.scene.mesh.IMesh.Flag;
 import ch.fhnw.ether.scene.mesh.IMesh.Queue;
+import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry.IGeometryAttribute;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry.Primitive;
 import ch.fhnw.ether.scene.mesh.material.ColorMapMaterial;
+import ch.fhnw.ether.scene.mesh.material.ColorMaterial;
 import ch.fhnw.ether.scene.mesh.material.IMaterial;
 import ch.fhnw.ether.scene.mesh.material.Texture;
 import ch.fhnw.util.UpdateRequest;
@@ -24,17 +26,7 @@ import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 import ch.fhnw.util.math.geometry.BoundingBox;
 
-public class Field implements IMesh{
-	
-	private int content;
-	private String attribute = "nothing";
-	private int gridPositionX; 
-	private int gridPositionY;
-	private float startPositionX;
-	private float startPositionY;
-	private float stopPositionX;
-	private float stopPositionY;
-	private LinkedList<Field> paths;
+public class Car implements IMesh{
 	private String name = "unnamed_field";
 	private Queue queue;
 	private Set<Flag> flags;
@@ -45,36 +37,40 @@ public class Field implements IMesh{
 	private BoundingBox bb;
 	
 	
-	public Field(IMaterial material, IGeometry geometry) {
-		this(material, geometry, Queue.DEPTH);
-		paths = new LinkedList<Field>();
+	public Car(){			
+		 this(new ColorMaterial(RGBA.WHITE), Util.getDefaultCar());
 	}
 
-	public Field(IMaterial material, IGeometry geometry, Queue queue) {
+		
+	public Car(IMaterial material, IGeometry geometry) {
+		this(material, geometry, Queue.DEPTH);
+	}
+
+	public Car(IMaterial material, IGeometry geometry, Queue queue) {
 		this(material, geometry, queue, NO_FLAGS);
 	}
 
-	public Field(IMaterial material, IGeometry geometry, Flag flag, Flag... flags) {
+	public Car(IMaterial material, IGeometry geometry, Flag flag, Flag... flags) {
 		this(material, geometry, Queue.DEPTH, EnumSet.of(flag, flags));
 	}
 
-	public Field(IMaterial material, IGeometry geometry, Flag flag) {
+	public Car(IMaterial material, IGeometry geometry, Flag flag) {
 		this(material, geometry, Queue.DEPTH, EnumSet.of(flag));
 	}
 
-	public Field(IMaterial material, IGeometry geometry, EnumSet<Flag> flags) {
+	public Car(IMaterial material, IGeometry geometry, EnumSet<Flag> flags) {
 		this(material, geometry, Queue.DEPTH, flags);
 	}
 
-	public Field(IMaterial material, IGeometry geometry, Queue queue, Flag flag) {
+	public Car(IMaterial material, IGeometry geometry, Queue queue, Flag flag) {
 		this(material, geometry, queue, EnumSet.of(flag));
 	}
 
-	public Field(IMaterial material, IGeometry geometry, Queue queue, Flag flag, Flag... flags) {
+	public Car(IMaterial material, IGeometry geometry, Queue queue, Flag flag, Flag... flags) {
 		this(material, geometry, queue, EnumSet.of(flag, flags));
 	}
 
-	public Field(IMaterial material, IGeometry geometry, Queue queue, EnumSet<Flag> flags) {
+	public Car(IMaterial material, IGeometry geometry, Queue queue, EnumSet<Flag> flags) {
 		this.material = material;
 		this.geometry = geometry;
 		this.queue = queue;
@@ -85,62 +81,7 @@ public class Field implements IMesh{
 	private final UpdateRequest update = new UpdateRequest(true);
 
 
-	
-	// Field spezifisch
-	
-	public void setContent(int c){
-		this.content = c;
-	}
-	
-	public int getContent(){
-		return this.content;
-	}
-	
-	
-	public void setAttribute(String a){
-		this.attribute = a;
-	}
-	
-	public String getAttribute(){
-		return this.attribute;
-	}
-	
-	
-	public void setGridPositionX(int x){
-		this.gridPositionX = x;		
-	}
 
-	public void setGridPositionY(int y){
-		this.gridPositionX = y;		
-	}
-	
-	public void savePosition(){
-		float[] transformArray = this.getTransform().toArray();
-		this.startPositionX = transformArray[12];
-		this.stopPositionX = this.startPositionX + 1;
-		this.startPositionY = transformArray[13];
-		this.stopPositionY = this.startPositionY +1;
-	}
-	
-	public float getStartPositionX(){
-		return this.startPositionX;
-	}
-	
-	public float getStopPositionX(){
-		return this.stopPositionX;
-	}
-		
-	public float getStartPositionY(){
-		return this.startPositionY;
-	}
-	
-	public float getStopPositionY(){
-		return this.stopPositionY;
-	}
-	
-	public void setPaths(LinkedList<Field> p){
-		this.paths = p;
-	}
 	// I3DObject implementation
 
 	@Override
