@@ -1,8 +1,7 @@
 
 package ch.fhnw.comgr.citysim;
 
-import java.awt.event.KeyEvent;
-
+import ch.fhnw.comgr.citysim.util.TaxiLoader;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.controller.IController;
 import ch.fhnw.ether.controller.event.IEventScheduler;
@@ -10,17 +9,16 @@ import ch.fhnw.ether.scene.DefaultScene;
 import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.camera.Camera;
 import ch.fhnw.ether.scene.camera.ICamera;
-
+import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.ui.Button;
-import ch.fhnw.ether.ui.Button.IButtonAction;
-import ch.fhnw.ether.ui.IWidget;
-import ch.fhnw.ether.ui.IWidget.IWidgetAction;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.ether.view.IView.ViewType;
 import ch.fhnw.ether.view.gl.DefaultView;
-import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
+
+import java.awt.event.KeyEvent;
+import java.util.List;
 import java.util.logging.Logger;
 
 public final class StreetExample {
@@ -35,7 +33,7 @@ public final class StreetExample {
 	public static final int STREET_SOUTH_WEST = 7;
 	
 	private final static Logger LOGGER = Logger.getLogger(StreetExample.class.getName());
-	private Car car;
+	private List<IMesh> car;
 	private CityBoard cityboard;
 	
 	float startX = -(strasse[0].length / 2.0f);
@@ -85,8 +83,8 @@ public final class StreetExample {
 				}
 			}			
 			/////// CAR //////////			
-			car = new Car();
-			scene.add3DObject(car);
+			car = TaxiLoader.getTaxi();
+			scene.add3DObjects(car);
 			
 						
 			controller.getUI().addWidget(new Button(2,5, "Feld 0 2", "", KeyEvent.VK_ESCAPE, (button, v) -> {
@@ -114,22 +112,23 @@ public final class StreetExample {
 			@Override
 			public void run(double time, double interval) {
 					
-					if(newCarPosition.x > carPosition.x && newCarPosition.x - carPosition.x > 0.1){
-						moveEast(carPosition.x - newCarPosition.x);
-					}else if(newCarPosition.x < carPosition.x && newCarPosition.x - carPosition.x < 0.1){
-						moveWest(carPosition.x - newCarPosition.x);
-					}
-					
-					if(newCarPosition.y > carPosition.y && newCarPosition.y - carPosition.y > 0.1){
-						moveNorth(carPosition.y - newCarPosition.y);
-					}else if(newCarPosition.y < carPosition.y && newCarPosition.y - carPosition.y < 0.1){
-						moveSouth(carPosition.y - newCarPosition.y);
-					}
+				if(newCarPosition.x > carPosition.x && newCarPosition.x - carPosition.x > 0.1){
+					moveEast(carPosition.x - newCarPosition.x);
+				}else if(newCarPosition.x < carPosition.x && newCarPosition.x - carPosition.x < 0.1){
+					moveWest(carPosition.x - newCarPosition.x);
+				}
 
-			Mat4 transform = Mat4.multiply(Mat4.translate(new Vec3(0.5f,0.5f,0)),Mat4.scale(0.5f));            	
-			car.setTransform(transform);
+				if(newCarPosition.y > carPosition.y && newCarPosition.y - carPosition.y > 0.1){
+					moveNorth(carPosition.y - newCarPosition.y);
+				}else if(newCarPosition.y < carPosition.y && newCarPosition.y - carPosition.y < 0.1){
+					moveSouth(carPosition.y - newCarPosition.y);
+				}
 
+				Mat4 transform = Mat4.multiply(Mat4.rotate(90, 1,0,0),Mat4.translate(new Vec3(0.76f,0,-0.5f)),Mat4.scale(0.055f));
 
+				for (IMesh mesh : car) {
+					mesh.setTransform(transform);
+				}
 			}
 		});
 		
@@ -137,25 +136,33 @@ public final class StreetExample {
 	
 	public void moveEast(float distance){
 		carPosition = carPosition.add(new Vec3(0.1f,0,0));
-		car.setPosition(carPosition);
+		for (IMesh mesh : car) {
+			mesh.setPosition(carPosition);
+		}
 	}
 	
 	
 	public void moveWest(float distance){
 		carPosition = carPosition.subtract(new Vec3(0.1f,0,0));
-		car.setPosition(carPosition);
+		for (IMesh mesh : car) {
+			mesh.setPosition(carPosition);
+		}
 	}
 	
 	
 	public void moveNorth(float distance){
 		carPosition = carPosition.add(new Vec3(0,0.1f,0));
-		car.setPosition(carPosition);
+		for (IMesh mesh : car) {
+			mesh.setPosition(carPosition);
+		}
 	}
 	
 	
 	public void moveSouth(float distance){
 		carPosition = carPosition.subtract(new Vec3(0,0.1f,0));
-		car.setPosition(carPosition);
+		for (IMesh mesh : car) {
+			mesh.setPosition(carPosition);
+		}
 	}
 		
 		

@@ -20,6 +20,7 @@ import ch.fhnw.ether.scene.mesh.material.IMaterial;
 import ch.fhnw.ether.scene.mesh.material.Texture;
 import ch.fhnw.util.UpdateRequest;
 import ch.fhnw.util.color.RGBA;
+import ch.fhnw.util.math.Mat3;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 import ch.fhnw.util.math.geometry.BoundingBox;
@@ -29,7 +30,7 @@ public class Field implements IMesh{
 	private int content;
 	private String name = "unnamed_field";
 	private Queue queue;
-	private Set<Flag> flags;
+	private final EnumSet<Flag> flags;
 	private IMaterial material;
 	private IGeometry geometry;
 	private Vec3 position = Vec3.ZERO;
@@ -70,7 +71,7 @@ public class Field implements IMesh{
 		this.material = material;
 		this.geometry = geometry;
 		this.queue = queue;
-		this.flags = Collections.unmodifiableSet(flags);
+		this.flags = flags;
 		checkAttributeConsistency(material, geometry);
 	}
 		
@@ -154,7 +155,7 @@ public class Field implements IMesh{
 	}
 
 	@Override
-	public Set<Flag> getFlags() {
+	public EnumSet<Flag> getFlags() {
 		return flags;
 	}
 	
@@ -188,6 +189,30 @@ public class Field implements IMesh{
 	}
 
 	@Override
+	public float[] getTransformedPositionData() {
+		Mat4 tp = Mat4.multiply(Mat4.translate(position), transform);
+		return tp.transform(geometry.getData()[0]);
+	}
+
+	@Override
+	public float[][] getTransformedGeometryData() {
+		float[][] src = geometry.getData();
+		float[][] dst = new float[src.length][];
+		IGeometryAttribute[] attrs = geometry.getAttributes();
+		Mat4 tp = Mat4.multiply(Mat4.translate(position), transform);
+		dst[0] = tp.transform(src[0]);
+		for (int i = 1; i < src.length; ++i) {
+			if (attrs[i].equals(IGeometry.NORMAL_ARRAY)) {
+				Mat3 tn = new Mat3(tp).inverse().transpose();
+				dst[i] = tn.transform(src[i]);
+			} else {
+				dst[i] = Arrays.copyOf(src[i], src[i].length);
+			}
+		}
+		return dst;
+	}
+
+	@Override
 	public String toString() {
 		return name;
 	}
@@ -209,10 +234,11 @@ public class Field implements IMesh{
 			throw new IllegalArgumentException("primitive types of material and geometry do not match: " + m + " " + g);
 
 		// geometry must provide all materials required by material
-		List<IGeometryAttribute> ga = Arrays.asList(geometry.getAttributes());
-		List<IAttribute> ma = material.getRequiredAttributes();
-		if (!ga.containsAll(ma))
-			throw new IllegalArgumentException("primitive types of material and geometry do not match: " + m + " " + g);
+		List<IGeometryAttribute> geometryAttributes = Arrays.asList(geometry.getAttributes());
+		for (IAttribute attr : material.getGeometryAttributes()) {
+			if (!geometryAttributes.contains(attr))
+				throw new IllegalArgumentException("geometry does not provide required attribute: " + attr);
+		}
 	}
 
 }
