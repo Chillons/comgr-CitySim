@@ -20,7 +20,10 @@ import ch.fhnw.util.math.Vec3;
 import ch.fhnw.util.math.geometry.BoundingBox;
 
 public class CityBoard implements I3DObject{
-	private static Field[][] fields;
+	private final Field[][] fields;
+	private final List<Field> nodes;
+	private final List<Path> paths;	
+
 
 	
 	private String name = "CityBoard";
@@ -46,20 +49,18 @@ public class CityBoard implements I3DObject{
 				Field field = createField(strasse[i][j]);
 				
 				field.setContent(strasse[i][j]);
-				field.setGridPositionX(i);
-				field.setGridPositionY(j);
 				field.setName("Feld " + i + " " + j);
 				
 				field.setPosition(new Vec3(startX+j, startY-i, 0f));
 				//field.setTransform(Mat4.translate(startX+j, startY-i, 0f));
 				
-				field.savePosition();
 				fields[i][j] = field;				
 			}
 		}
 		
 		PathAlgorithm pathAlgorithm = new PathAlgorithm(this.fields);	
-		pathAlgorithm.definePaths();	
+		paths = pathAlgorithm.getPaths();	
+		nodes = pathAlgorithm.getNodes();
 	}
 	
 	
@@ -68,7 +69,12 @@ public class CityBoard implements I3DObject{
 	}
 	
 
-	public void getActualField(float positionX, float positionY){
+	public List<Field> getNodes(){
+		return nodes;
+	}
+	
+	
+	/*public void getActualField(float positionX, float positionY){
 	for (int i = 0; i < fields.length; i++) {			
 		for (int j = 0; j < fields[i].length; j++) {
 			if(positionX >= fields[i][j].getStartPositionX() && positionX <= fields[i][j].getStopPositionX()){
@@ -78,7 +84,7 @@ public class CityBoard implements I3DObject{
 			}
 		}
 	}
-}
+}*/
 	
 	
 	

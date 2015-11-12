@@ -10,18 +10,11 @@ import ch.fhnw.ether.scene.DefaultScene;
 import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.camera.Camera;
 import ch.fhnw.ether.scene.camera.ICamera;
-import ch.fhnw.ether.scene.mesh.DefaultMesh;
-import ch.fhnw.ether.scene.mesh.IMesh;
-import ch.fhnw.ether.scene.mesh.MeshLibrary;
-import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
-import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
-import ch.fhnw.ether.scene.mesh.geometry.IGeometry.Primitive;
-import ch.fhnw.ether.scene.mesh.material.ColorMapMaterial;
-import ch.fhnw.ether.scene.mesh.material.ColorMaterial;
-import ch.fhnw.ether.scene.mesh.material.CustomMaterial;
-import ch.fhnw.ether.scene.mesh.material.IMaterial;
-import ch.fhnw.ether.scene.mesh.material.Texture;
+
 import ch.fhnw.ether.ui.Button;
+import ch.fhnw.ether.ui.Button.IButtonAction;
+import ch.fhnw.ether.ui.IWidget;
+import ch.fhnw.ether.ui.IWidget.IWidgetAction;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.ether.view.IView.ViewType;
 import ch.fhnw.ether.view.gl.DefaultView;
@@ -47,12 +40,9 @@ public final class StreetExample {
 	
 	float startX = -(strasse[0].length / 2.0f);
 	float startY = (strasse.length / 2.0f);
-	float positionX = startX;
-	float positionY = startY;
-	float directionX = 0;
-	float directionY = 0;
 
-
+	private Vec3 carPosition = new Vec3(0f, 0f, 0f);
+	Vec3 newCarPosition= carPosition;
 	
 	
 	public static final int[][] strasse = { 
@@ -68,9 +58,11 @@ public final class StreetExample {
 		new StreetExample();
 	}
 
+	
 	// Setup the whole thing
 	public StreetExample() {
 		// Create controller
+		
 		IController controller = new DefaultController();
 		controller.run(time -> {
 			// Create view
@@ -85,41 +77,35 @@ public final class StreetExample {
 			scene.add3DObject(camera);
 			controller.setCamera(view, camera);
 
-
 			/////// CITY ////////
 			cityboard = new CityBoard(strasse);	
 			for (int i = 0; i < cityboard.getFields().length; i++) {
 				for (int j = 0; j < cityboard.getFields()[0].length; j++) {
-					scene.add3DObject(cityboard.getFields()[i][j]);		
+					scene.add3DObject(cityboard.getFields()[i][j]);	
 				}
-			}
-						
+			}			
 			/////// CAR //////////			
 			car = new Car();
 			scene.add3DObject(car);
 			
-			
-			
-			
-			controller.getUI().addWidget(new Button(0, 1, "left", "", KeyEvent.VK_ESCAPE, (button, v) -> {
-				directionX = -0.01f;
-				directionY =0;
+						
+			controller.getUI().addWidget(new Button(2,5, "Feld 0 2", "", KeyEvent.VK_ESCAPE, (button, v) -> {
+				newCarPosition = cityboard.getNodes().get(0).getPosition(); 
 			}));
-			controller.getUI().addWidget(new Button(2, 1, "right", "", KeyEvent.VK_ESCAPE, (button, v) -> {
-				directionX = 0.01f;
-				directionY =0;
+			controller.getUI().addWidget(new Button(0,4, "Feld 1 0", "", KeyEvent.VK_ESCAPE, (button, v) -> {
+				newCarPosition = cityboard.getNodes().get(1).getPosition(); 
 			}));
-			controller.getUI().addWidget(new Button(1, 2, "up", "", KeyEvent.VK_ESCAPE, (button, v) -> {
-				directionX = 0;
-				directionY = 0.01f;
+			controller.getUI().addWidget(new Button(0,2, "Feld 3 0", "", KeyEvent.VK_ESCAPE, (button, v) -> {
+				newCarPosition = cityboard.getNodes().get(2).getPosition(); 
 			}));
-			controller.getUI().addWidget(new Button(1, 0, "down", "", KeyEvent.VK_ESCAPE, (button, v) -> {
-				directionX = 0;
-				directionY = -0.01f;
+			controller.getUI().addWidget(new Button(2,2, "Feld 3 2", "", KeyEvent.VK_ESCAPE, (button, v) -> {
+				newCarPosition = cityboard.getNodes().get(3).getPosition(); 
 			}));
-			controller.getUI().addWidget(new Button(1, 1, "stop", "", KeyEvent.VK_ESCAPE, (button, v) -> {
-				directionX = 0;
-				directionY = 0;
+			controller.getUI().addWidget(new Button(0,0, "Feld 5 0", "", KeyEvent.VK_ESCAPE, (button, v) -> {
+				newCarPosition = cityboard.getNodes().get(4).getPosition(); 
+			}));
+			controller.getUI().addWidget(new Button(2, 0, "Feld 5 2", "", KeyEvent.VK_ESCAPE, (button, v) -> {
+				newCarPosition = cityboard.getNodes().get(5).getPosition();
 			}));
 		});
 		
@@ -127,46 +113,49 @@ public final class StreetExample {
 		controller.animate(new IEventScheduler.IAnimationAction() {		
 			@Override
 			public void run(double time, double interval) {
-				positionX += directionX;
-				positionY += directionY;
-				
-				// Limit Position X
-				/* if(positionX >= fields[0][0].getStartPositionX()){
-					positionX += directionX;
-				}else{
-					positionX = fields[0][0].getStartPositionX();
-				}
-				
-				if(positionX <= fields[0][4].getStopPositionX()){
-					positionX += directionX;
-				}else{
-					positionX = fields[0][4].getStopPositionX();
-				}
-				
-				
-				
-				if(positionY <= fields[0][0].getStopPositionY()){
-					positionY += directionY;
-				}else{
-					positionY = fields[0][0].getStopPositionY();
-				}
-				
-				if(positionY >= fields[4][0].getStartPositionY()){
-					positionY += directionY;
-				}else{
-					positionY = fields[4][0].getStartPositionY();
-				}	*/	
-				
+					
+					if(newCarPosition.x > carPosition.x && newCarPosition.x - carPosition.x > 0.1){
+						moveEast(carPosition.x - newCarPosition.x);
+					}else if(newCarPosition.x < carPosition.x && newCarPosition.x - carPosition.x < 0.1){
+						moveWest(carPosition.x - newCarPosition.x);
+					}
+					
+					if(newCarPosition.y > carPosition.y && newCarPosition.y - carPosition.y > 0.1){
+						moveNorth(carPosition.y - newCarPosition.y);
+					}else if(newCarPosition.y < carPosition.y && newCarPosition.y - carPosition.y < 0.1){
+						moveSouth(carPosition.y - newCarPosition.y);
+					}
 
-				
-	            Mat4 transform = Mat4.multiply(Mat4.translate(positionX, positionY, 0.5f), Mat4.scale(0.5f));            
-				//Mat4 transform = Mat4.multiply(Mat4.scale(0.5f));         
-		           
-				car.setTransform(transform);
-				//cityboard.getActualField(positionX, positionY);
+			Mat4 transform = Mat4.multiply(Mat4.translate(new Vec3(0.5f,0.5f,0)),Mat4.scale(0.5f));            	
+			car.setTransform(transform);
+
 
 			}
-		});	
+		});
+		
+	}
+	
+	public void moveEast(float distance){
+		carPosition = carPosition.add(new Vec3(0.1f,0,0));
+		car.setPosition(carPosition);
+	}
+	
+	
+	public void moveWest(float distance){
+		carPosition = carPosition.subtract(new Vec3(0.1f,0,0));
+		car.setPosition(carPosition);
+	}
+	
+	
+	public void moveNorth(float distance){
+		carPosition = carPosition.add(new Vec3(0,0.1f,0));
+		car.setPosition(carPosition);
+	}
+	
+	
+	public void moveSouth(float distance){
+		carPosition = carPosition.subtract(new Vec3(0,0.1f,0));
+		car.setPosition(carPosition);
 	}
 		
 		

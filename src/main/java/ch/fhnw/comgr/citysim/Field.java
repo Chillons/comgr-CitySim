@@ -27,14 +27,6 @@ import ch.fhnw.util.math.geometry.BoundingBox;
 public class Field implements IMesh{
 	
 	private int content;
-	private String attribute = "nothing";
-	private int gridPositionX; 
-	private int gridPositionY;
-	private float startPositionX;
-	private float startPositionY;
-	private float stopPositionX;
-	private float stopPositionY;
-	private LinkedList<Field> paths;
 	private String name = "unnamed_field";
 	private Queue queue;
 	private Set<Flag> flags;
@@ -43,11 +35,11 @@ public class Field implements IMesh{
 	private Vec3 position = Vec3.ZERO;
 	private Mat4 transform = Mat4.ID;
 	private BoundingBox bb;
+	private LinkedList<Field> paths;
 	
 	
 	public Field(IMaterial material, IGeometry geometry) {
 		this(material, geometry, Queue.DEPTH);
-		paths = new LinkedList<Field>();
 	}
 
 	public Field(IMaterial material, IGeometry geometry, Queue queue) {
@@ -87,7 +79,6 @@ public class Field implements IMesh{
 
 	
 	// Field spezifisch
-	
 	public void setContent(int c){
 		this.content = c;
 	}
@@ -95,52 +86,13 @@ public class Field implements IMesh{
 	public int getContent(){
 		return this.content;
 	}
-	
-	
-	public void setAttribute(String a){
-		this.attribute = a;
-	}
-	
-	public String getAttribute(){
-		return this.attribute;
-	}
-	
-	
-	public void setGridPositionX(int x){
-		this.gridPositionX = x;		
-	}
 
-	public void setGridPositionY(int y){
-		this.gridPositionX = y;		
-	}
-	
-	public void savePosition(){
-		float[] transformArray = this.getTransform().toArray();
-		this.startPositionX = transformArray[12];
-		this.stopPositionX = this.startPositionX + 1;
-		this.startPositionY = transformArray[13];
-		this.stopPositionY = this.startPositionY +1;
-	}
-	
-	public float getStartPositionX(){
-		return this.startPositionX;
-	}
-	
-	public float getStopPositionX(){
-		return this.stopPositionX;
-	}
-		
-	public float getStartPositionY(){
-		return this.startPositionY;
-	}
-	
-	public float getStopPositionY(){
-		return this.stopPositionY;
-	}
 	
 	public void setPaths(LinkedList<Field> p){
 		this.paths = p;
 	}
+
+
 	// I3DObject implementation
 
 	@Override
