@@ -9,21 +9,18 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by maurice on 11/12/15.
- */
 public class TaxiLoader {
 
     private TaxiLoader() {
 
     }
 
-    public static List<IMesh> getTaxi() {
-        final URL obj = TaxiLoader.class.getClassLoader().getResource("assets/taxi/londonCab/London_Cab.obj");
+    public static List<IMesh> getTaxi(TaxiType type) {
+        final URL obj = TaxiLoader.class.getClassLoader().getResource("assets/taxi/" + type.toString() + ".obj");
 
         final List<IMesh> meshes = new ArrayList<>();
         try {
-            new ObjReader(obj).getMeshes().forEach(mesh -> meshes.add(mesh));
+            new ObjReader(obj).getMeshes().forEach(meshes::add);
         } catch (IOException e) {
             e.printStackTrace();
         }

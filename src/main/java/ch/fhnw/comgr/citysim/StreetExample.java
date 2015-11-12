@@ -1,7 +1,7 @@
 
 package ch.fhnw.comgr.citysim;
 
-import ch.fhnw.comgr.citysim.util.TaxiLoader;
+import ch.fhnw.comgr.citysim.util.TaxiType;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.controller.IController;
 import ch.fhnw.ether.controller.event.IEventScheduler;
@@ -14,7 +14,6 @@ import ch.fhnw.ether.ui.Button;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.ether.view.IView.ViewType;
 import ch.fhnw.ether.view.gl.DefaultView;
-import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 
 import java.awt.event.KeyEvent;
@@ -82,8 +81,12 @@ public final class StreetExample {
 					scene.add3DObject(cityboard.getFields()[i][j]);	
 				}
 			}			
-			/////// CAR //////////			
-			car = TaxiLoader.getTaxi();
+			/////// CAR //////////
+			Taxi taxi = new Taxi(TaxiType.YELLOW_CAB);
+			car = taxi.getMesh();
+			for (IMesh mesh : car) {
+				mesh.setTransform(taxi.getTransform());
+			}
 			scene.add3DObjects(car);
 			
 						
@@ -124,11 +127,6 @@ public final class StreetExample {
 					moveSouth(carPosition.y - newCarPosition.y);
 				}
 
-				Mat4 transform = Mat4.multiply(Mat4.rotate(90, 1,0,0),Mat4.translate(new Vec3(0.76f,0,-0.5f)),Mat4.scale(0.055f));
-
-				for (IMesh mesh : car) {
-					mesh.setTransform(transform);
-				}
 			}
 		});
 		
