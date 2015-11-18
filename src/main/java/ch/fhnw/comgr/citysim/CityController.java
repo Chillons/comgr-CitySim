@@ -1,12 +1,15 @@
 package ch.fhnw.comgr.citysim;
 
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.scene.I3DObject;
+import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.scene.mesh.IMesh.Flag;
 import ch.fhnw.ether.scene.mesh.IMesh.Queue;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
@@ -19,12 +22,11 @@ import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 import ch.fhnw.util.math.geometry.BoundingBox;
 
-public class CityBoard implements I3DObject{
+public class CityController extends DefaultController implements I3DObject{
 	private final Field[][] fields;
 	private final List<Field> nodes;
 	private final List<Path> paths;	
-
-
+	private final List<List<IMesh>> taxis;
 	
 	private String name = "CityBoard";
 	private Queue queue;
@@ -35,7 +37,7 @@ public class CityBoard implements I3DObject{
 	private Mat4 transform = Mat4.ID;
 	private BoundingBox bb;
 	  
-	public CityBoard(int[][] strasse){
+	public CityController(int[][] strasse){
 
 		fields = new Field[strasse.length][strasse[0].length];
 
@@ -61,6 +63,7 @@ public class CityBoard implements I3DObject{
 		PathAlgorithm pathAlgorithm = new PathAlgorithm(this.fields);	
 		paths = pathAlgorithm.getPaths();	
 		nodes = pathAlgorithm.getNodes();
+		taxis = new ArrayList<List<IMesh>>();
 	}
 	
 	
@@ -71,6 +74,16 @@ public class CityBoard implements I3DObject{
 
 	public List<Field> getNodes(){
 		return nodes;
+	}
+	
+	
+	public List<List<IMesh>> getTaxis(){
+		return taxis;
+	}
+	
+	
+	public void addTaxi(List<IMesh> t){
+		taxis.add(t);
 	}
 	
 	
