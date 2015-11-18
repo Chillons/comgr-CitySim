@@ -1,6 +1,7 @@
 
 package ch.fhnw.comgr.citysim;
 
+import ch.fhnw.comgr.citysim.util.CityEventScheduler;
 import ch.fhnw.comgr.citysim.util.PickFieldTool;
 import ch.fhnw.comgr.citysim.util.TaxiType;
 import ch.fhnw.ether.controller.DefaultController;
@@ -82,9 +83,8 @@ public final class StreetExample {
 			
 			scene.add3DObject(camera);
 			controller.setCamera(view, camera);
-			
-			PickFieldTool pickFieldTool = new PickFieldTool(controller);
-			controller.setCurrentTool(pickFieldTool);
+					
+
 			
 
 			/////// CITY ////////
@@ -101,15 +101,15 @@ public final class StreetExample {
 			car = taxi.getMesh();
 			for (IMesh mesh : car) {
 				mesh.setTransform(taxi.getTransform());
+				mesh.setPosition(controller.getNodes().get(0).getPosition());
 			}
+			
 			
 			controller.addTaxi(car);
 			scene.add3DObjects(car);
 			
-						
-			/*controller.getUI().addWidget(new Button(2,5, "Feld 0 2", "", KeyEvent.VK_ESCAPE, (button, v) -> {
-				newCarPosition = cityboard.getNodes().get(0).getPosition(); 
-			}));*/
+			PickFieldTool pickFieldTool = new PickFieldTool(controller);
+			controller.setCurrentTool(pickFieldTool);	
 		});
 		
 			

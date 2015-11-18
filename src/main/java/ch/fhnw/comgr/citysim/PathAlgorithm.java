@@ -39,17 +39,15 @@ public class PathAlgorithm {
 		  for(int j=0; j<nodes.size();j++){  
 			  pathsProNode = this.getPath(nodes.get(j));
 			  if(pathsProNode !=null){
-			  System.out.println("Von Knoten " + nodes.get(i).getName() + " zu Knoten " + nodes.get(j).getName());
-			  System.out.println("Pfad: " + pathsProNode);
-			  System.out.println();
+				  nodes.get(i).addToPaths(pathsProNode);
 			  }
 		  }
-		  nodes.get(i).setPaths(pathsProNode);
+		  
 	  }
 	  return paths;
   }
   
-
+ 
   public List<Field> getNodes(){
 	  return nodes;	  
   }

@@ -71,6 +71,18 @@ public class CityController extends DefaultController implements I3DObject{
 		return fields;
 	}
 	
+	
+	public Field getFieldAtPosition(Vec3 position){
+		for (int i = 0; i < fields.length; i++) {
+			for (int j = 0; j < fields[i].length; j++) {
+			  if(fields[i][j].getPosition().equals(position)){
+				  return fields[i][j];
+			  }
+		  }
+		}
+		return null;
+	}
+	
 
 	public List<Field> getNodes(){
 		return nodes;
@@ -85,27 +97,7 @@ public class CityController extends DefaultController implements I3DObject{
 	public void addTaxi(List<IMesh> t){
 		taxis.add(t);
 	}
-	
-	
-	/*public void getActualField(float positionX, float positionY){
-	for (int i = 0; i < fields.length; i++) {			
-		for (int j = 0; j < fields[i].length; j++) {
-			if(positionX >= fields[i][j].getStartPositionX() && positionX <= fields[i][j].getStopPositionX()){
-				if(positionY >= fields[i][j].getStartPositionY() && positionY <= fields[i][j].getStopPositionY()){
-					System.out.println("Actual field is: " + fields[i][j].getName());
-				}
-			}
-		}
-	}
-}*/
-	
-	
-	
-	
-
-	
-		
-		
+			
 		
 		private static Field createField(int type){
 			switch (type) {

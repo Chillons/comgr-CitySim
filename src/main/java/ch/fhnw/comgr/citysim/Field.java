@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import ch.fhnw.ether.scene.I3DObject;
 import ch.fhnw.ether.scene.attribute.IAttribute;
 import ch.fhnw.ether.scene.mesh.DefaultMesh;
 import ch.fhnw.ether.scene.mesh.IMesh;
@@ -36,7 +37,7 @@ public class Field implements IMesh{
 	private Vec3 position = Vec3.ZERO;
 	private Mat4 transform = Mat4.ID;
 	private BoundingBox bb;
-	private LinkedList<Field> paths;
+	private LinkedList<LinkedList<Field>> paths;
 	
 	
 	public Field(IMaterial material, IGeometry geometry) {
@@ -72,6 +73,7 @@ public class Field implements IMesh{
 		this.geometry = geometry;
 		this.queue = queue;
 		this.flags = flags;
+		paths = new LinkedList<LinkedList<Field>>();
 		checkAttributeConsistency(material, geometry);
 	}
 		
@@ -89,10 +91,19 @@ public class Field implements IMesh{
 	}
 
 	
-	public void setPaths(LinkedList<Field> p){
-		this.paths = p;
+	public void addToPaths(LinkedList<Field> p){
+		this.paths.add(p);
 	}
 
+	
+	public LinkedList<Field> getPathTo(Field to){
+		  for(int i=0; i<paths.size(); i++) {
+			  if(paths.get(i).getLast().equals(to)){
+				  return paths.get(i);
+		  }
+		  }
+		  return null;
+	}
 
 	// I3DObject implementation
 
