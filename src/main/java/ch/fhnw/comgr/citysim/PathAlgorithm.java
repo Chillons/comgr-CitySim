@@ -38,11 +38,6 @@ public class PathAlgorithm {
 		  this.execute(nodes.get(i));
 		  for(int j=0; j<nodes.size();j++){  
 			  pathsProNode = this.getPath(nodes.get(j));
-			  if(pathsProNode !=null){
-			  System.out.println("Von Knoten " + nodes.get(i).getName() + " zu Knoten " + nodes.get(j).getName());
-			  System.out.println("Pfad: " + pathsProNode);
-			  System.out.println();
-			  }
 		  }
 		  nodes.get(i).setPaths(pathsProNode);
 	  }

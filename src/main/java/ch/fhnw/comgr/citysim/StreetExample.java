@@ -40,7 +40,6 @@ public final class StreetExample {
 	public static final int STREET_SOUTH_WEST = 7;
 	
 	
-	private final static Logger LOGGER = Logger.getLogger(StreetExample.class.getName());
 	private List<IMesh> car;
 	
 	float startX = -(strasse[0].length / 2.0f);
@@ -105,11 +104,7 @@ public final class StreetExample {
 			
 			controller.addTaxi(car);
 			scene.add3DObjects(car);
-			
-						
-			/*controller.getUI().addWidget(new Button(2,5, "Feld 0 2", "", KeyEvent.VK_ESCAPE, (button, v) -> {
-				newCarPosition = cityboard.getNodes().get(0).getPosition(); 
-			}));*/
+
 		});
 		
 			

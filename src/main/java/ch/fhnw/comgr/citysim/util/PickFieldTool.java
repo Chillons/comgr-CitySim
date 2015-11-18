@@ -40,7 +40,6 @@ public class PickFieldTool extends AbstractTool {
 				List<IMesh> actualTaxi = this.getCityController().getTaxis().get(0);
 				super.getController().animate(new DriveAnimationAction(actualTaxi, newCarPosition));
 			}	
-			//newCarPosition = cityboard.getNodes().get(0).getPosition(); 
 			
 		}
 	}
