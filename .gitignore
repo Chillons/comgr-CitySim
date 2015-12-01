@@ -96,6 +96,7 @@ build/
 .gradle
 
 !lib/*
+!*.obj
 /bin/
 
 # Eclipse

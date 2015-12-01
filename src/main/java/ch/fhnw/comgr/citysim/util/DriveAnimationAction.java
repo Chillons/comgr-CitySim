@@ -2,7 +2,6 @@ package ch.fhnw.comgr.citysim.util;
 
 import java.util.List;
 
-import ch.fhnw.comgr.citysim.Taxi;
 import ch.fhnw.ether.controller.event.IEventScheduler;
 import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.util.math.Vec3;

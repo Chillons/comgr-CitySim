@@ -1,8 +1,6 @@
 package ch.fhnw.comgr.citysim;
 
-import ch.fhnw.ether.scene.mesh.IMesh.Queue;
-import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
-import ch.fhnw.ether.scene.mesh.material.IMaterial;
+import ch.fhnw.comgr.citysim.model.Field;
 
 public class Path{
 	  private final Field source;

@@ -1,25 +1,17 @@
-package ch.fhnw.comgr.citysim;
+package ch.fhnw.comgr.citysim.model;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import ch.fhnw.ether.scene.attribute.IAttribute;
-import ch.fhnw.ether.scene.mesh.DefaultMesh;
 import ch.fhnw.ether.scene.mesh.IMesh;
-import ch.fhnw.ether.scene.mesh.IMesh.Flag;
-import ch.fhnw.ether.scene.mesh.IMesh.Queue;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry.IGeometryAttribute;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry.Primitive;
-import ch.fhnw.ether.scene.mesh.material.ColorMapMaterial;
 import ch.fhnw.ether.scene.mesh.material.IMaterial;
-import ch.fhnw.ether.scene.mesh.material.Texture;
 import ch.fhnw.util.UpdateRequest;
-import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Mat3;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;

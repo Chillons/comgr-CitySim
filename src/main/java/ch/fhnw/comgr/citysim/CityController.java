@@ -3,20 +3,16 @@ package ch.fhnw.comgr.citysim;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
+import ch.fhnw.comgr.citysim.model.Field;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.scene.mesh.IMesh;
-import ch.fhnw.ether.scene.mesh.IMesh.Flag;
-import ch.fhnw.ether.scene.mesh.IMesh.Queue;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
 import ch.fhnw.ether.scene.mesh.material.ColorMapMaterial;
 import ch.fhnw.ether.scene.mesh.material.IMaterial;
 import ch.fhnw.ether.scene.mesh.material.Texture;
 import ch.fhnw.util.color.RGBA;
-import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
-import ch.fhnw.util.math.geometry.BoundingBox;
 
 public class CityController extends DefaultController{
 	private final Field[][] fields;

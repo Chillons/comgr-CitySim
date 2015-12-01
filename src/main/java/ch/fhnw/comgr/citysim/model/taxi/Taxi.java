@@ -1,4 +1,4 @@
-package ch.fhnw.comgr.citysim;
+package ch.fhnw.comgr.citysim.model.taxi;
 
 import ch.fhnw.comgr.citysim.util.TaxiLoader;
 import ch.fhnw.util.math.geometry.BoundingBox;
@@ -20,9 +20,6 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
-/**
- * Created by maurice on 11/12/15.
- */
 public class Taxi{
 
     private Mat4 transform;
