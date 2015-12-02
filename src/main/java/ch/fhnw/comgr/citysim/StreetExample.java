@@ -97,8 +97,13 @@ public final class StreetExample {
 
 			Taxi taxi = new Taxi(TaxiType.YELLOW_CAB, controller);
 	
+			taxi.setTransform(Mat4.translate(1, 0, 0));
+			
 			controller.addTaxi(taxi);
 			scene.add3DObjects(taxi.getMesh());
+			
+			
+			controller.startAnimationTaxis();
 
 		});
 		

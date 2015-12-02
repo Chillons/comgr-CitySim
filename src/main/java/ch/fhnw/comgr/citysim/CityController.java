@@ -43,8 +43,17 @@ public class CityController extends DefaultController {
 		paths = pathAlgorithm.getPaths();
 		nodes = pathAlgorithm.getNodes();
 		taxis = new ArrayList<Taxi>();
+		
 	}
 
+	public void startAnimationTaxis() {
+		if (taxis != null) {
+			for (Taxi t : taxis) {
+				this.animate(t);		
+			}			
+		}
+	}
+	
 	public Field getField(Vec3 position) {
 		for (int i = 0; i < fields.length; i++) {
 			for (int j = 0; j < fields[i].length; j++) {
