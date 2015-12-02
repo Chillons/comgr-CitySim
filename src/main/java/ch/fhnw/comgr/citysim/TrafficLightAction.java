@@ -21,7 +21,10 @@ public class TrafficLightAction implements IEventScheduler.IAnimationAction {
     public void run(double time, double interval) {
         if (time - interactionObject.getActivationTime() > 5) {
             interactionObject.deactivate();
+            System.out.println("Time is up! Resetting traffic light");
             controller.kill(this);
+        } else if (interactionObject.isActive()) {
+
         } else {
             interactionObject.activate();
         }

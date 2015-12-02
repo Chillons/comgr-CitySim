@@ -15,6 +15,7 @@ import ch.fhnw.ether.scene.mesh.MeshUtilities;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.ether.view.IView.ViewType;
 import ch.fhnw.ether.view.gl.DefaultView;
+import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 
 import javax.imageio.spi.IIORegistry;
@@ -107,11 +108,19 @@ public final class StreetExample {
 
 			/////// Traffic Light dummy ///////
 
-			InteractionObject interactionObject = new InteractionObject();
-			interactionObject.setMesh(MeshUtilities.createCube());
+			InteractionObject interactionObject = new InteractionObject(MeshUtilities.createCube(InteractionObject.greenBlock));
 
 			CitySimMap map = CitySimMap.getInstance();
 			map.addObjectToLayer(interactionObject);
+
+
+			IMesh mesh = MeshUtilities.createCube(InteractionObject.greenBlock);
+			mesh.setTransform(Mat4.translate(1, 2, .5f));
+
+			InteractionObject interactionObject2 = new InteractionObject(mesh);
+
+			map.addObjectToLayer(interactionObject2);
+
 
 			for (InteractionObject intObj : map.getInteractionObjects()) {
 				scene.add3DObjects(intObj.getMesh());

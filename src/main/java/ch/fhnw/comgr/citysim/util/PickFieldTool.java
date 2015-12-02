@@ -53,19 +53,21 @@ public class PickFieldTool extends AbstractTool {
 						//noinspection SuspiciousMethodCalls
 						if (interactionObject.getMesh().contains(currentObject)) {
 							System.out.println("Traffic light found!");
-							if (!foundTrafficLights.contains(interactionObject)) {
+							if (!foundTrafficLights.contains(interactionObject) && !interactionObject.isActive()) {
 								foundTrafficLights.add(interactionObject);
+								trafficLightFound = true;
+								System.out.println("Setting color to red");
+							} else {
+								System.out.println("But already red!");
 							}
-							trafficLightFound = true;
 						}
 					}
 				}
 
 				if (trafficLightFound) {
 					if (foundTrafficLights.size() == 1 ) {
-						System.out.println("Setting light to green");
 						double currentTime = getController().getScheduler().getTime();
-						System.out.println("currentTime = " + currentTime);
+						System.out.println("activation Time = " + currentTime);
 						InteractionObject trafficLight = foundTrafficLights.get(0);
 
 						trafficLight.activate();

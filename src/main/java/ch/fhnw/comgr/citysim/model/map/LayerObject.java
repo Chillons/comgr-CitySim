@@ -8,25 +8,41 @@ import java.util.List;
 
 public abstract class LayerObject {
 
-  private List<IMesh> mesh;
+  private final List<IMesh> mesh;
+  private final List<Mat4> baseTransformations;
+
+  public LayerObject(IMesh mesh) {
+    this.mesh = new ArrayList<>();
+    this.mesh.add(mesh);
+
+    baseTransformations = new ArrayList<>();
+    baseTransformations.add(mesh.getTransform());
+
+  }
+
+  public LayerObject(List<IMesh> mesh) {
+    this.mesh = new ArrayList<>();
+    this.mesh.addAll(mesh);
+    baseTransformations = new ArrayList<>();
+    for (int i = 0; i < mesh.size(); i++) {
+      baseTransformations.add(i, mesh.get(i).getTransform());
+      System.out.println("added base transformation");
+    }
+  }
 
   public List<IMesh> getMesh() {
     return mesh;
   }
 
-  public void setMesh(List<IMesh> mesh) {
-    // TODO: copy instead of just assign?
-    this.mesh = mesh;
-  }
-
-  public void setMesh(IMesh mesh) {
-    this.mesh = new ArrayList<>();
-    this.mesh.add(mesh);
-  }
-
   public void setTransform(Mat4 transform) {
-    for (IMesh m : mesh) {
-      m.setTransform(transform);
+
+    for (int i = 0; i < mesh.size(); i++) {
+      IMesh m = mesh.get(i);
+      if (transform != null) {
+        m.setTransform(baseTransformations.get(i).postMultiply(transform));
+      } else {
+        m.setTransform(baseTransformations.get(i));
+      }
     }
   }
 }
