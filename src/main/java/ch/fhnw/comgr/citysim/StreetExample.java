@@ -1,6 +1,8 @@
 
 package ch.fhnw.comgr.citysim;
 
+import ch.fhnw.comgr.citysim.model.map.InteractionObject;
+import ch.fhnw.comgr.citysim.model.map.CitySimMap;
 import ch.fhnw.comgr.citysim.model.taxi.Taxi;
 import ch.fhnw.comgr.citysim.util.PickFieldTool;
 import ch.fhnw.comgr.citysim.util.TaxiType;
@@ -9,6 +11,7 @@ import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.camera.Camera;
 import ch.fhnw.ether.scene.camera.ICamera;
 import ch.fhnw.ether.scene.mesh.IMesh;
+import ch.fhnw.ether.scene.mesh.MeshUtilities;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.ether.view.IView.ViewType;
 import ch.fhnw.ether.view.gl.DefaultView;
@@ -91,15 +94,28 @@ public final class StreetExample {
 			}			
 			/////// CAR //////////
 
-			Taxi taxi = new Taxi(TaxiType.YELLOW_CAB);
+//			Taxi taxi = new Taxi(TaxiType.YELLOW_CAB);
+//
+//			car = taxi.getMesh();
+//			for (IMesh mesh : car) {
+//				mesh.setTransform(taxi.getTransform());
+//			}
+//
+//			controller.addTaxi(car);
+//			scene.add3DObjects(car);
 
-			car = taxi.getMesh();
-			for (IMesh mesh : car) {
-				mesh.setTransform(taxi.getTransform());
+
+			/////// Traffic Light dummy ///////
+
+			InteractionObject interactionObject = new InteractionObject();
+			interactionObject.setMesh(MeshUtilities.createCube());
+
+			CitySimMap map = CitySimMap.getInstance();
+			map.addObjectToLayer(interactionObject);
+
+			for (InteractionObject intObj : map.getInteractionObjects()) {
+				scene.add3DObjects(intObj.getMesh());
 			}
-
-			controller.addTaxi(car);
-			scene.add3DObjects(car);
 
 		});
 		

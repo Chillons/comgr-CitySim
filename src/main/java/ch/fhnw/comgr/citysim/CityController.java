@@ -1,11 +1,13 @@
 package ch.fhnw.comgr.citysim;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import ch.fhnw.comgr.citysim.model.Field;
 import ch.fhnw.ether.controller.DefaultController;
+import ch.fhnw.ether.image.Frame;
 import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
 import ch.fhnw.ether.scene.mesh.material.ColorMapMaterial;
@@ -94,7 +96,14 @@ public class CityController extends DefaultController{
 		
 				
 		private static Field createField(String asset) {
-			IMaterial m = new ColorMapMaterial(RGBA.WHITE, new Texture(StreetExample.class.getResource(asset)), true);
+//			IMaterial m = new ColorMapMaterial(RGBA.WHITE, new Texture(StreetExample.class.getResource(asset)), true);
+			IMaterial m = null;
+			try {
+
+				m = new ColorMapMaterial(RGBA.WHITE, Frame.create(StreetExample.class.getResource(asset)).getTexture(), true);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			IGeometry g = Util.getDefaultField();
 			return new Field(m, g);
 		}

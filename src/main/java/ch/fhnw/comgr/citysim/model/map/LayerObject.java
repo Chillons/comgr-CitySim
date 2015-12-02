@@ -8,16 +8,25 @@ import java.util.List;
 
 public abstract class LayerObject {
 
-  private List<IMesh> model;
+  private List<IMesh> mesh;
 
-  private Mat4 transform;
-
-  public List<IMesh> getModel() {
-    return model;
+  public List<IMesh> getMesh() {
+    return mesh;
   }
 
-  public void setModel(List<IMesh> model) {
+  public void setMesh(List<IMesh> mesh) {
     // TODO: copy instead of just assign?
-    this.model = model;
+    this.mesh = mesh;
+  }
+
+  public void setMesh(IMesh mesh) {
+    this.mesh = new ArrayList<>();
+    this.mesh.add(mesh);
+  }
+
+  public void setTransform(Mat4 transform) {
+    for (IMesh m : mesh) {
+      m.setTransform(transform);
+    }
   }
 }

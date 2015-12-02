@@ -3,7 +3,7 @@ package ch.fhnw.comgr.citysim.model.map;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Map {
+public class CitySimMap {
 
   /*
   Content is organized in layers:
@@ -30,42 +30,53 @@ public class Map {
 
    */
 
+  private static final CitySimMap mapInstance = new CitySimMap();
+
   public static final int LAYER_STREET = 0;
   public static final int LAYER_STATIC = 1;
   public static final int LAYER_INTERACT = 2;
   public static final int LAYER_DYNAMIC = 3;
 
   private List<LayerObject> staticObjects;
-  private List<LayerObject> interactionObjects;
-  private List<LayerObject> dynamicObjects;
+  private List<InteractionObject> interactionObjects;
+  private List<DynamicObject> dynamicObjects;
 
-  public Map() {
+  private CitySimMap() {
     staticObjects = new ArrayList<>();
     interactionObjects = new ArrayList<>();
     dynamicObjects = new ArrayList<>();
   }
 
+  public static CitySimMap getInstance() {
+    return mapInstance;
+  }
+
+
+
   /**
    * Adds an object to a layer at a specific position
    *
    * @param object
-   * @param layerId
    * @return true if it could be added, false otherwise
    */
-  public boolean addObjectToLayer(LayerObject object, int layerId) {
+  public boolean addObjectToLayer(LayerObject object) {
+        if (object instanceof InteractionObject) {
+          interactionObjects.add((InteractionObject) object);
+          return true;
+        } else if (object instanceof DynamicObject) {
+          dynamicObjects.add((DynamicObject) object);
+          return true;
+        } else {
+          return false;
+        }
+  }
 
-    switch (layerId) {
-      case LAYER_STATIC:
-        staticObjects.add(object);
-        break;
-      case LAYER_INTERACT:
-        interactionObjects.add(object);
-        break;
-      case LAYER_DYNAMIC:
-        dynamicObjects.add(object);
-        break;
-    }
-    return false;
+  public List<DynamicObject> getDynamicObjects() {
+    return dynamicObjects;
+  }
+
+  public List<InteractionObject> getInteractionObjects() {
+    return interactionObjects;
   }
 
 }
