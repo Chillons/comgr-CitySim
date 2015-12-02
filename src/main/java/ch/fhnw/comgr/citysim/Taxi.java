@@ -31,21 +31,41 @@ public class Taxi{
 
     private TaxiType taxiType;
     
-        
+    private Field target;
+    
+    private CityController controller;
    
-    public Taxi(TaxiType taxiType) {
-        taxi = TaxiLoader.getTaxi(taxiType);
-        this.taxiType = taxiType;
+    public Taxi(TaxiType taxiType, CityController controller) {
+    	this.taxiType = taxiType;
+    	this.controller = controller;
+
+    	// Get Meshes from File
+        this.taxi = TaxiLoader.getTaxi(taxiType);
+        
+        // Get Starttransformation
         this.transform = taxiType.getTransform();
         
+        // Update transformationmatrix to meshes
+        update();
     }
 
     public List<IMesh> getMesh() {
         return taxi;
     }
     
+    /**
+     * Transform all Meshes with the actual Transformmatrix
+     */
+    public void update() {
+		for (IMesh mesh : taxi) {
+			mesh.setTransform(transform);
+		}
+    }
 
-
+    /**
+     * Set Transformation Matrix. Initial Transformation will automaticly be added.
+     * @param mat4s
+     */
     public void setTransform(Mat4...mat4s) {
         Mat4 transform = taxiType.getTransform();
         for (Mat4 mat4 : mat4s) {
@@ -53,14 +73,20 @@ public class Taxi{
         }
         this.transform = transform;
 
-        for (IMesh mesh : taxi) {
-            mesh.setTransform(transform);
-        }
+        update();
     }
     
 
 	public Mat4 getTransform() {
 		return transform;
+	}
+
+	public Field getTarget() {
+		return target;
+	}
+
+	public void setTarget(Field target) {
+		this.target = target;
 	}
 
 

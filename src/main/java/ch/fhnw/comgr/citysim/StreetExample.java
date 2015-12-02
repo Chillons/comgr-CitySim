@@ -50,8 +50,8 @@ public final class StreetExample {
 	
 	
 	public static final int[][] strasse = { 
-			{ GRAS, 				GRAS, 				STREET_SOUTH_EAST }, 
-			{ STREET_SOUTH_WEST, 	GRAS, 				STREET_NORTH_SOUTH}, 
+			{ STREET_NORTH_SOUTH,	GRAS, 				STREET_SOUTH_EAST }, 
+			{ STREET_NORTH_SOUTH, 	GRAS, 				STREET_NORTH_SOUTH}, 
 			{ STREET_NORTH_SOUTH, 	GRAS, 				STREET_NORTH_SOUTH }, 
 			{ CROSSING,  			STREET_EAST_WEST, 	CROSSING },
 			{ STREET_NORTH_SOUTH, 	GRAS, 		 		STREET_NORTH_SOUTH },
@@ -95,15 +95,10 @@ public final class StreetExample {
 			}			
 			/////// CAR //////////
 
-			Taxi taxi = new Taxi(TaxiType.YELLOW_CAB);
-			
-			car = taxi.getMesh();
-			for (IMesh mesh : car) {
-				mesh.setTransform(taxi.getTransform());
-			}
-			
-			controller.addTaxi(car);
-			scene.add3DObjects(car);
+			Taxi taxi = new Taxi(TaxiType.YELLOW_CAB, controller);
+	
+			controller.addTaxi(taxi);
+			scene.add3DObjects(taxi.getMesh());
 
 		});
 		
