@@ -10,6 +10,8 @@ public abstract class LayerObject {
 
   private final List<IMesh> mesh;
   private final List<Mat4> baseTransformations;
+  private int fieldX;
+  private int fieldY;
 
   public LayerObject(IMesh mesh) {
     this.mesh = new ArrayList<>();
@@ -44,5 +46,11 @@ public abstract class LayerObject {
         m.setTransform(baseTransformations.get(i));
       }
     }
+  }
+
+  public void setPosition(int fieldX, int fieldY) {
+
+    this.fieldX = fieldX;
+    this.fieldY = fieldY;
   }
 }

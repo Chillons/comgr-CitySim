@@ -37,7 +37,7 @@ public class CitySimMap {
   public static final int LAYER_INTERACT = 2;
   public static final int LAYER_DYNAMIC = 3;
 
-  private List<LayerObject> staticObjects;
+  private List<StaticObject> staticObjects;
   private List<InteractionObject> interactionObjects;
   private List<DynamicObject> dynamicObjects;
 
@@ -77,6 +77,10 @@ public class CitySimMap {
 
   public List<InteractionObject> getInteractionObjects() {
     return interactionObjects;
+  }
+
+  public List<StaticObject> getStaticObjects() {
+    return staticObjects;
   }
 
 }

@@ -4,12 +4,12 @@ import ch.fhnw.comgr.citysim.model.map.InteractionObject;
 import ch.fhnw.ether.controller.IController;
 import ch.fhnw.ether.controller.event.IEventScheduler;
 
-public class TrafficLightAction implements IEventScheduler.IAnimationAction {
+public class ConstructionSiteAction implements IEventScheduler.IAnimationAction {
 
     private final InteractionObject interactionObject;
     private final IController controller;
 
-    public TrafficLightAction(InteractionObject interactionObject, IController controller) {
+    public ConstructionSiteAction(InteractionObject interactionObject, IController controller) {
         this.interactionObject = interactionObject;
         this.controller = controller;
     }
@@ -18,9 +18,11 @@ public class TrafficLightAction implements IEventScheduler.IAnimationAction {
     public void run(double time, double interval) {
         if (time - interactionObject.getActivationTime() > 5) {
             interactionObject.deactivate();
-            System.out.println("Time is up! Resetting traffic light at " + time);
+            System.out.println("Time is up! Resetting traffic light");
             controller.kill(this);
-        } else if (!interactionObject.isActive()) {
+        } else if (interactionObject.isActive()) {
+
+        } else {
             interactionObject.activate();
         }
     }
