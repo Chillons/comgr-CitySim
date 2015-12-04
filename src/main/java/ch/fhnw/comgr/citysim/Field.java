@@ -29,6 +29,7 @@ public class Field implements IMesh{
 	private Mat4 transform = Mat4.ID;
 	private BoundingBox bb;
 	private LinkedList<Field> paths;
+	private int[] authorisations;
 	
 	
 	public Field(IMaterial material, IGeometry geometry) {
@@ -85,6 +86,107 @@ public class Field implements IMesh{
 		this.paths = p;
 	}
 
+	
+	public void setAuthorisations(int type){
+		// authorisation [north, south, east, west]
+		authorisations = new int[4];
+		switch (type) {
+		case 0:	
+			//Gras
+			this.authorisations[0] = 0;
+			this.authorisations[1] = 0;
+			this.authorisations[2] = 0;
+			this.authorisations[3] = 0;
+			break;
+		case 1:
+			// East West
+			this.authorisations[0] = 0;
+			this.authorisations[1] = 0;
+			this.authorisations[2] = 1;
+			this.authorisations[3] = 1;
+			break;
+		case 2:
+			// North South
+			this.authorisations[0] = 1;
+			this.authorisations[1] = 1;
+			this.authorisations[2] = 0;
+			this.authorisations[3] = 0;
+			break;
+		case 3:
+			// North South East West
+			this.authorisations[0] = 1;
+			this.authorisations[1] = 1;
+			this.authorisations[2] = 1;
+			this.authorisations[3] = 1;
+			break;
+		case 4:
+			// North East
+			this.authorisations[0] = 1;
+			this.authorisations[1] = 0;
+			this.authorisations[2] = 1;
+			this.authorisations[3] = 0;
+			break;
+		case 5:
+			// North West
+			this.authorisations[0] = 1;
+			this.authorisations[1] = 0;
+			this.authorisations[2] = 0;
+			this.authorisations[3] = 1;
+			break;
+		case 6:
+			// South East
+			this.authorisations[0] = 0;
+			this.authorisations[1] = 1;
+			this.authorisations[2] = 1;
+			this.authorisations[3] = 0;
+			break;
+		case 7:
+			// South West
+			this.authorisations[0] = 0;
+			this.authorisations[1] = 1;
+			this.authorisations[2] = 0;
+			this.authorisations[3] = 1;
+			break;
+		}
+	}
+	
+	
+	public int[] getAuthorisations(){
+		return this.authorisations;
+	}
+	
+	
+	public int getEntryPointOfTaxiWithinTheField(Vec3 carPosition){
+		/*
+		 * HIER IST ES UNSCHÖN PROGRAMMIERT
+		 * Die Grösse des Fields muss 1 sein
+		 * Sonst funktioniert die Funktion nicht
+		 */
+		
+		float distanceXWithinTheField = Math.abs(carPosition.x % 1);
+		float distanceYWithinTheField = Math.abs(carPosition.y % 1);
+
+		if(distanceXWithinTheField < 0.1){
+			//west
+			return 3;
+		}
+		
+		if(distanceXWithinTheField > 0.9){
+			//east
+			return 2;
+		}
+		
+		if(distanceYWithinTheField < 0.1){
+			//north
+			return 0;
+		}
+		
+		if(distanceYWithinTheField > 0.9){
+			//south
+			return 1;
+		}
+		return 0;
+	}
 
 	// I3DObject implementation
 

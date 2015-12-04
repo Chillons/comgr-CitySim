@@ -20,6 +20,7 @@ public class Taxi implements IAnimationAction {
 	private List<IMesh> taxi;
 	private TaxiType taxiType;
 	private Field position;
+	private Field tempPosition;
 	private Field target;
 
 	private CityController controller;
@@ -42,6 +43,8 @@ public class Taxi implements IAnimationAction {
 
 		// Initial Position is 0 0
 		this.position = controller.getField(Vec3.ZERO);
+		this.tempPosition = null;
+		
 		this.target = controller.getField(Vec3.ZERO);
 
 		al = new PathAlgorithm(controller.getFields());
@@ -100,81 +103,155 @@ public class Taxi implements IAnimationAction {
 
 	float angleCar = 0;
 
+	int[] authorisations;
+	int entryPointOfTaxi;
 	boolean turnLeft = false;
 	boolean turnRight = false;
+	boolean authorisedToTurn = false;
+	
 
 	@Override
 	public void run(double time, double interval) {
-		System.out.println("Position Car: "
-				+ startTransform.postMultiply(transform).transform(
-						new Vec3(0, 0, 0)));
+
 		carPosition = startTransform.postMultiply(transform).transform(
 				new Vec3(0, 0, 0));
+
 		newCarPosition = target.getPosition();
-		Vec3 roundedCardPosition = new Vec3((int) carPosition.x,
-				(int) (carPosition.y), (int) carPosition.z);
-		System.out.println("Feld von Taxi"
-				+ controller.getField(roundedCardPosition));
-
-		position = controller.getField(roundedCardPosition);
-
-		al.execute(position);
-
-		boolean run = true;
 		
-		if (!roundedCardPosition.equals(newCarPosition) && run) {
-			System.out.println("Carposition:  " + roundedCardPosition);
-			System.out.println("NeuePosition: " + newCarPosition);
-
-			if (turnLeft) {
+		position = controller.getField(carPosition);
+		boolean run = true;
+		al.execute(position);
+		
+		Vec3 roundedCarPosition = new Vec3((int) carPosition.x,
+				(int) (carPosition.y), (int) carPosition.z);
+		
+		
+		if (!position.equals(target) && run) {
+			
+			if(position != tempPosition){
+				// es wurde ein neues Field beigetreten
+				entryPointOfTaxi = position.getEntryPointOfTaxiWithinTheField(carPosition);
+				authorisations = position.getAuthorisations();
+				authorisedToTurn = true;
+			}
+		
+			tempPosition = position;
+					
+			// North East
+			if(entryPointOfTaxi == 0 && authorisations[2] == 1 && !turnLeft && authorisedToTurn){
+				//turn left	
+				if (position.getPosition().x < newCarPosition.x){
+					System.out.println("NE");
+					turnLeft = true;
+					turnRight = false;
+					angleCar += 1;
+				}
+			}
+						
+			// North West
+			if(entryPointOfTaxi == 0 && authorisations[3] == 1 && !turnRight && authorisedToTurn){
+				//turn right
+				if (position.getPosition().x > newCarPosition.x){
+					System.out.println("NW");
+					turnLeft = false;
+					turnRight = true;
+					angleCar -= 1;
+				}
+			}
+						
+			// South East
+			if(entryPointOfTaxi == 1 && authorisations[2] == 1 && !turnRight && authorisedToTurn){
+				//turn right
+				if (position.getPosition().x < newCarPosition.x){
+					System.out.println("SE");
+					turnLeft = false;
+					turnRight = true;
+					angleCar -= 1;
+				}
+			}
+			
+			// South West
+			if(entryPointOfTaxi == 1 && authorisations[3] == 1 && !turnLeft && authorisedToTurn){
+				//turn left
+				if (position.getPosition().x > newCarPosition.x){
+					System.out.println("SW");
+					turnLeft = true;
+					turnRight = false;
+					angleCar += 1;
+				}
+			}
+			
+			// East North
+			if(entryPointOfTaxi == 2 && authorisations[0] == 1 && !turnRight && authorisedToTurn){
+				//turn right
+				if (position.getPosition().y < newCarPosition.y){
+					System.out.println("EN");
+					turnLeft = false;
+					turnRight = true;
+					angleCar -= 1;
+				}
+			}
+					
+			// East South
+			if(entryPointOfTaxi == 2 && authorisations[1] == 1 && !turnLeft && authorisedToTurn){
+				//turn left
+				if (position.getPosition().y > newCarPosition.y){
+					System.out.println("ES");
+					turnLeft = true;
+					turnRight = false;
+					angleCar += 1;
+				}
+			}
+						
+			// West North
+			if(entryPointOfTaxi == 3 && authorisations[0] == 1 && !turnLeft && authorisedToTurn){
+				//turn left
+				if (position.getPosition().y < newCarPosition.y){
+					System.out.println("WN");
+					turnLeft = true;
+					turnRight = false;
+					angleCar += 1;
+				}
+				
+			}
+			
+			// West South
+			if(entryPointOfTaxi == 3 && authorisations[1] == 1 && !turnRight && authorisedToTurn){
+				//turn right
+				if (position.getPosition().y > newCarPosition.y){
+					System.out.println("WS");
+					turnLeft = false;
+					turnRight = true;
+					angleCar -= 1;
+				}
+			}
+			
+						
+			/*if (turnLeft) {
 				geradeFahren(9);
 			} else {
 				geradeFahren(10);				
-			}
+			}*/
 			
-			if (turnLeft && angleCar % 90 != 0) {
+			geradeFahren(10);
+							
+			if (turnLeft && angleCar % 90 != 0 && authorisedToTurn) {
 				addTransform(Mat4.rotate(0.5f, new Vec3(0, 1, 0)));
 				angleCar += 0.5;
 			}
 			
-			if (turnRight && angleCar % 90 != 0) {
+			if (turnRight && angleCar % 90 != 0 && authorisedToTurn) {
 				addTransform(Mat4.rotate(-1f, new Vec3(0, 1, 0)));
 				angleCar -= 1;
 			}
 			
-			if (position.getPosition().x == 0 && position.getPosition().y == -2
-					&& !turnLeft) {
-				turnLeft = true;
-				angleCar += 1;
-			}
-			if (position.getPosition().x == 1 && position.getPosition().y == -2
-					&& !turnRight) {
+			if(angleCar % 90 == 0){
+				authorisedToTurn = false;
 				turnLeft = false;
-				turnRight = true;
-				angleCar -= 1;
+				turnRight = false;
 			}
-			
-			if (position.getPosition().x == 1 && position.getPosition().y == -4) {
-				run = false;
-			}
-
-		}
 	}
-
-	public void moveEast(float distance) {
-		addTransform(Mat4.translate(10f, 0, 10));
-	}
-
-	public void moveWest(float distance) {
-		addTransform(Mat4.translate(10f, 0, 10));
-	}
-
-	public void moveNorth(float distance) {
-		addTransform(Mat4.translate(10f, 0, 10));
-	}
-
-	public void moveSouth(float distance) {
-		addTransform(Mat4.translate(10f, 0, 10));
+					
 	}
 
 	public void geradeFahren(float tempo) {
