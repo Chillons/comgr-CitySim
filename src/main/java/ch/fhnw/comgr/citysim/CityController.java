@@ -45,14 +45,6 @@ public class CityController extends DefaultController {
 		taxis = new ArrayList<Taxi>();
 		
 	}
-
-	public void startAnimationTaxis() {
-		if (taxis != null) {
-			for (Taxi t : taxis) {
-				this.animate(t);		
-			}			
-		}
-	}
 	
 	public Field getField(Vec3 position) {
 		for (int i = 0; i < fields.length; i++) {

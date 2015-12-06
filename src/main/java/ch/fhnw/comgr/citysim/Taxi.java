@@ -6,25 +6,35 @@ import ch.fhnw.ether.controller.event.IEventScheduler.IAnimationAction;
 import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
+import ch.fhnw.util.math.geometry.BoundingBox;
 
 import java.util.List;
 
 /**
  * Created by maurice on 11/12/15.
  */
-public class Taxi implements IAnimationAction {
+public class Taxi {
 
-	private static final float EPSILON = 0.0001f;
-	private Mat4 startTransform;
+	private Mat4 baseTransformation;
 	private Mat4 transform;
 	private List<IMesh> taxi;
 	private TaxiType taxiType;
 	private Field position;
+	public Field getPosition() {
+		return position;
+	}
+
+	public void setPosition(Field position) {
+		this.position = position;
+	}
+
 	private Field target;
 
 	private CityController controller;
 
-	PathAlgorithm al;
+	private PathAlgorithm al;
+	
+	private BoundingBox bb;
 
 	public Taxi(TaxiType taxiType, CityController controller) {
 		this.taxiType = taxiType;
@@ -34,7 +44,7 @@ public class Taxi implements IAnimationAction {
 		this.taxi = TaxiLoader.getTaxi(taxiType);
 
 		// Get Starttransformation
-		this.startTransform = taxiType.getTransform();
+		this.baseTransformation = taxiType.getTransform();
 		transform = (Mat4.translate(new Vec3(-650, 0, 0)));
 
 		// Update transformationmatrix to meshes
@@ -46,6 +56,12 @@ public class Taxi implements IAnimationAction {
 
 		al = new PathAlgorithm(controller.getFields());
 	}
+	
+	public void updateBoundingBox() {
+		// TODO: Laeuft das so?????
+		bb = new BoundingBox();
+		taxi.forEach(m -> bb.add(m.getBounds()));
+	}
 
 	public List<IMesh> getMesh() {
 		return taxi;
@@ -56,7 +72,7 @@ public class Taxi implements IAnimationAction {
 	 */
 	public void update() {
 		for (IMesh mesh : taxi) {
-			mesh.setTransform(startTransform.postMultiply(transform));
+			mesh.setTransform(baseTransformation.postMultiply(transform));
 		}
 	}
 
@@ -94,6 +110,10 @@ public class Taxi implements IAnimationAction {
 	public void setTarget(Field target) {
 		this.target = target;
 	}
+	
+	public Vec3 getTaxiPosition() {
+		return baseTransformation.postMultiply(transform).transform(new Vec3(0, 0, 0));
+	}
 
 	Vec3 carPosition;
 	Vec3 newCarPosition;
@@ -103,82 +123,13 @@ public class Taxi implements IAnimationAction {
 	boolean turnLeft = false;
 	boolean turnRight = false;
 
-	@Override
-	public void run(double time, double interval) {
-		System.out.println("Position Car: "
-				+ startTransform.postMultiply(transform).transform(
-						new Vec3(0, 0, 0)));
-		carPosition = startTransform.postMultiply(transform).transform(
-				new Vec3(0, 0, 0));
-		newCarPosition = target.getPosition();
-		Vec3 roundedCardPosition = new Vec3((int) carPosition.x,
-				(int) (carPosition.y), (int) carPosition.z);
-		System.out.println("Feld von Taxi"
-				+ controller.getField(roundedCardPosition));
-
-		position = controller.getField(roundedCardPosition);
-
-		al.execute(position);
-
-		boolean run = true;
-		
-		if (!roundedCardPosition.equals(newCarPosition) && run) {
-			System.out.println("Carposition:  " + roundedCardPosition);
-			System.out.println("NeuePosition: " + newCarPosition);
-
-			if (turnLeft) {
-				geradeFahren(9);
-			} else {
-				geradeFahren(10);				
-			}
-			
-			if (turnLeft && angleCar % 90 != 0) {
-				addTransform(Mat4.rotate(0.5f, new Vec3(0, 1, 0)));
-				angleCar += 0.5;
-			}
-			
-			if (turnRight && angleCar % 90 != 0) {
-				addTransform(Mat4.rotate(-1f, new Vec3(0, 1, 0)));
-				angleCar -= 1;
-			}
-			
-			if (position.getPosition().x == 0 && position.getPosition().y == -2
-					&& !turnLeft) {
-				turnLeft = true;
-				angleCar += 1;
-			}
-			if (position.getPosition().x == 1 && position.getPosition().y == -2
-					&& !turnRight) {
-				turnLeft = false;
-				turnRight = true;
-				angleCar -= 1;
-			}
-			
-			if (position.getPosition().x == 1 && position.getPosition().y == -4) {
-				run = false;
-			}
-
-		}
-	}
-
-	public void moveEast(float distance) {
-		addTransform(Mat4.translate(10f, 0, 10));
-	}
-
-	public void moveWest(float distance) {
-		addTransform(Mat4.translate(10f, 0, 10));
-	}
-
-	public void moveNorth(float distance) {
-		addTransform(Mat4.translate(10f, 0, 10));
-	}
-
-	public void moveSouth(float distance) {
-		addTransform(Mat4.translate(10f, 0, 10));
-	}
-
+	
 	public void geradeFahren(float tempo) {
 		addTransform(Mat4.translate(0, 0, tempo));
 	}
 
+	public BoundingBox getBoundingBox() {
+		updateBoundingBox();
+		return bb;
+	}
 }

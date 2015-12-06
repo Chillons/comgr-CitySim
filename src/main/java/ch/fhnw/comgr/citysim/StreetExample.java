@@ -103,7 +103,6 @@ public final class StreetExample {
 			scene.add3DObjects(taxi.getMesh());
 			
 			
-			controller.startAnimationTaxis();
 
 		});
 		

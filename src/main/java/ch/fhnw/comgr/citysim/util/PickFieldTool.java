@@ -37,6 +37,8 @@ public class PickFieldTool extends AbstractTool {
 				Vec3 newCarPosition = pickables.values().iterator().next().getPosition();
 				Taxi actualTaxi = cityController.getTaxis().get(0);
 				actualTaxi.setTarget(cityController.getField(newCarPosition));
+				DriveAnimationAction dAA = new DriveAnimationAction(actualTaxi, cityController, null);
+				cityController.animate(dAA);
 				System.out.println("Click: X " + newCarPosition.x + " Y " + newCarPosition.y);
 			}	
 			
