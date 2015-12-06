@@ -159,12 +159,10 @@ public class Field implements IMesh{
 	public int getEntryPointOfTaxiWithinTheField(Vec3 carPosition){
 		/*
 		 * HIER IST ES UNSCHÖN PROGRAMMIERT
-		 * Die Grösse des Fields muss 1 sein
-		 * Sonst funktioniert die Funktion nicht
 		 */
 		
-		float distanceXWithinTheField = Math.abs(carPosition.x % 1);
-		float distanceYWithinTheField = Math.abs(carPosition.y % 1);
+		float distanceXWithinTheField = carPosition.x % 1;
+		float distanceYWithinTheField = carPosition.y % 1;
 
 		if(distanceXWithinTheField < 0.1){
 			//west
@@ -176,16 +174,28 @@ public class Field implements IMesh{
 			return 2;
 		}
 		
-		if(distanceYWithinTheField < 0.1){
-			//north
-			return 0;
+		if(distanceYWithinTheField > 0){
+			if(distanceYWithinTheField < 0.1){
+				//south
+				return 1;
+			}
+			
+			if(distanceYWithinTheField > 0.9){
+				//north
+				return 0;
+			}
+		}else{
+			if(distanceYWithinTheField > -0.1){
+				//north
+				return 0;
+			}
+			
+			if(distanceYWithinTheField < -0.9){
+				//south
+				return 1;
+			}
 		}
-		
-		if(distanceYWithinTheField > 0.9){
-			//south
-			return 1;
-		}
-		return 0;
+		return 5;
 	}
 
 	// I3DObject implementation
