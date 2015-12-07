@@ -15,7 +15,6 @@ import java.util.List;
  */
 public class Taxi implements IAnimationAction {
 
-	private static final float EPSILON = 0.0001f;
 	private Mat4 startTransform;
 	private Mat4 transform;
 	private List<IMesh> taxi;
@@ -202,7 +201,7 @@ public class Taxi implements IAnimationAction {
 					turnLeft = false;
 					turnRight = false;
 					turnBack = true;
-					rotation -= 1;
+					rotation += 1;
 				}
 			}
 						
@@ -238,7 +237,7 @@ public class Taxi implements IAnimationAction {
 					turnLeft = false;
 					turnRight = false;
 					turnBack = true;
-					rotation -= 1;
+					rotation += 1;
 				}
 			}
 			
@@ -275,7 +274,7 @@ public class Taxi implements IAnimationAction {
 					turnLeft = false;
 					turnRight = false;
 					turnBack = true;
-					rotation -= 1;
+					rotation += 1;
 				}
 			}
 						
@@ -313,7 +312,7 @@ public class Taxi implements IAnimationAction {
 					turnLeft = false;
 					turnRight = false;
 					turnBack = true;
-					rotation -= 1;
+					rotation += 1;
 				}
 			}
 			
@@ -323,12 +322,12 @@ public class Taxi implements IAnimationAction {
 			} else if (turnRight){
 				geradeFahren(10);
 			} else if (turnBack){
-				//geradeFahren(3);
+				geradeFahren(4);
 			}else{
 				geradeFahren(30);				
 			}
 			
-							
+			
 			if (turnLeft && rotation % 90 != 0 && authorisedToTurn) {
 				addTransform(Mat4.rotate(0.5f, new Vec3(0, 1, 0)));
 				rotation += 0.5;
@@ -339,9 +338,9 @@ public class Taxi implements IAnimationAction {
 				rotation -= 1;
 			}
 			
-			if (turnBack && rotation % 180 != 0 && authorisedToTurn) {
-				addTransform(Mat4.rotate(-1f, new Vec3(0, 1, 0)));
-				rotation -= 1;
+			if (turnBack && rotation % 181 != 0 && authorisedToTurn) {
+				addTransform(Mat4.rotate(+1f, new Vec3(0, 1, 0)));
+				rotation += 1;
 			}
 
 			
@@ -353,7 +352,7 @@ public class Taxi implements IAnimationAction {
 				rotation = 0;
 			}
 			
-			if(rotation % 180 == 0 && turnBack){
+			if(rotation % 181 == 0 && turnBack){
 				authorisedToTurn = false;
 				turnLeft = false;
 				turnRight = false;
