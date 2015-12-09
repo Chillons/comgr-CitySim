@@ -51,7 +51,17 @@ public class CityController extends DefaultController{
 		taxis = new ArrayList<List<IMesh>>();
 	}
 	
-	
+	public Field getField(Vec3 position) {
+		for (int i = 0; i < fields.length; i++) {
+			for (int j = 0; j < fields[i].length; j++) {
+				if (fields[i][j].getBounds().contains(position)) {
+					return fields[i][j];
+				}
+			}
+		}
+		return null;
+	}
+
 	public Field[][] getFields(){
 		return fields;
 	}

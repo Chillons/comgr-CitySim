@@ -6,6 +6,8 @@ import ch.fhnw.comgr.citysim.model.map.CitySimMap;
 import ch.fhnw.comgr.citysim.model.taxi.Taxi;
 import ch.fhnw.comgr.citysim.util.PickFieldTool;
 import ch.fhnw.comgr.citysim.util.TaxiType;
+import ch.fhnw.comgr.citysim.util.TrafficLightLoader;
+import ch.fhnw.ether.formats.obj.ObjReader;
 import ch.fhnw.ether.scene.DefaultScene;
 import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.camera.Camera;
@@ -19,6 +21,9 @@ import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 
 import javax.imageio.spi.IIORegistry;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -108,16 +113,15 @@ public final class StreetExample {
 
 			/////// Traffic Light dummy ///////
 
-			InteractionObject interactionObject = new InteractionObject(MeshUtilities.createCube(InteractionObject.greenBlock));
+//			InteractionObject interactionObject = new InteractionObject(MeshUtilities.createCube(InteractionObject.greenBlock));
 
 			CitySimMap map = CitySimMap.getInstance();
-			map.addObjectToLayer(interactionObject);
 
 
-			IMesh mesh = MeshUtilities.createCube(InteractionObject.greenBlock);
-			mesh.setTransform(Mat4.translate(1, 2, .5f));
 
-			InteractionObject interactionObject2 = new InteractionObject(mesh);
+
+			InteractionObject interactionObject2 = new InteractionObject(TrafficLightLoader.getStatic(getClass()),
+					TrafficLightLoader.getEnabled(getClass()), TrafficLightLoader.getDisabled(getClass()));
 
 			map.addObjectToLayer(interactionObject2);
 
@@ -126,9 +130,32 @@ public final class StreetExample {
 				scene.add3DObjects(intObj.getMesh());
 			}
 
+			// Traffic Light
+			List<IMesh> trafficLight = getTrafficLight();
+
+			scene.add3DObjects(trafficLight);
+
 		});
 		
 			
+	}
+
+	public static List<IMesh> getTrafficLight() {
+
+		final URL obj = StreetExample.class.getClassLoader().getResource("assets/trafficLight/trafficLight1.obj");
+
+		final List<IMesh> meshes = new ArrayList<>();
+		try {
+			new ObjReader(obj).getMeshes().forEach(mesh -> meshes.add(mesh));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("number of meshes before merging: " + meshes.size());
+		final List<IMesh> merged = MeshUtilities.mergeMeshes(meshes);
+		System.out.println("number of meshes after merging: " + merged.size());
+
+
+		return merged;
 	}
 		
 }
