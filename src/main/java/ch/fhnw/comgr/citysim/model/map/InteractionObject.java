@@ -1,9 +1,6 @@
 package ch.fhnw.comgr.citysim.model.map;
 
 import ch.fhnw.ether.scene.mesh.IMesh;
-import ch.fhnw.ether.scene.mesh.material.IMaterial;
-import ch.fhnw.ether.scene.mesh.material.ShadedMaterial;
-import ch.fhnw.util.color.RGB;
 import ch.fhnw.util.math.Mat4;
 
 import java.util.ArrayList;

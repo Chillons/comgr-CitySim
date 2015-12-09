@@ -32,11 +32,6 @@ public class CitySimMap {
 
   private static final CitySimMap mapInstance = new CitySimMap();
 
-  public static final int LAYER_STREET = 0;
-  public static final int LAYER_STATIC = 1;
-  public static final int LAYER_INTERACT = 2;
-  public static final int LAYER_DYNAMIC = 3;
-
   private List<StaticObject> staticObjects;
   private List<InteractionObject> interactionObjects;
   private List<DynamicObject> dynamicObjects;
@@ -65,6 +60,9 @@ public class CitySimMap {
           return true;
         } else if (object instanceof DynamicObject) {
           dynamicObjects.add((DynamicObject) object);
+          return true;
+        } else if (object instanceof StaticObject) {
+          staticObjects.add((StaticObject) object);
           return true;
         } else {
           return false;
