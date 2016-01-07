@@ -17,7 +17,6 @@ public class CityController extends DefaultController {
 	private final List<Path> paths;
 	private final List<Taxi> taxis;
 
-
 	public CityController(int[][] strasse) {
 
 		fields = new Field[strasse.length][strasse[0].length];
@@ -32,7 +31,7 @@ public class CityController extends DefaultController {
 
 				field.setContent(strasse[i][j]);
 				field.setName("Feld " + i + " " + j);
-				
+
 				field.setAuthorisations(strasse[i][j]);
 
 				field.setPosition(new Vec3(startX + j, startY - i, 0f));
@@ -46,36 +45,35 @@ public class CityController extends DefaultController {
 		paths = pathAlgorithm.getPaths();
 		nodes = pathAlgorithm.getNodes();
 		taxis = new ArrayList<Taxi>();
-		
+
 	}
 
 	public void startAnimationTaxis() {
 		if (taxis != null) {
 			for (Taxi t : taxis) {
-				this.animate(t);		
-			}			
+				this.animate(t);
+			}
 		}
 	}
-	
+
 	public Field getField(Vec3 position) {
 		/*
-		// HIER IST ES UNSCHÖN PROGRAMIERT
-		// Warum: Die Länge eines Field muss "1" sein
-		// Sonst funktioniert die Funktion nicht
-		*/
-		
+		 * // HIER IST ES UNSCHÖN PROGRAMIERT // Warum: Die Länge eines Field
+		 * muss "1" sein // Sonst funktioniert die Funktion nicht
+		 */
+
 		for (int i = 0; i < fields.length; i++) {
 			for (int j = 0; j < fields[i].length; j++) {
-				if (position.x >= fields[i][j].getPosition().x && position.x < fields[i][j].getPosition().x +1) {
-					if (position.y >= fields[i][j].getPosition().y && position.y <= fields[i][j].getPosition().y +1) {
-					return fields[i][j];
+				if (position.x >= fields[i][j].getPosition().x && position.x < fields[i][j].getPosition().x + 1) {
+					if (position.y >= fields[i][j].getPosition().y && position.y <= fields[i][j].getPosition().y + 1) {
+						return fields[i][j];
 					}
 				}
 			}
 		}
 		return null;
 	}
-	
+
 	public Field[][] getFields() {
 		return fields;
 	}
@@ -120,7 +118,5 @@ public class CityController extends DefaultController {
 		IGeometry g = Util.getDefaultField();
 		return new Field(m, g);
 	}
-	
-
 
 }

@@ -1,6 +1,7 @@
 
 package ch.fhnw.comgr.citysim;
 
+import ch.fhnw.comgr.citysim.util.HouseLoader;
 import ch.fhnw.comgr.citysim.util.PickFieldTool;
 import ch.fhnw.comgr.citysim.util.TaxiType;
 import ch.fhnw.ether.controller.DefaultController;
@@ -11,18 +12,27 @@ import ch.fhnw.ether.scene.DefaultScene;
 import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.camera.Camera;
 import ch.fhnw.ether.scene.camera.ICamera;
+import ch.fhnw.ether.scene.light.DirectionalLight;
+import ch.fhnw.ether.scene.light.ILight;
+import ch.fhnw.ether.scene.mesh.DefaultMesh;
 import ch.fhnw.ether.scene.mesh.IMesh;
+import ch.fhnw.ether.scene.mesh.IMesh.Flag;
+import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
+import ch.fhnw.ether.scene.mesh.geometry.IGeometry.Primitive;
 import ch.fhnw.ether.scene.mesh.material.ColorMapMaterial;
+import ch.fhnw.ether.scene.mesh.material.ColorMaterial;
 import ch.fhnw.ether.scene.mesh.material.IMaterial;
 import ch.fhnw.ether.scene.mesh.material.Texture;
 import ch.fhnw.ether.ui.Button;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.ether.view.IView.ViewType;
 import ch.fhnw.ether.view.gl.DefaultView;
+import ch.fhnw.util.color.RGB;
 import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
+import ch.fhnw.util.math.geometry.GeodesicSphere;
 
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -113,8 +123,25 @@ public final class StreetExample {
 			scene.add3DObjects(taxi.getMesh());
 			
 			
-			controller.startAnimationTaxis();
+			
+			controller.startAnimationTaxis(); 
 
+			Field[][] fields = controller.getFields();
+			
+			for (int i = 0; i < fields.length; i++) {
+				for (int j = 0; j < fields[i].length; j++) {
+					if (strasse[i][j] == GRAS) {
+						Vec3 pos = fields[i][j].getPosition();
+						List<IMesh> house = HouseLoader.getHouse("bilding");
+						Mat4 trans = Mat4.multiply(Mat4.rotate(90, 1,0,0),Mat4.translate(new Vec3(0f, 0.01,0f)),Mat4.scale(0.0048f));
+						house.forEach(h -> h.setTransform(trans.preMultiply(Mat4.translate(pos.x + 0.7f, pos.y + 0.5f, 0))));
+						scene.add3DObjects(house);
+					}
+				}
+			}
+			
+			scene.add3DObject(new DirectionalLight(Vec3.Z, RGB.WHITE, RGB.WHITE));
+			
 		});
 		
 			

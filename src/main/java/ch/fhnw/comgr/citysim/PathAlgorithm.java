@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+
+// DAS IST EIN KOMMENTAR
 public class PathAlgorithm {
 
   private final Field[][] fields;
@@ -126,6 +128,23 @@ public class PathAlgorithm {
       return d;
     }
   }
+  
+  
+  
+  public LinkedList<Field> getPathFromTo(Field source, Field target){  
+	  LinkedList <Field> path = new LinkedList<Field>();
+	  searchForPaths();
+	  for(int i=0; i<nodes.size(); i++) { 
+		  if(source.equals(nodes.get(i))){ 
+			  this.execute(nodes.get(i));
+			  return this.getPath(target);
+		  }
+	  }
+	  // Keine station gefunden
+	  path.add(source);
+	  return path;
+  }
+  
 
   /*
    * This method returns the path from the source to the selected target and
@@ -149,9 +168,8 @@ public class PathAlgorithm {
   }
   
 
-  
-  
-  
+
+ 
 	public void searchForPaths(){
 		for (int i = 0; i < fields.length; i++) {
 			for (int j = 0; j < fields[i].length; j++) {

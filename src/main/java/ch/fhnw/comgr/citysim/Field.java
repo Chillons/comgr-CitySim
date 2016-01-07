@@ -17,8 +17,8 @@ import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 import ch.fhnw.util.math.geometry.BoundingBox;
 
-public class Field implements IMesh{
-	
+public class Field implements IMesh {
+
 	private int content;
 	private String name = "unnamed_field";
 	private Queue queue;
@@ -30,8 +30,7 @@ public class Field implements IMesh{
 	private BoundingBox bb;
 	private LinkedList<Field> paths;
 	private int[] authorisations;
-	
-	
+
 	public Field(IMaterial material, IGeometry geometry) {
 		this(material, geometry, Queue.DEPTH);
 	}
@@ -40,7 +39,8 @@ public class Field implements IMesh{
 		this(material, geometry, queue, NO_FLAGS);
 	}
 
-	public Field(IMaterial material, IGeometry geometry, Flag flag, Flag... flags) {
+	public Field(IMaterial material, IGeometry geometry, Flag flag,
+			Flag... flags) {
 		this(material, geometry, Queue.DEPTH, EnumSet.of(flag, flags));
 	}
 
@@ -56,43 +56,41 @@ public class Field implements IMesh{
 		this(material, geometry, queue, EnumSet.of(flag));
 	}
 
-	public Field(IMaterial material, IGeometry geometry, Queue queue, Flag flag, Flag... flags) {
+	public Field(IMaterial material, IGeometry geometry, Queue queue,
+			Flag flag, Flag... flags) {
 		this(material, geometry, queue, EnumSet.of(flag, flags));
 	}
 
-	public Field(IMaterial material, IGeometry geometry, Queue queue, EnumSet<Flag> flags) {
+	public Field(IMaterial material, IGeometry geometry, Queue queue,
+			EnumSet<Flag> flags) {
 		this.material = material;
 		this.geometry = geometry;
 		this.queue = queue;
 		this.flags = flags;
 		checkAttributeConsistency(material, geometry);
 	}
-		
+
 	private final UpdateRequest update = new UpdateRequest(true);
 
-
-	
 	// Field spezifisch
-	public void setContent(int c){
+	public void setContent(int c) {
 		this.content = c;
 	}
-	
-	public int getContent(){
+
+	public int getContent() {
 		return this.content;
 	}
 
-	
-	public void setPaths(LinkedList<Field> p){
+	public void setPaths(LinkedList<Field> p) {
 		this.paths = p;
 	}
 
-	
-	public void setAuthorisations(int type){
+	public void setAuthorisations(int type) {
 		// authorisation [north, south, east, west]
 		authorisations = new int[4];
 		switch (type) {
-		case 0:	
-			//Gras
+		case 0:
+			// Gras
 			this.authorisations[0] = 0;
 			this.authorisations[1] = 0;
 			this.authorisations[2] = 0;
@@ -149,49 +147,47 @@ public class Field implements IMesh{
 			break;
 		}
 	}
-	
-	
-	public int[] getAuthorisations(){
+
+	public int[] getAuthorisations() {
 		return this.authorisations;
 	}
-	
-	
-	public int getEntryPointOfTaxiWithinTheField(Vec3 carPosition){
+
+	public int getEntryPointOfTaxiWithinTheField(Vec3 carPosition) {
 		/*
 		 * HIER IST ES UNSCHÖN PROGRAMMIERT
 		 */
-		
+
 		float distanceXWithinTheField = carPosition.x % 1;
 		float distanceYWithinTheField = carPosition.y % 1;
 
-		if(distanceXWithinTheField < 0.1){
-			//west
+		if (distanceXWithinTheField < 0.1) {
+			// west
 			return 3;
 		}
-		
-		if(distanceXWithinTheField > 0.9){
-			//east
+
+		if (distanceXWithinTheField > 0.9) {
+			// east
 			return 2;
 		}
-		
-		if(distanceYWithinTheField > 0){
-			if(distanceYWithinTheField < 0.1){
-				//south
+
+		if (distanceYWithinTheField > 0) {
+			if (distanceYWithinTheField < 0.1) {
+				// south
 				return 1;
 			}
-			
-			if(distanceYWithinTheField > 0.9){
-				//north
+
+			if (distanceYWithinTheField > 0.9) {
+				// north
 				return 0;
 			}
-		}else{
-			if(distanceYWithinTheField > -0.1){
-				//north
+		} else {
+			if (distanceYWithinTheField > -0.1) {
+				// north
 				return 0;
 			}
-			
-			if(distanceYWithinTheField < -0.9){
-				//south
+
+			if (distanceYWithinTheField < -0.9) {
+				// south
 				return 1;
 			}
 		}
@@ -206,25 +202,30 @@ public class Field implements IMesh{
 			bb = new BoundingBox();
 			float[] in = new float[3];
 			float[] out = new float[3];
-			getGeometry().inspect(0, (attribute, data) -> {
-				if (transform != Mat4.ID) {
-					for (int i = 0; i < data.length; i += 3) {
-						in[0] = data[i + 0];
-						in[1] = data[i + 1];
-						in[2] = data[i + 2];
-						transform.transform(in, out);
-						out[0] += position.x;
-						out[1] += position.y;
-						out[2] += position.z;
-						bb.add(out);
-					}
+			getGeometry()
+					.inspect(
+							0,
+							(attribute, data) -> {
+								if (transform != Mat4.ID) {
+									for (int i = 0; i < data.length; i += 3) {
+										in[0] = data[i + 0];
+										in[1] = data[i + 1];
+										in[2] = data[i + 2];
+										transform.transform(in, out);
+										out[0] += position.x;
+										out[1] += position.y;
+										out[2] += position.z;
+										bb.add(out);
+									}
 
-				} else {
-					for (int i = 0; i < data.length; i += 3) {
-						bb.add(data[i + 0] + position.x, data[i + 1] + position.y, data[i + 2] + position.z);
-					}
-				}
-			});
+								} else {
+									for (int i = 0; i < data.length; i += 3) {
+										bb.add(data[i + 0] + position.x,
+												data[i + 1] + position.y,
+												data[i + 2] + position.z);
+									}
+								}
+							});
 		}
 		return bb;
 	}
@@ -233,12 +234,13 @@ public class Field implements IMesh{
 	public boolean equals(Object obj) {
 		if (obj instanceof Field) {
 			Field f = (Field) obj;
-			return f.position.x == this.position.x && f.position.y == this.position.y;
+			return f.position.x == this.position.x
+					&& f.position.y == this.position.y;
 		} else {
-			return super.equals(obj);			
+			return super.equals(obj);
 		}
 	}
-	
+
 	@Override
 	public Vec3 getPosition() {
 		return position;
@@ -272,7 +274,7 @@ public class Field implements IMesh{
 	public EnumSet<Flag> getFlags() {
 		return flags;
 	}
-	
+
 	@Override
 	public boolean hasFlag(Flag flag) {
 		return flags.contains(flag);
@@ -330,7 +332,7 @@ public class Field implements IMesh{
 	public String toString() {
 		return name;
 	}
-	
+
 	@Override
 	public UpdateRequest getUpdater() {
 		return update;
@@ -340,18 +342,23 @@ public class Field implements IMesh{
 		update.request();
 	}
 
-	private static void checkAttributeConsistency(IMaterial material, IGeometry geometry) {
+	private static void checkAttributeConsistency(IMaterial material,
+			IGeometry geometry) {
 		// primitive types must match
 		Primitive m = material.getType();
 		Primitive g = geometry.getType();
 		if (m != g)
-			throw new IllegalArgumentException("primitive types of material and geometry do not match: " + m + " " + g);
+			throw new IllegalArgumentException(
+					"primitive types of material and geometry do not match: "
+							+ m + " " + g);
 
 		// geometry must provide all materials required by material
-		List<IGeometryAttribute> geometryAttributes = Arrays.asList(geometry.getAttributes());
+		List<IGeometryAttribute> geometryAttributes = Arrays.asList(geometry
+				.getAttributes());
 		for (IAttribute attr : material.getGeometryAttributes()) {
 			if (!geometryAttributes.contains(attr))
-				throw new IllegalArgumentException("geometry does not provide required attribute: " + attr);
+				throw new IllegalArgumentException(
+						"geometry does not provide required attribute: " + attr);
 		}
 	}
 
