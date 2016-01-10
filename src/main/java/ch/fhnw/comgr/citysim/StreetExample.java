@@ -48,9 +48,15 @@ public final class StreetExample {
 	public static final int N_W = 5;
 	public static final int S_E = 6;
 	public static final int S_W = 7;
-	public static final int HOU = 10;
-	public static final int HO1 = 11;
-	
+	// Ausrichtung nach unten. 
+	public static final int H0S = 10;
+	// Ausrichtung nach oben. 
+	public static final int H0N = 12;
+	//Ausrichtung nach unten. Braucht rechts noch einmal gras
+	public static final int H1S = 11;
+	//Ausrichtung nach oben. Braucht links noch einmal gras
+	public static final int H1N = 13;
+		
 	private List<IMesh> car;
 	
 	float startX = -(strasse[0].length / 2.0f);
@@ -63,22 +69,22 @@ public final class StreetExample {
 	public static final int[][] strasse = { 
 																										  // 13
 	{ S_E,	E_W,	E_W,	E_W,	CRO, 	E_W, 	E_W ,	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W ,	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	S_W}, 
-	{ N_S,	HO1,	GRA,	HOU,	N_S, 	HOU, 	GRA ,	HOU,	N_S,	GRA,	HOU, 	GRA, 	HOU ,	N_S, 	GRA, 	HOU, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S}, 
+	{ N_S,	H1S,	GRA,	H0S,	N_S, 	H0S, 	GRA ,	H0S,	N_S,	GRA,	H0S, 	GRA, 	H0S ,	N_S, 	H0S, 	H1S, 	GRA,	N_S,	GRA,	H1S, 	GRA, 	GRA ,	N_S}, 
 	{ CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO}, 
-	{ HOU,	GRA,	HOU,	GRA, 	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	HOU, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S}, 
+	{ H0S,	GRA,	H0S,	GRA, 	N_S, 	GRA, 	H0S, 	H0S,	N_S,	GRA,	H0S, 	H0S, 	GRA ,	N_S, 	GRA, 	H0S, 	GRA,	N_S,	H1S,	GRA, 	H1S, 	GRA ,	N_S}, 
 	{ CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO},
-	{ N_S,	GRA,	GRA,	GRA, 	N_S,	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S},
+	{ N_S,	GRA,	GRA,	GRA, 	N_S,	GRA, 	GRA, 	GRA,	N_S,	GRA,	H1S, 	GRA, 	GRA ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S},
 	{ CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO}, 
-	{ N_S,	HOU,	HOU,	GRA, 	GRA, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	HOU, 	GRA, 	GRA,	N_S,	GRA,	HOU, 	GRA, 	GRA ,	N_S},
-	{ N_S,	HOU,	HOU,	GRA, 	GRA, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	HOU ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	HOU, 	GRA, 	GRA ,	N_S},
+	{ N_S,	GRA,	GRA,	GRA, 	GRA, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S},
+	{ N_S,	H0S,	H0S,	GRA, 	GRA, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	H1S, 	GRA, 	H0S ,	N_S, 	GRA, 	H1S, 	GRA,	N_S,	GRA,	H0S, 	GRA, 	GRA ,	N_S},
 	{ CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO}, 
-	{ N_S,	GRA,	GRA,	GRA, 	N_S,	HOU, 	GRA, 	GRA,	HOU,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	HOU, 	GRA, 	GRA ,	N_S}, 
-	{ N_S,	GRA,	GRA,	GRA, 	N_S,	GRA, 	HOU, 	GRA,	HOU,	HOU,	GRA, 	GRA, 	HOU ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	HOU, 	GRA, 	GRA ,	N_S}, 
+	{ N_S,	GRA,	GRA,	GRA, 	N_S,	GRA, 	GRA, 	GRA,	GRA,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S}, 
+	{ N_S,	GRA,	H1S,	GRA, 	N_S,	H1S, 	GRA, 	GRA,	H0S,	H0S,	H1S, 	GRA, 	H0S ,	N_S, 	H1S, 	GRA, 	GRA,	N_S,	GRA,	H0S, 	H1S, 	GRA ,	N_S}, 
 	{ CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO},
-	{ N_S,	GRA,	GRA,	GRA, 	N_S,	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	HOU, 	HOU,	N_S,	HOU,	GRA, 	GRA, 	GRA ,	N_S},
-	{CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	HOU,	GRA, 	GRA, 	GRA ,	CRO}, 
-	{ N_S,	GRA,	GRA,	GRA, 	N_S, 	HOU, 	GRA, 	GRA,	N_S,	GRA,	HOU, 	HOU, 	HOU ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	HOU,	GRA, 	GRA, 	GRA ,	N_S},
-	{ N_S,	GRA,	GRA,	GRA, 	N_S, 	GRA, 	GRA, 	GRA,	N_S,	HOU,	GRA, 	GRA, 	GRA ,	N_S, 	HOU, 	GRA, 	GRA,	N_S,	HOU,	GRA, 	GRA, 	GRA ,	N_S}, 
+	{ N_S,	GRA,	GRA,	GRA, 	N_S,	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	H0S, 	H0S,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S},
+	{CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	GRA,	GRA, 	GRA, 	GRA ,	CRO}, 
+	{ N_S,	GRA,	GRA,	GRA, 	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S},
+	{ N_S,	GRA,	GRA,	GRA, 	N_S, 	GRA, 	GRA, 	GRA,	N_S,	H0S,	H1S, 	GRA, 	GRA ,	N_S, 	H0S, 	H1S, 	GRA,	N_S,	H0S,	H1S, 	GRA, 	GRA ,	N_S}, 
 	{ N_E,	E_W,	E_W,	E_W,	CRO, 	E_W, 	E_W ,	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W ,	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	N_W}  // 17
 	};
 
@@ -141,14 +147,14 @@ public final class StreetExample {
 			
 			for (int i = 0; i < fields.length; i++) {
 				for (int j = 0; j < fields[i].length; j++) {
-					if (strasse[i][j] == HOU) {
+					if (strasse[i][j] == H0S) {
 						Vec3 pos = fields[i][j].getPosition();
 						List<IMesh> house = HouseLoader.getHouse("Bambo_House");
 						Mat4 trans = Mat4.multiply(Mat4.rotate(90, 1,0,0),Mat4.translate(new Vec3(-0.5f, 0.01, 0.33f)),Mat4.scale(0.06f)); // 0.048
 						house.forEach(h -> h.setTransform(trans.preMultiply(Mat4.translate(pos.x + 0.7f, pos.y + 0.5f, 0))));
 						scene.add3DObjects(house);
 					}
-					if (strasse[i][j] == HO1) {
+					if (strasse[i][j] == H1S) {
 						Vec3 pos = fields[i][j].getPosition();
 						List<IMesh> house = HouseLoader.getHouse("hOUSE");
 						// y, höhe, x
@@ -160,7 +166,7 @@ public final class StreetExample {
 			}
 			
 			ILight light = new DirectionalLight(new Vec3(5,5,5), RGB.WHITE, RGB.WHITE);
-			ILight light2 = new DirectionalLight(new Vec3(1,1,5), RGB.WHITE, RGB.WHITE);
+			ILight light2 = new DirectionalLight(new Vec3(-10,-10,5), RGB.WHITE, RGB.WHITE);
 			scene.add3DObject(light);
 			scene.add3DObject(light2);
 			
