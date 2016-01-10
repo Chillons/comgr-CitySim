@@ -2,7 +2,6 @@ package ch.fhnw.comgr.citysim;
 
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.LinkedList;
 import java.util.List;
 
 import ch.fhnw.ether.scene.attribute.IAttribute;
@@ -28,7 +27,6 @@ public class Field implements IMesh {
 	private Vec3 position = Vec3.ZERO;
 	private Mat4 transform = Mat4.ID;
 	private BoundingBox bb;
-	private LinkedList<Field> paths;
 	private int[] authorisations;
 
 	public Field(IMaterial material, IGeometry geometry) {
@@ -79,10 +77,6 @@ public class Field implements IMesh {
 
 	public int getContent() {
 		return this.content;
-	}
-
-	public void setPaths(LinkedList<Field> p) {
-		this.paths = p;
 	}
 
 	public void setAuthorisations(int type) {
@@ -153,44 +147,34 @@ public class Field implements IMesh {
 	}
 
 	public int getEntryPointOfTaxiWithinTheField(Vec3 carPosition) {
-		/*
-		 * HIER IST ES UNSCHÖN PROGRAMMIERT
-		 */
 
 		float distanceXWithinTheField = carPosition.x % 1;
 		float distanceYWithinTheField = carPosition.y % 1;
 
-		if (distanceXWithinTheField < 0.1) {
+		double fieldX = PathAlgorithm.getFields()[0][0].getBounds().getMaxX() - PathAlgorithm.getFields()[0][0].getBounds().getMinX(); 
+		double fieldY = Math.abs(PathAlgorithm.getFields()[0][0].getBounds().getMaxY() - PathAlgorithm.getFields()[0][0].getBounds().getMinY()); 
+		
+		if (distanceXWithinTheField < (fieldX/10)) {
 			// west
 			return 3;
 		}
 
-		if (distanceXWithinTheField > 0.9) {
+		if (distanceXWithinTheField > (fieldX/10*9)) {
 			// east
 			return 2;
 		}
 
-		if (distanceYWithinTheField > 0) {
-			if (distanceYWithinTheField < 0.1) {
-				// south
-				return 1;
-			}
 
-			if (distanceYWithinTheField > 0.9) {
-				// north
+		if (distanceYWithinTheField < fieldY/10) {
+			// north
 				return 0;
-			}
-		} else {
-			if (distanceYWithinTheField > -0.1) {
-				// north
-				return 0;
-			}
-
-			if (distanceYWithinTheField < -0.9) {
-				// south
-				return 1;
-			}
 		}
+
+		if (distanceYWithinTheField > (fieldY/10*9)) {
+			// south
+			return 1;
+		}
+
 		return 5;
 	}
 

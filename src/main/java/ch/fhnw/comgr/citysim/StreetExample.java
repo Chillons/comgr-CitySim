@@ -1,42 +1,25 @@
 
 package ch.fhnw.comgr.citysim;
 
+import java.util.List;
+
 import ch.fhnw.comgr.citysim.util.HouseLoader;
 import ch.fhnw.comgr.citysim.util.PickFieldTool;
 import ch.fhnw.comgr.citysim.util.TaxiType;
-import ch.fhnw.ether.controller.DefaultController;
-import ch.fhnw.ether.controller.IController;
-import ch.fhnw.ether.controller.event.IEventScheduler;
-import ch.fhnw.ether.controller.tool.PickTool;
 import ch.fhnw.ether.scene.DefaultScene;
 import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.camera.Camera;
+import ch.fhnw.ether.scene.camera.FrameCameraControl;
 import ch.fhnw.ether.scene.camera.ICamera;
 import ch.fhnw.ether.scene.light.DirectionalLight;
 import ch.fhnw.ether.scene.light.ILight;
-import ch.fhnw.ether.scene.mesh.DefaultMesh;
 import ch.fhnw.ether.scene.mesh.IMesh;
-import ch.fhnw.ether.scene.mesh.IMesh.Flag;
-import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
-import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
-import ch.fhnw.ether.scene.mesh.geometry.IGeometry.Primitive;
-import ch.fhnw.ether.scene.mesh.material.ColorMapMaterial;
-import ch.fhnw.ether.scene.mesh.material.ColorMaterial;
-import ch.fhnw.ether.scene.mesh.material.IMaterial;
-import ch.fhnw.ether.scene.mesh.material.Texture;
-import ch.fhnw.ether.ui.Button;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.ether.view.IView.ViewType;
 import ch.fhnw.ether.view.gl.DefaultView;
 import ch.fhnw.util.color.RGB;
-import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
-import ch.fhnw.util.math.geometry.GeodesicSphere;
-
-import java.awt.event.KeyEvent;
-import java.util.List;
-import java.util.logging.Logger;
 
 public final class StreetExample {
 	
@@ -99,12 +82,17 @@ public final class StreetExample {
 		// Create controller
 		
 		CityController controller = new CityController(strasse);
+
 		
 		controller.run(time -> {
 			// Create view
 			// Neues Config machen
 			IView view = new DefaultView(controller, 100, 100, 800, 600, new IView.Config(ViewType.INTERACTIVE_VIEW, 0, new IView.ViewFlag[0]), "City Sim");		
 			ICamera camera = new Camera(new Vec3(0, 5, 5), Vec3.ZERO);
+			FrameCameraControl fcc = new FrameCameraControl(camera, PathAlgorithm.getNodes());
+			fcc.frame();
+			
+
 
 			// Create scene and add triangle
 			IScene scene = new DefaultScene(controller);			
@@ -119,31 +107,29 @@ public final class StreetExample {
 
 			/////// CITY ////////
 
-			for (int i = 0; i < controller.getFields().length; i++) {
-				for (int j = 0; j < controller.getFields()[0].length; j++) {
-					scene.add3DObject(controller.getFields()[i][j]);	
+			for (int i = 0; i < PathAlgorithm.getFields().length; i++) {
+				for (int j = 0; j < PathAlgorithm.getFields()[0].length; j++) {
+					scene.add3DObject(PathAlgorithm.getFields()[i][j]);	
 				}
-			}			
+			}	
+
 			/////// CAR //////////
 
-			Taxi taxi = new Taxi(TaxiType.YELLOW_CAB, controller);
-	
+			Taxi taxi = new Taxi(TaxiType.YELLOW_CAB);
 			taxi.setTransform(Mat4.translate(1, 0, 0));
 			
-			controller.addTaxi(taxi);
+			DriveAnimation drive = new DriveAnimation(taxi);			
+			controller.animate(drive);
 			scene.add3DObjects(taxi.getMesh());
 			
 			
+			Field[][] fields = PathAlgorithm.getFields();
 			
-			controller.startAnimationTaxis(); 
+			Field target = fields[14][22];
 			
-			Field[][]felder = controller.getFields();
+			drive.setTarget(target);
 			
-			Field target = felder[14][22];
-			
-			controller.getTaxis().get(0).setTarget(target);
-			
-			Field[][] fields = controller.getFields();
+
 			
 			for (int i = 0; i < fields.length; i++) {
 				for (int j = 0; j < fields[i].length; j++) {
@@ -164,6 +150,7 @@ public final class StreetExample {
 					}
 				}
 			}
+			
 			
 			ILight light = new DirectionalLight(new Vec3(5,5,5), RGB.WHITE, RGB.WHITE);
 			ILight light2 = new DirectionalLight(new Vec3(-10,-10,5), RGB.WHITE, RGB.WHITE);

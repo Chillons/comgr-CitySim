@@ -1,6 +1,5 @@
 package ch.fhnw.comgr.citysim;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,146 +10,49 @@ import java.util.Map;
 import java.util.Set;
 
 
-// DAS IST EIN KOMMENTAR
 public class PathAlgorithm {
 
-  private final Field[][] fields;
-  private final List<Field> nodes;
-  private final List<Path> paths;	
-  private LinkedList<Field> pathsProNode;
+  private static Field[][] fields;
+  private static List<Field> nodes;
+  private static List<Path> paths;	
+  private static LinkedList<Field> pathsProNode;
 
-  private Set<Field> settledNodes;
-  private Set<Field> unSettledNodes;
-  private Map<Field, Field> predecessors;
-  private Map<Field, Integer> distance;
+  private static Set<Field> settledNodes;
+  private static Set<Field> unSettledNodes;
+  private static Map<Field, Field> predecessors;
+  private static Map<Field, Integer> distance;
   
 
   public PathAlgorithm(Field[][] fields) {
     // create a copy of the array so that we can operate on this array
-	this.fields = fields;
-    this.nodes = new ArrayList<Field>();
-    this.paths = new ArrayList<Path>();
-  }
-  
-  
-  public List<Path> getPaths(){
-	  searchForPaths();
-	  for(int i=0; i<nodes.size(); i++) {
-		  pathsProNode = new LinkedList<Field>();
-		  this.execute(nodes.get(i));
-		  for(int j=0; j<nodes.size();j++){  
-			  pathsProNode = this.getPath(nodes.get(j));
-		  }
-		  nodes.get(i).setPaths(pathsProNode);
-	  }
-	  return paths;
+	PathAlgorithm.fields = fields;
+    PathAlgorithm.nodes = new ArrayList<Field>();
+    PathAlgorithm.paths = new ArrayList<Path>();
+    PathAlgorithm.getPaths();
   }
   
 
-  public List<Field> getNodes(){
-	  return nodes;	  
-  }
   
-  
-  public void execute(Field source) {
-    settledNodes = new HashSet<Field>();
-    unSettledNodes = new HashSet<Field>();
-    distance = new HashMap<Field, Integer>();
-    predecessors = new HashMap<Field, Field>();
-    distance.put(source, 0);
-    unSettledNodes.add(source);
-    while (unSettledNodes.size() > 0) {
-      Field node = getMinimum(unSettledNodes);
-      settledNodes.add(node);
-      unSettledNodes.remove(node);
-      findMinimalDistances(node);
-    }
-  }
-
-  private void findMinimalDistances(Field node) {
-    List<Field> adjacentNodes = getNeighbors(node);
-    for (Field target : adjacentNodes) {
-      if (getShortestDistance(target) > getShortestDistance(node)
-          + getDistance(node, target)) {
-        distance.put(target, getShortestDistance(node)
-            + getDistance(node, target));
-        predecessors.put(target, node);
-        unSettledNodes.add(target);
-      }
-    }
-
-  }
-
-  private int getDistance(Field node, Field target) {
-    for (Path p : paths) {
-      if (p.getSource().equals(node)
-          && p.getDestination().equals(target)) {
-        return p.getWeight();
-      }
-    }
-    throw new RuntimeException("Should not happen");
-  }
-
-  private List<Field> getNeighbors(Field node) {
-    List<Field> neighbors = new ArrayList<Field>();
-    for (Path p : paths) {
-      if (p.getSource().equals(node)
-          && !isSettled(p.getDestination())) {
-        neighbors.add(p.getDestination());
-      }
-    }
-    return neighbors;
-  }
-
-  private Field getMinimum(Set<Field> vertexes) {
-    Field minimum = null;
-    for (Field vertex : vertexes) {
-      if (minimum == null) {
-        minimum = vertex;
-      } else {
-        if (getShortestDistance(vertex) < getShortestDistance(minimum)) {
-          minimum = vertex;
-        }
-      }
-    }
-    return minimum;
-  }
-
-  private boolean isSettled(Field vertex) {
-    return settledNodes.contains(vertex);
-  }
-
-  private int getShortestDistance(Field destination) {
-    Integer d = distance.get(destination);
-    if (d == null) {
-      return Integer.MAX_VALUE;
-    } else {
-      return d;
-    }
-  }
-  
-  
-  
-  public LinkedList<Field> getPathFromTo(Field source, Field target){  
+  public static LinkedList<Field> getPathFromTo(Field source, Field target){  
 	  LinkedList <Field> path = new LinkedList<Field>();
 	  searchForPaths();
 	  for(int i=0; i<nodes.size(); i++) { 
 		  if(source.equals(nodes.get(i))){ 
-			  this.execute(nodes.get(i));
-			  return this.getPath(target);
+			  PathAlgorithm.execute(nodes.get(i));
+			  return PathAlgorithm.getPath(target);
 		  }
 	  }
 	  // Keine station gefunden
 	  path.add(source);
 	  return path;
   }
-  
+
 
   /*
    * This method returns the path from the source to the selected target and
    * NULL if no path exists
    */
-  public LinkedList<Field> getPath(Field target) {
+  private static LinkedList<Field> getPath(Field target) {
     LinkedList<Field> path = new LinkedList<Field>();
     Field step = target;
     // check if a path exists
@@ -168,9 +70,106 @@ public class PathAlgorithm {
   }
   
 
+  
+  private static List<Path> getPaths(){
+	  PathAlgorithm.searchForPaths();
+	  for(int i=0; i<nodes.size(); i++) {
+		  pathsProNode = new LinkedList<Field>();
+		  PathAlgorithm.execute(nodes.get(i));
+		  for(int j=0; j<nodes.size();j++){  
+			  pathsProNode = PathAlgorithm.getPath(nodes.get(j));
+		  }
+	  }
+	  return paths;
+  }
+  
+  public static Field[][] getFields(){
+	  return fields;	  
+  }
+  
+  public static List<Field> getNodes(){
+	  return nodes;	  
+  }
+  
+  private static void execute(Field source) {
+    settledNodes = new HashSet<Field>();
+    unSettledNodes = new HashSet<Field>();
+    distance = new HashMap<Field, Integer>();
+    predecessors = new HashMap<Field, Field>();
+    distance.put(source, 0);
+    unSettledNodes.add(source);
+    while (unSettledNodes.size() > 0) {
+      Field node = getMinimum(unSettledNodes);
+      settledNodes.add(node);
+      unSettledNodes.remove(node);
+      findMinimalDistances(node);
+    }
+  }
 
- 
-	public void searchForPaths(){
+  private static void findMinimalDistances(Field node) {
+    List<Field> adjacentNodes = getNeighbors(node);
+    for (Field target : adjacentNodes) {
+      if (getShortestDistance(target) > getShortestDistance(node)
+          + getDistance(node, target)) {
+        distance.put(target, getShortestDistance(node)
+            + getDistance(node, target));
+        predecessors.put(target, node);
+        unSettledNodes.add(target);
+      }
+    }
+
+  }
+
+  private static int getDistance(Field node, Field target) {
+    for (Path p : paths) {
+      if (p.getSource().equals(node)
+          && p.getDestination().equals(target)) {
+        return p.getWeight();
+      }
+    }
+    throw new RuntimeException("Should not happen");
+  }
+
+  private static List<Field> getNeighbors(Field node) {
+    List<Field> neighbors = new ArrayList<Field>();
+    for (Path p : paths) {
+      if (p.getSource().equals(node)
+          && !isSettled(p.getDestination())) {
+        neighbors.add(p.getDestination());
+      }
+    }
+    return neighbors;
+  }
+
+  private static Field getMinimum(Set<Field> vertexes) {
+    Field minimum = null;
+    for (Field vertex : vertexes) {
+      if (minimum == null) {
+        minimum = vertex;
+      } else {
+        if (getShortestDistance(vertex) < getShortestDistance(minimum)) {
+          minimum = vertex;
+        }
+      }
+    }
+    return minimum;
+  }
+
+  private static boolean isSettled(Field vertex) {
+    return settledNodes.contains(vertex);
+  }
+
+  private static int getShortestDistance(Field destination) {
+    Integer d = distance.get(destination);
+    if (d == null) {
+      return Integer.MAX_VALUE;
+    } else {
+      return d;
+    }
+  }
+  
+  
+	private static void searchForPaths(){
 		for (int i = 0; i < fields.length; i++) {
 			for (int j = 0; j < fields[i].length; j++) {
 					switch (fields[i][j].getContent()) {
@@ -215,7 +214,7 @@ public class PathAlgorithm {
 	}
 	}
 
-	private void searchNorth(int i, int j){
+	private static void searchNorth(int i, int j){
 		Field startField = fields[i][j];
 		Field stopField = fields[i][j];
 		Path path = null;
@@ -239,7 +238,7 @@ public class PathAlgorithm {
 		}
 	}
 	
-	private void searchSouth(int i, int j){
+	private static void searchSouth(int i, int j){
 		Field startField = fields[i][j];
 		Field stopField = fields[i][j];
 		Path path = null;
@@ -264,7 +263,7 @@ public class PathAlgorithm {
 		
 
 	
-	private void searchEast(int i, int j){
+	private static void searchEast(int i, int j){
 		Field startField = fields[i][j];
 		Field stopField = fields[i][j];
 		Path path = null;
@@ -289,7 +288,7 @@ public class PathAlgorithm {
 	}
 	
 	
-	private void searchWest(int i, int j){
+	private static void searchWest(int i, int j){
 		Field startField = fields[i][j];
 		Field stopField = fields[i][j];
 		Path path = null;

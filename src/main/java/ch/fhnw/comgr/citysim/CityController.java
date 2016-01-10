@@ -1,21 +1,17 @@
 package ch.fhnw.comgr.citysim;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
 import ch.fhnw.ether.controller.DefaultController;
+import ch.fhnw.ether.image.Frame;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
 import ch.fhnw.ether.scene.mesh.material.ColorMapMaterial;
 import ch.fhnw.ether.scene.mesh.material.IMaterial;
-import ch.fhnw.ether.scene.mesh.material.Texture;
 import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Vec3;
 
-public class CityController extends DefaultController {
-	private final Field[][] fields;
-	private final List<Field> nodes;
-	private final List<Path> paths;
-	private final List<Taxi> taxis;
+public class CityController extends DefaultController{
+	private static Field[][] fields;
 
 	public CityController(int[][] strasse) {
 
@@ -35,59 +31,26 @@ public class CityController extends DefaultController {
 				field.setAuthorisations(strasse[i][j]);
 
 				field.setPosition(new Vec3(startX + j, startY - i, 0f));
-				// field.setTransform(Mat4.translate(startX+j, startY-i, 0f));
 
 				fields[i][j] = field;
 			}
 		}
 
-		PathAlgorithm pathAlgorithm = new PathAlgorithm(this.fields);
-		paths = pathAlgorithm.getPaths();
-		nodes = pathAlgorithm.getNodes();
-		taxis = new ArrayList<Taxi>();
+		PathAlgorithm pathAlgorithm = new PathAlgorithm(CityController.fields);
 
 	}
 
-	public void startAnimationTaxis() {
-		if (taxis != null) {
-			for (Taxi t : taxis) {
-				this.animate(t);
-			}
-		}
-	}
-
-	public Field getField(Vec3 position) {
-		/*
-		 * // HIER IST ES UNSCHÖN PROGRAMIERT // Warum: Die Länge eines Field
-		 * muss "1" sein // Sonst funktioniert die Funktion nicht
-		 */
-
+	public static Field getField(Vec3 position) {
 		for (int i = 0; i < fields.length; i++) {
 			for (int j = 0; j < fields[i].length; j++) {
-				if (position.x >= fields[i][j].getPosition().x && position.x < fields[i][j].getPosition().x + 1) {
-					if (position.y >= fields[i][j].getPosition().y && position.y <= fields[i][j].getPosition().y + 1) {
+				if (position.x >= fields[i][j].getBounds().getMinX() && position.x < fields[i][j].getBounds().getMaxX()) {
+					if (position.y >= fields[i][j].getBounds().getMinY() && position.y <= fields[i][j].getBounds().getMaxY() ) {
 						return fields[i][j];
 					}
 				}
 			}
 		}
 		return null;
-	}
-
-	public Field[][] getFields() {
-		return fields;
-	}
-
-	public List<Field> getNodes() {
-		return nodes;
-	}
-
-	public List<Taxi> getTaxis() {
-		return taxis;
-	}
-
-	public void addTaxi(Taxi t) {
-		taxis.add(t);
 	}
 
 	private static Field createField(int type) {
@@ -117,8 +80,12 @@ public class CityController extends DefaultController {
 	}
 
 	private static Field createField(String asset) {
-		IMaterial m = new ColorMapMaterial(RGBA.WHITE, new Texture(
-				StreetExample.class.getResource(asset)), true);
+		IMaterial m = null;
+		try {
+			m = new ColorMapMaterial(RGBA.WHITE, Frame.create(StreetExample.class.getResource(asset)).getTexture(), true);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		IGeometry g = Util.getDefaultField();
 		return new Field(m, g);
 	}
