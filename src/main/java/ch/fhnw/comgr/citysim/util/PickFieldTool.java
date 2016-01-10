@@ -30,14 +30,16 @@ public class PickFieldTool extends AbstractTool {
 		public void pointerPressed(IPointerEvent e) {
 			int x = e.getX();
 			int y = e.getY();
-			Map<Float, I3DObject> pickables = PickUtilities.pickFromScene(PickMode.POINT, x, y, 0, 0, e.getView());
-			if (pickables.isEmpty())
-				System.out.println("No Mesh Clicked");
-			else{		
-				Vec3 newCarPosition = pickables.values().iterator().next().getPosition();
-				Taxi actualTaxi = cityController.getTaxis().get(0);
-				actualTaxi.setTarget(cityController.getField(newCarPosition));
-			}	
+			System.out.println("X: " + x);
+			System.out.println("Y: " + y);
+//			Map<Float, I3DObject> pickables = PickUtilities.pickFromScene(PickMode.POINT, x, y, 0, 0, e.getView());
+//			if (pickables.isEmpty())
+//				System.out.println("No Mesh Clicked");
+//			else{		
+//				Vec3 newCarPosition = pickables.values().iterator().next().getPosition();
+//				Taxi actualTaxi = cityController.getTaxis().get(0);
+//				actualTaxi.setTarget(cityController.getField(newCarPosition));
+//			}	
 			
 		}
 	}

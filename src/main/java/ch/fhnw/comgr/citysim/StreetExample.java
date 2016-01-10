@@ -40,14 +40,16 @@ import java.util.logging.Logger;
 
 public final class StreetExample {
 	
-	public static final int GRAS = 0;
-	public static final int STREET_EAST_WEST = 1;
-	public static final int STREET_NORTH_SOUTH = 2;
-	public static final int CROSSING = 3;
-	public static final int STREET_NORTH_EAST = 4;
-	public static final int STREET_NORTH_WEST = 5;
-	public static final int STREET_SOUTH_EAST = 6;
-	public static final int STREET_SOUTH_WEST = 7;
+	public static final int GRA = 0;
+	public static final int E_W = 1;
+	public static final int N_S = 2;
+	public static final int CRO = 3;
+	public static final int N_E = 4;
+	public static final int N_W = 5;
+	public static final int S_E = 6;
+	public static final int S_W = 7;
+	public static final int HOU = 10;
+	public static final int HO1 = 11;
 	
 	private List<IMesh> car;
 	
@@ -59,22 +61,25 @@ public final class StreetExample {
 	
 	
 	public static final int[][] strasse = { 
-	{ STREET_SOUTH_WEST, 	GRAS,		STREET_SOUTH_EAST,	STREET_EAST_WEST, 	STREET_SOUTH_WEST, GRAS , GRAS}, 
-	{ STREET_NORTH_SOUTH,	GRAS,		STREET_NORTH_SOUTH, 	GRAS, 			STREET_NORTH_SOUTH, GRAS, GRAS}, 
-	{ STREET_NORTH_SOUTH,	GRAS,		STREET_NORTH_SOUTH, 	GRAS, 			STREET_NORTH_SOUTH, GRAS, GRAS}, 
-	{ CROSSING, 			STREET_EAST_WEST,	CROSSING,  		STREET_EAST_WEST, 	CROSSING, STREET_EAST_WEST, STREET_SOUTH_WEST},
-	{ STREET_NORTH_SOUTH,	GRAS,		STREET_NORTH_SOUTH, 	GRAS, 		 		STREET_NORTH_SOUTH, GRAS, STREET_NORTH_SOUTH},
-	{ STREET_NORTH_EAST,	STREET_EAST_WEST,		STREET_NORTH_WEST, 	GRAS, 				CROSSING, STREET_EAST_WEST, STREET_NORTH_WEST}, 
-	{ STREET_SOUTH_EAST,	STREET_EAST_WEST,		STREET_EAST_WEST, 	STREET_EAST_WEST, 	CROSSING, STREET_EAST_WEST, STREET_SOUTH_WEST},
-	{ STREET_NORTH_EAST,	STREET_EAST_WEST,		STREET_EAST_WEST, 	STREET_EAST_WEST, 	CROSSING, STREET_EAST_WEST, STREET_NORTH_WEST},
-	{ STREET_SOUTH_WEST, 	GRAS,		STREET_SOUTH_EAST,	STREET_EAST_WEST, 	CROSSING, GRAS , GRAS}, 
-	{ STREET_NORTH_SOUTH,	GRAS,		STREET_NORTH_SOUTH, 	GRAS, 				STREET_NORTH_SOUTH, GRAS, GRAS}, 
-	{ STREET_NORTH_SOUTH,	GRAS,		STREET_NORTH_SOUTH, 	GRAS, 				STREET_NORTH_SOUTH, GRAS, GRAS}, 
-	{ CROSSING, 			STREET_EAST_WEST,	CROSSING,  			STREET_EAST_WEST, 	CROSSING, STREET_EAST_WEST, STREET_SOUTH_WEST},
-	{ STREET_NORTH_SOUTH,	GRAS,		STREET_NORTH_SOUTH, 	GRAS, 		 		STREET_NORTH_SOUTH, GRAS, STREET_NORTH_SOUTH},
-	{ STREET_NORTH_EAST,	STREET_EAST_WEST,		STREET_NORTH_WEST, 	GRAS, 				CROSSING, STREET_EAST_WEST, STREET_NORTH_WEST}, 
-{ STREET_SOUTH_EAST,	STREET_EAST_WEST,		STREET_EAST_WEST, 	STREET_EAST_WEST, 	CROSSING, STREET_EAST_WEST, STREET_SOUTH_WEST},
-{ STREET_NORTH_EAST,	STREET_EAST_WEST,		STREET_EAST_WEST, 	STREET_EAST_WEST, 	CROSSING, STREET_EAST_WEST, STREET_NORTH_WEST}
+																										  // 13
+	{ S_E,	E_W,	E_W,	E_W,	CRO, 	E_W, 	E_W ,	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W ,	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	S_W}, 
+	{ N_S,	HO1,	GRA,	HOU,	N_S, 	HOU, 	GRA ,	HOU,	N_S,	GRA,	HOU, 	GRA, 	HOU ,	N_S, 	GRA, 	HOU, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S}, 
+	{ CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO}, 
+	{ HOU,	GRA,	HOU,	GRA, 	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	HOU, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S}, 
+	{ CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO},
+	{ N_S,	GRA,	GRA,	GRA, 	N_S,	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S},
+	{ CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO}, 
+	{ N_S,	HOU,	HOU,	GRA, 	GRA, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	HOU, 	GRA, 	GRA,	N_S,	GRA,	HOU, 	GRA, 	GRA ,	N_S},
+	{ N_S,	HOU,	HOU,	GRA, 	GRA, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	HOU ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	HOU, 	GRA, 	GRA ,	N_S},
+	{ CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO}, 
+	{ N_S,	GRA,	GRA,	GRA, 	N_S,	HOU, 	GRA, 	GRA,	HOU,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	HOU, 	GRA, 	GRA ,	N_S}, 
+	{ N_S,	GRA,	GRA,	GRA, 	N_S,	GRA, 	HOU, 	GRA,	HOU,	HOU,	GRA, 	GRA, 	HOU ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	HOU, 	GRA, 	GRA ,	N_S}, 
+	{ CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO},
+	{ N_S,	GRA,	GRA,	GRA, 	N_S,	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	HOU, 	HOU,	N_S,	HOU,	GRA, 	GRA, 	GRA ,	N_S},
+	{CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	HOU,	GRA, 	GRA, 	GRA ,	CRO}, 
+	{ N_S,	GRA,	GRA,	GRA, 	N_S, 	HOU, 	GRA, 	GRA,	N_S,	GRA,	HOU, 	HOU, 	HOU ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	HOU,	GRA, 	GRA, 	GRA ,	N_S},
+	{ N_S,	GRA,	GRA,	GRA, 	N_S, 	GRA, 	GRA, 	GRA,	N_S,	HOU,	GRA, 	GRA, 	GRA ,	N_S, 	HOU, 	GRA, 	GRA,	N_S,	HOU,	GRA, 	GRA, 	GRA ,	N_S}, 
+	{ N_E,	E_W,	E_W,	E_W,	CRO, 	E_W, 	E_W ,	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W ,	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	N_W}  // 17
 	};
 
 		
@@ -92,7 +97,7 @@ public final class StreetExample {
 		controller.run(time -> {
 			// Create view
 			// Neues Config machen
-			IView view = new DefaultView(controller, 100, 100, 500, 500, new IView.Config(ViewType.INTERACTIVE_VIEW, 0, new IView.ViewFlag[0]), "City Sim");		
+			IView view = new DefaultView(controller, 100, 100, 800, 600, new IView.Config(ViewType.INTERACTIVE_VIEW, 0, new IView.ViewFlag[0]), "City Sim");		
 			ICamera camera = new Camera(new Vec3(0, 5, 5), Vec3.ZERO);
 
 			// Create scene and add triangle
@@ -125,22 +130,39 @@ public final class StreetExample {
 			
 			
 			controller.startAnimationTaxis(); 
-
+			
+			Field[][]felder = controller.getFields();
+			
+			Field target = felder[14][22];
+			
+			controller.getTaxis().get(0).setTarget(target);
+			
 			Field[][] fields = controller.getFields();
 			
 			for (int i = 0; i < fields.length; i++) {
 				for (int j = 0; j < fields[i].length; j++) {
-					if (strasse[i][j] == GRAS) {
+					if (strasse[i][j] == HOU) {
 						Vec3 pos = fields[i][j].getPosition();
-						List<IMesh> house = HouseLoader.getHouse("bilding");
-						Mat4 trans = Mat4.multiply(Mat4.rotate(90, 1,0,0),Mat4.translate(new Vec3(0f, 0.01,0f)),Mat4.scale(0.0048f));
+						List<IMesh> house = HouseLoader.getHouse("Bambo_House");
+						Mat4 trans = Mat4.multiply(Mat4.rotate(90, 1,0,0),Mat4.translate(new Vec3(-0.5f, 0.01, 0.33f)),Mat4.scale(0.06f)); // 0.048
+						house.forEach(h -> h.setTransform(trans.preMultiply(Mat4.translate(pos.x + 0.7f, pos.y + 0.5f, 0))));
+						scene.add3DObjects(house);
+					}
+					if (strasse[i][j] == HO1) {
+						Vec3 pos = fields[i][j].getPosition();
+						List<IMesh> house = HouseLoader.getHouse("hOUSE");
+						// y, höhe, x
+						Mat4 trans = Mat4.multiply(Mat4.rotate(90, 1,0,0),Mat4.rotate(90, 0,1,0) ,Mat4.translate(new Vec3(0.0078f, 0.537, 0.4f)),Mat4.scale(0.0015f));
 						house.forEach(h -> h.setTransform(trans.preMultiply(Mat4.translate(pos.x + 0.7f, pos.y + 0.5f, 0))));
 						scene.add3DObjects(house);
 					}
 				}
 			}
 			
-			scene.add3DObject(new DirectionalLight(Vec3.Z, RGB.WHITE, RGB.WHITE));
+			ILight light = new DirectionalLight(new Vec3(5,5,5), RGB.WHITE, RGB.WHITE);
+			ILight light2 = new DirectionalLight(new Vec3(1,1,5), RGB.WHITE, RGB.WHITE);
+			scene.add3DObject(light);
+			scene.add3DObject(light2);
 			
 		});
 		

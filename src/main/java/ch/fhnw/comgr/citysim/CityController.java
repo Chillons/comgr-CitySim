@@ -92,8 +92,10 @@ public class CityController extends DefaultController {
 
 	private static Field createField(int type) {
 		switch (type) {
+		case 11:
+		case 10:
 		case 0:
-			return createField("/assets/grass.jpg");
+			return createField("/assets/grassfinal.jpg");
 		case 1:
 			return createField("/assets/roadEW.jpg");
 		case 2:
