@@ -46,6 +46,39 @@ public class PathAlgorithm {
 	  path.add(source);
 	  return path;
   }
+  
+  
+  public static int getDistanceFromTo(Field source, Field target){  
+	  LinkedList <Field> path = new LinkedList<Field>();
+	  searchForPaths();
+	  for(int i=0; i<nodes.size(); i++) { 
+		  if(source.equals(nodes.get(i))){ 
+			  PathAlgorithm.execute(nodes.get(i));
+			  int distTotal = 0;
+			  LinkedList<Field> stations = PathAlgorithm.getPath(target);
+			  for(int j=0; j< stations.size()-1; j++){
+				  distTotal += getDistance(stations.get(j), stations.get(j+1));
+			  }
+			  return distTotal;
+		  }
+	  }
+	  return -1;
+  }
+  
+  public static int getTimeFromTo(Field source, Field target){  
+	  LinkedList <Field> path = new LinkedList<Field>();
+	  searchForPaths();
+	  for(int i=0; i<nodes.size(); i++) { 
+		  if(source.equals(nodes.get(i))){ 
+			  PathAlgorithm.execute(nodes.get(i));
+			  int distance = PathAlgorithm.getPath(target).size();
+			  int time = (60 * distance) / 50; //für eine Geschwindigkeit von 50km/h
+			  return time;
+		  }
+	  }
+
+	  return -1;
+  }
 
 
   /*

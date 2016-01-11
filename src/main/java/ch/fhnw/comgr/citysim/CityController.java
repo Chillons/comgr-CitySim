@@ -12,6 +12,7 @@ import ch.fhnw.util.math.Vec3;
 
 public class CityController extends DefaultController{
 	private static Field[][] fields;
+	private static InteractionPanel interactionPanel;
 
 	public CityController(int[][] strasse) {
 
@@ -40,6 +41,15 @@ public class CityController extends DefaultController{
 
 	}
 
+	public static InteractionPanel getInteractionPanel(){
+		return interactionPanel;
+	}
+	
+	public static void setInteractionPanel(InteractionPanel ip){
+		CityController.interactionPanel = ip;
+		
+	}
+	
 	public static Field getField(Vec3 position) {
 		for (int i = 0; i < fields.length; i++) {
 			for (int j = 0; j < fields[i].length; j++) {

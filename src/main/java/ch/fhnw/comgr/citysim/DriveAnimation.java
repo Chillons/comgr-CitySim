@@ -29,6 +29,7 @@ public class DriveAnimation implements IAnimationAction {
 	boolean authorisedToTurn = false;
 	int stationCounter;
 	Taxi animatedTaxi;
+	String[] message = new String[2];
 	
 	public DriveAnimation(Taxi t){
 		this.animatedTaxi = t;
@@ -64,19 +65,40 @@ public class DriveAnimation implements IAnimationAction {
 
 		if (!target.equals(tempTarget)) {
 			// Es wurde auf einem neuen Field geklickt
-			stations = PathAlgorithm.getPathFromTo(carPositionAsField, target);
-			
-			if (stations != null) {
-				// es wurde auf eine Kreuzung geklickt
-				stationCounter = 1;
-				interStation = stations.get(stationCounter);
-				run = true;
-			} else {
-				System.out.println("No intersection clicked");
+			if(!carPositionAsField.equals(tempTarget)){
+				message[0] = "Ich habe bereits einen Fahrziel.";
+				message[1] = "Bitte hab ein wenig Geduld für die Setzung eines neuen Fahrziel.";
+				CityController.getInteractionPanel().clear();
+				CityController.getInteractionPanel().sendMessage(message);
+				CityController.getInteractionPanel().update();
+				target = tempTarget; // reset
+				
+			}else{				
+					stations = PathAlgorithm.getPathFromTo(carPositionAsField, target);					
+					if (stations != null) {
+						// es wurde auf eine Kreuzung geklickt
+						stationCounter = 1;
+						interStation = stations.get(stationCounter);
+						run = true;
+						
+						message[0] = "Danke. Ich fahre sofort zu meinem neuen Fahrziel, das " + target.getName() + ".";
+						message[1] = "Dieser Fahrt entspricht eine Distanz von " + PathAlgorithm.getDistanceFromTo(tempTarget, target) +
+										 "Km. Das sind ungefähr " + PathAlgorithm.getTimeFromTo(tempTarget, target) + " Minuten Fahrt.";				
+						CityController.getInteractionPanel().sendMessage(message);
+						
+						
+					} else {
+						target = tempTarget; // reset
+						
+						message[0] = "Ich kann nur bei Kreuzungen halten";
+						message[1] = "Bitte wähle eine Kreuzung der Stadt aus.";				
+						CityController.getInteractionPanel().sendMessage(message);
+					}
+					tempTarget = target;
 			}
 
 		}
-		tempTarget = target;
+		
 
 		if (run & carPositionAsField.equals(interStation)) {
 			// Die InterStation wurde erreicht
@@ -87,6 +109,10 @@ public class DriveAnimation implements IAnimationAction {
 			} else {
 				// Ziel wurde erreicht
 				run = false;
+				
+				message[0] = "Das Ziel wurde erreicht, mit einer Verzögerung von 0 Minuten gemäss Fahrplan.";
+				message[1] = "Hast du nun eine neue Wunsch-Destination?";				
+				CityController.getInteractionPanel().sendMessage(message);
 			}
 		}
 
@@ -305,12 +331,13 @@ public class DriveAnimation implements IAnimationAction {
 				rotation += 1;
 			}
 
+			
 			if (rotation % 90 == 0 && (turnLeft || turnRight)) {
 				authorisedToTurn = false;
 				turnLeft = false;
 				turnRight = false;
 				turnBack = false;
-				rotation = 0;
+				rotation = 0;				
 			}
 
 			if (rotation % 181 == 0 && turnBack) {
@@ -322,6 +349,7 @@ public class DriveAnimation implements IAnimationAction {
 			}
 
 		}
+		
 	}
 
 	public void geradeFahren(float tempo) {

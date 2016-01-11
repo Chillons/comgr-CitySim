@@ -152,7 +152,7 @@ public class Field implements IMesh {
 		float distanceYWithinTheField = carPosition.y % 1;
 
 		double fieldX = PathAlgorithm.getFields()[0][0].getBounds().getMaxX() - PathAlgorithm.getFields()[0][0].getBounds().getMinX(); 
-		double fieldY = Math.abs(PathAlgorithm.getFields()[0][0].getBounds().getMaxY() - PathAlgorithm.getFields()[0][0].getBounds().getMinY()); 
+		double fieldY = PathAlgorithm.getFields()[0][0].getBounds().getMaxY() - PathAlgorithm.getFields()[0][0].getBounds().getMinY(); 
 		
 		if (distanceXWithinTheField < (fieldX/10)) {
 			// west
@@ -164,18 +164,28 @@ public class Field implements IMesh {
 			return 2;
 		}
 
-
-		if (distanceYWithinTheField < fieldY/10) {
-			// north
+		if(distanceYWithinTheField > 0){
+			if(distanceYWithinTheField < fieldY/10){
+				//south
+				return 1;
+			}
+			
+			if(distanceYWithinTheField > fieldY/10*9){
+				//north
 				return 0;
+			}
+		}else{
+			if(distanceYWithinTheField > -(fieldY/10)){
+				//north
+				return 0;
+			}
+			
+			if(distanceYWithinTheField < -(fieldY/10*9)){
+				//south
+				return 1;
+			}
 		}
-
-		if (distanceYWithinTheField > (fieldY/10*9)) {
-			// south
-			return 1;
-		}
-
-		return 5;
+		return -1;
 	}
 
 	// I3DObject implementation

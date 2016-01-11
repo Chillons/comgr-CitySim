@@ -1,6 +1,8 @@
 
 package ch.fhnw.comgr.citysim;
 
+import java.awt.Color;
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 import ch.fhnw.comgr.citysim.util.HouseLoader;
@@ -14,6 +16,7 @@ import ch.fhnw.ether.scene.camera.ICamera;
 import ch.fhnw.ether.scene.light.DirectionalLight;
 import ch.fhnw.ether.scene.light.ILight;
 import ch.fhnw.ether.scene.mesh.IMesh;
+import ch.fhnw.ether.ui.GraphicsPlane;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.ether.view.IView.ViewType;
 import ch.fhnw.ether.view.gl.DefaultView;
@@ -65,7 +68,7 @@ public final class StreetExample {
 	{ N_S,	GRA,	H1S,	GRA, 	N_S,	H1S, 	GRA, 	GRA,	H0S,	H0S,	H1S, 	GRA, 	H0S ,	N_S, 	H1S, 	GRA, 	GRA,	N_S,	GRA,	H0S, 	H1S, 	GRA ,	N_S}, 
 	{ CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO},
 	{ N_S,	GRA,	GRA,	GRA, 	N_S,	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	H0S, 	H0S,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S},
-	{CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	GRA,	GRA, 	GRA, 	GRA ,	CRO}, 
+	{CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	CRO}, 
 	{ N_S,	GRA,	GRA,	GRA, 	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S},
 	{ N_S,	GRA,	GRA,	GRA, 	N_S, 	GRA, 	GRA, 	GRA,	N_S,	H0S,	H1S, 	GRA, 	GRA ,	N_S, 	H0S, 	H1S, 	GRA,	N_S,	H0S,	H1S, 	GRA, 	GRA ,	N_S}, 
 	{ N_E,	E_W,	E_W,	E_W,	CRO, 	E_W, 	E_W ,	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W ,	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	N_W}  // 17
@@ -113,7 +116,7 @@ public final class StreetExample {
 				}
 			}	
 
-			/////// CAR //////////
+			/////// Taxi //////////
 
 			Taxi taxi = new Taxi(TaxiType.YELLOW_CAB);
 			taxi.setTransform(Mat4.translate(1, 0, 0));
@@ -121,13 +124,13 @@ public final class StreetExample {
 			DriveAnimation drive = new DriveAnimation(taxi);			
 			controller.animate(drive);
 			scene.add3DObjects(taxi.getMesh());
+			pickFieldTool.setCurrentTaxi(taxi, drive);
 			
 			
 			Field[][] fields = PathAlgorithm.getFields();
 			
-			Field target = fields[14][22];
-			
-			drive.setTarget(target);
+			//Field target = fields[14][22];			
+			//drive.setTarget(target);
 			
 
 			
@@ -152,6 +155,17 @@ public final class StreetExample {
 			}
 			
 			
+			//InteractionPanel
+			InteractionPanel plane = new InteractionPanel(0, 0, 1800, 1600);
+			controller.getRenderManager().addMesh(plane.getMesh());
+			CityController.setInteractionPanel(plane);
+			
+			String[] message = new String[2];
+			message[0] = "Hallo mein Name ist John. Ich bin der Taxifahrer von CitySim.";
+			message[1] = "Klicke auf eine Kreuzung um mir einen neuen Fahrziel zu setzen.";
+			plane.sendMessage(message);
+
+		
 			ILight light = new DirectionalLight(new Vec3(5,5,5), RGB.WHITE, RGB.WHITE);
 			ILight light2 = new DirectionalLight(new Vec3(-10,-10,5), RGB.WHITE, RGB.WHITE);
 			scene.add3DObject(light);
@@ -161,5 +175,6 @@ public final class StreetExample {
 		
 			
 	}
+	
 		
 }
