@@ -3,10 +3,11 @@ package ch.fhnw.comgr.citysim;
 
 import ch.fhnw.comgr.citysim.model.map.InteractionObject;
 import ch.fhnw.comgr.citysim.model.map.CitySimMap;
-import ch.fhnw.comgr.citysim.model.map.StaticObject;
 import ch.fhnw.comgr.citysim.model.taxi.Taxi;
 import ch.fhnw.comgr.citysim.util.PickFieldTool;
 import ch.fhnw.comgr.citysim.util.TaxiType;
+import ch.fhnw.comgr.citysim.util.TrafficLightLoader;
+import ch.fhnw.ether.formats.obj.ObjReader;
 import ch.fhnw.ether.scene.DefaultScene;
 import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.camera.Camera;
@@ -20,6 +21,9 @@ import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 
 import javax.imageio.spi.IIORegistry;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -108,47 +112,50 @@ public final class StreetExample {
 
 
 			/////// Traffic Light dummy ///////
+
+//			InteractionObject interactionObject = new InteractionObject(MeshUtilities.createCube(InteractionObject.greenBlock));
+
 			CitySimMap map = CitySimMap.getInstance();
 
-			IMesh box = MeshUtilities.createCube(InteractionObject.greenBlock);
-			box.setTransform(Mat4.translate(1.5f, -0.6f, 0.5f));
-			InteractionObject interactionObject = new InteractionObject(box);
-			map.addObjectToLayer(interactionObject);
 
-			IMesh box2 = MeshUtilities.createCube(InteractionObject.greenBlock);
-			box2.setTransform(Mat4.translate(-0.5f, 1.6f, .5f));
-			InteractionObject interactionObject2 = new InteractionObject(box2);
+
+
+			InteractionObject interactionObject2 = new InteractionObject(TrafficLightLoader.getStatic(getClass()),
+					TrafficLightLoader.getEnabled(getClass()), TrafficLightLoader.getDisabled(getClass()));
+
 			map.addObjectToLayer(interactionObject2);
-
-			IMesh box3 = MeshUtilities.createCube(InteractionObject.greenBlock);
-			box3.setTransform(Mat4.translate(2.5f, 1.6f, 0.5f));
-			InteractionObject interactionObject3 = new InteractionObject(box3);
-			map.addObjectToLayer(interactionObject3);
-
-			StaticObject staticObject = new StaticObject(MeshUtilities.createCube(InteractionObject.redBlock));
-			staticObject.setTransform(Mat4.multiply(Mat4.translate(-1.4f, -1, 0.5f), Mat4.scale(0.5f)));
-
-			StaticObject staticObject2 = new StaticObject(MeshUtilities.createCube(InteractionObject.redBlock));
-			staticObject2.setTransform(Mat4.multiply(Mat4.translate(-1.4f, 2, 0.5f), Mat4.scale(0.5f)));
-
-			map.addObjectToLayer(staticObject);
-			map.addObjectToLayer(staticObject2);
-
 
 
 			for (InteractionObject intObj : map.getInteractionObjects()) {
 				scene.add3DObjects(intObj.getMesh());
 			}
 
+			// Traffic Light
+			List<IMesh> trafficLight = getTrafficLight();
 
-			for (StaticObject staticO : map.getStaticObjects()) {
-				scene.add3DObjects(staticO.getMesh());
-			}
-
+			scene.add3DObjects(trafficLight);
 
 		});
 		
 			
+	}
+
+	public static List<IMesh> getTrafficLight() {
+
+		final URL obj = StreetExample.class.getClassLoader().getResource("assets/trafficLight/trafficLight1.obj");
+
+		final List<IMesh> meshes = new ArrayList<>();
+		try {
+			new ObjReader(obj).getMeshes().forEach(mesh -> meshes.add(mesh));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("number of meshes before merging: " + meshes.size());
+		final List<IMesh> merged = MeshUtilities.mergeMeshes(meshes);
+		System.out.println("number of meshes after merging: " + merged.size());
+
+
+		return merged;
 	}
 		
 }
