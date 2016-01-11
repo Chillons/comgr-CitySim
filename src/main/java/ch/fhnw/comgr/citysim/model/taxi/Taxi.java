@@ -1,4 +1,4 @@
-package ch.fhnw.comgr.citysim;
+package ch.fhnw.comgr.citysim.model.taxi;
 
 import ch.fhnw.comgr.citysim.util.TaxiLoader;
 import ch.fhnw.comgr.citysim.util.TaxiType;
@@ -10,10 +10,7 @@ import ch.fhnw.util.math.Vec3;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by maurice on 11/12/15.
- */
-public class Taxi {
+public class Taxi{
 
 	private Mat4 startTransform;
 	private Mat4 transform;
@@ -52,7 +49,7 @@ public class Taxi {
 	/**
 	 * Set Transformation Matrix. Initial Transformation will automaticly be
 	 * added.
-	 * 
+	 *
 	 * @param mat4s
 	 */
 	public void setTransform(Mat4... mat4s) {
@@ -75,7 +72,7 @@ public class Taxi {
 	public Mat4 getTransform() {
 		return transform;
 	}
-	
+
 	public Mat4 getStartTransform(){
 		return startTransform;
 	}

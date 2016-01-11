@@ -1,9 +1,14 @@
 package ch.fhnw.comgr.citysim;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import ch.fhnw.comgr.citysim.model.Field;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.image.Frame;
+import ch.fhnw.ether.image.Frame;
+import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
 import ch.fhnw.ether.scene.mesh.material.ColorMapMaterial;
 import ch.fhnw.ether.scene.mesh.material.IMaterial;
@@ -40,6 +45,7 @@ public class CityController extends DefaultController{
 		PathAlgorithm pathAlgorithm = new PathAlgorithm(CityController.fields);
 
 	}
+	
 
 	public static InteractionPanel getInteractionPanel(){
 		return interactionPanel;
@@ -47,7 +53,7 @@ public class CityController extends DefaultController{
 	
 	public static void setInteractionPanel(InteractionPanel ip){
 		CityController.interactionPanel = ip;
-		
+
 	}
 	
 	public static Field getField(Vec3 position) {

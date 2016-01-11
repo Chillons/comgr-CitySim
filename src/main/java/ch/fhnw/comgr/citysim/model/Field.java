@@ -1,4 +1,4 @@
-package ch.fhnw.comgr.citysim;
+package ch.fhnw.comgr.citysim.model;
 
 import java.util.Arrays;
 import java.util.EnumSet;

@@ -1,6 +1,9 @@
 
 package ch.fhnw.comgr.citysim;
 
+import ch.fhnw.comgr.citysim.model.map.InteractionObject;
+import ch.fhnw.comgr.citysim.model.map.CitySimMap;
+import ch.fhnw.comgr.citysim.model.taxi.Taxi;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -8,6 +11,8 @@ import java.util.List;
 import ch.fhnw.comgr.citysim.util.HouseLoader;
 import ch.fhnw.comgr.citysim.util.PickFieldTool;
 import ch.fhnw.comgr.citysim.util.TaxiType;
+import ch.fhnw.comgr.citysim.util.TrafficLightLoader;
+import ch.fhnw.ether.formats.obj.ObjReader;
 import ch.fhnw.ether.scene.DefaultScene;
 import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.camera.Camera;
@@ -16,6 +21,7 @@ import ch.fhnw.ether.scene.camera.ICamera;
 import ch.fhnw.ether.scene.light.DirectionalLight;
 import ch.fhnw.ether.scene.light.ILight;
 import ch.fhnw.ether.scene.mesh.IMesh;
+import ch.fhnw.ether.scene.mesh.MeshUtilities;
 import ch.fhnw.ether.ui.GraphicsPlane;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.ether.view.IView.ViewType;
@@ -23,6 +29,13 @@ import ch.fhnw.ether.view.gl.DefaultView;
 import ch.fhnw.util.color.RGB;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
+
+import javax.imageio.spi.IIORegistry;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 public final class StreetExample {
 	
@@ -34,15 +47,15 @@ public final class StreetExample {
 	public static final int N_W = 5;
 	public static final int S_E = 6;
 	public static final int S_W = 7;
-	// Ausrichtung nach unten. 
+	// Ausrichtung nach unten.
 	public static final int H0S = 10;
-	// Ausrichtung nach oben. 
+	// Ausrichtung nach oben.
 	public static final int H0N = 12;
 	//Ausrichtung nach unten. Braucht rechts noch einmal gras
 	public static final int H1S = 11;
 	//Ausrichtung nach oben. Braucht links noch einmal gras
 	public static final int H1N = 13;
-		
+
 	private List<IMesh> car;
 	
 	float startX = -(strasse[0].length / 2.0f);
@@ -54,28 +67,31 @@ public final class StreetExample {
 	
 	public static final int[][] strasse = { 
 																										  // 13
-	{ S_E,	E_W,	E_W,	E_W,	CRO, 	E_W, 	E_W ,	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W ,	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	S_W}, 
-	{ N_S,	H1S,	GRA,	H0S,	N_S, 	H0S, 	GRA ,	H0S,	N_S,	GRA,	H0S, 	GRA, 	H0S ,	N_S, 	H0S, 	H1S, 	GRA,	N_S,	GRA,	H1S, 	GRA, 	GRA ,	N_S}, 
-	{ CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO}, 
-	{ H0S,	GRA,	H0S,	GRA, 	N_S, 	GRA, 	H0S, 	H0S,	N_S,	GRA,	H0S, 	H0S, 	GRA ,	N_S, 	GRA, 	H0S, 	GRA,	N_S,	H1S,	GRA, 	H1S, 	GRA ,	N_S}, 
+	{ S_E,	E_W,	E_W,	E_W,	CRO, 	E_W, 	E_W ,	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W ,	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	S_W},
+	{ N_S,	H1S,	GRA,	H0S,	N_S, 	H0S, 	GRA ,	H0S,	N_S,	GRA,	H0S, 	GRA, 	H0S ,	N_S, 	H0S, 	H1S, 	GRA,	N_S,	GRA,	H1S, 	GRA, 	GRA ,	N_S},
+	{ CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO},
+	{ H0S,	GRA,	H0S,	GRA, 	N_S, 	GRA, 	H0S, 	H0S,	N_S,	GRA,	H0S, 	H0S, 	GRA ,	N_S, 	GRA, 	H0S, 	GRA,	N_S,	H1S,	GRA, 	H1S, 	GRA ,	N_S},
 	{ CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO},
 	{ N_S,	GRA,	GRA,	GRA, 	N_S,	GRA, 	GRA, 	GRA,	N_S,	GRA,	H1S, 	GRA, 	GRA ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S},
-	{ CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO}, 
+	{ CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO},
 	{ N_S,	GRA,	GRA,	GRA, 	GRA, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S},
 	{ N_S,	H0S,	H0S,	GRA, 	GRA, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	H1S, 	GRA, 	H0S ,	N_S, 	GRA, 	H1S, 	GRA,	N_S,	GRA,	H0S, 	GRA, 	GRA ,	N_S},
-	{ CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO}, 
-	{ N_S,	GRA,	GRA,	GRA, 	N_S,	GRA, 	GRA, 	GRA,	GRA,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S}, 
-	{ N_S,	GRA,	H1S,	GRA, 	N_S,	H1S, 	GRA, 	GRA,	H0S,	H0S,	H1S, 	GRA, 	H0S ,	N_S, 	H1S, 	GRA, 	GRA,	N_S,	GRA,	H0S, 	H1S, 	GRA ,	N_S}, 
+	{ CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO},
+	{ N_S,	GRA,	GRA,	GRA, 	N_S,	GRA, 	GRA, 	GRA,	GRA,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S},
+	{ N_S,	GRA,	H1S,	GRA, 	N_S,	H1S, 	GRA, 	GRA,	H0S,	H0S,	H1S, 	GRA, 	H0S ,	N_S, 	H1S, 	GRA, 	GRA,	N_S,	GRA,	H0S, 	H1S, 	GRA ,	N_S},
 	{ CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO},
 	{ N_S,	GRA,	GRA,	GRA, 	N_S,	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	H0S, 	H0S,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S},
-	{CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	CRO}, 
+	{CRO,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	CRO},
 	{ N_S,	GRA,	GRA,	GRA, 	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S},
-	{ N_S,	GRA,	GRA,	GRA, 	N_S, 	GRA, 	GRA, 	GRA,	N_S,	H0S,	H1S, 	GRA, 	GRA ,	N_S, 	H0S, 	H1S, 	GRA,	N_S,	H0S,	H1S, 	GRA, 	GRA ,	N_S}, 
+	{ N_S,	GRA,	GRA,	GRA, 	N_S, 	GRA, 	GRA, 	GRA,	N_S,	H0S,	H1S, 	GRA, 	GRA ,	N_S, 	H0S, 	H1S, 	GRA,	N_S,	H0S,	H1S, 	GRA, 	GRA ,	N_S},
 	{ N_E,	E_W,	E_W,	E_W,	CRO, 	E_W, 	E_W ,	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W ,	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	N_W}  // 17
 	};
 
 		
 	public static void main(String[] args) {
+
+			IIORegistry registry = IIORegistry.getDefaultInstance();
+			registry.registerServiceProvider(new com.realityinteractive.imageio.tga.TGAImageReaderSpi());
 		new StreetExample();
 	}
 
@@ -86,15 +102,14 @@ public final class StreetExample {
 		
 		CityController controller = new CityController(strasse);
 
-		
 		controller.run(time -> {
 			// Create view
 			// Neues Config machen
-			IView view = new DefaultView(controller, 100, 100, 800, 600, new IView.Config(ViewType.INTERACTIVE_VIEW, 0, new IView.ViewFlag[0]), "City Sim");		
+			IView view = new DefaultView(controller, 100, 100, 800, 600, new IView.Config(ViewType.INTERACTIVE_VIEW, 0, new IView.ViewFlag[0]), "City Sim");
 			ICamera camera = new Camera(new Vec3(0, 5, 5), Vec3.ZERO);
 			FrameCameraControl fcc = new FrameCameraControl(camera, PathAlgorithm.getNodes());
 			fcc.frame();
-			
+
 
 
 			// Create scene and add triangle
@@ -103,37 +118,37 @@ public final class StreetExample {
 			
 			scene.add3DObject(camera);
 			controller.setCamera(view, camera);
-			
+
 			PickFieldTool pickFieldTool = new PickFieldTool(controller);
 			controller.setCurrentTool(pickFieldTool);
-			
+
 
 			/////// CITY ////////
 
 			for (int i = 0; i < PathAlgorithm.getFields().length; i++) {
 				for (int j = 0; j < PathAlgorithm.getFields()[0].length; j++) {
-					scene.add3DObject(PathAlgorithm.getFields()[i][j]);	
+					scene.add3DObject(PathAlgorithm.getFields()[i][j]);
 				}
-			}	
+			}
 
 			/////// Taxi //////////
 
 			Taxi taxi = new Taxi(TaxiType.YELLOW_CAB);
 			taxi.setTransform(Mat4.translate(1, 0, 0));
-			
-			DriveAnimation drive = new DriveAnimation(taxi);			
+
+			DriveAnimation drive = new DriveAnimation(taxi);
 			controller.animate(drive);
 			scene.add3DObjects(taxi.getMesh());
 			pickFieldTool.setCurrentTaxi(taxi, drive);
-			
-			
-			Field[][] fields = PathAlgorithm.getFields();
-			
-			//Field target = fields[14][22];			
-			//drive.setTarget(target);
-			
 
-			
+
+			Field[][] fields = PathAlgorithm.getFields();
+
+			//Field target = fields[14][22];
+			//drive.setTarget(target);
+
+
+
 			for (int i = 0; i < fields.length; i++) {
 				for (int j = 0; j < fields[i].length; j++) {
 					if (strasse[i][j] == H0S) {
@@ -152,29 +167,80 @@ public final class StreetExample {
 						scene.add3DObjects(house);
 					}
 				}
+//			Taxi taxi = new Taxi(TaxiType.YELLOW_CAB);
+//
+//			car = taxi.getMesh();
+//			for (IMesh mesh : car) {
+//				mesh.setTransform(taxi.getTransform());
+//			}
+//
+//			controller.addTaxi(car);
+//			scene.add3DObjects(car);
+
+
+			/////// Traffic Light dummy ///////
+
+//			InteractionObject interactionObject = new InteractionObject(MeshUtilities.createCube(InteractionObject.greenBlock));
+
+			CitySimMap map = CitySimMap.getInstance();
+
+
+
+
+			InteractionObject interactionObject2 = new InteractionObject(TrafficLightLoader.getStatic(getClass()),
+					TrafficLightLoader.getEnabled(getClass()), TrafficLightLoader.getDisabled(getClass()));
+
+			map.addObjectToLayer(interactionObject2);
+
+
+			for (InteractionObject intObj : map.getInteractionObjects()) {
+				scene.add3DObjects(intObj.getMesh());
 			}
-			
-			
+
+			// Traffic Light
+			List<IMesh> trafficLight = getTrafficLight();
+
+			scene.add3DObjects(trafficLight);
+
+
 			//InteractionPanel
 			InteractionPanel plane = new InteractionPanel(0, 0, 1800, 1600);
 			controller.getRenderManager().addMesh(plane.getMesh());
 			CityController.setInteractionPanel(plane);
-			
+
 			String[] message = new String[2];
 			message[0] = "Hallo mein Name ist John. Ich bin der Taxifahrer von CitySim.";
 			message[1] = "Klicke auf eine Kreuzung um mir einen neuen Fahrziel zu setzen.";
 			plane.sendMessage(message);
 
-		
+
 			ILight light = new DirectionalLight(new Vec3(5,5,5), RGB.WHITE, RGB.WHITE);
 			ILight light2 = new DirectionalLight(new Vec3(-10,-10,5), RGB.WHITE, RGB.WHITE);
 			scene.add3DObject(light);
 			scene.add3DObject(light2);
-			
+
 		});
 		
 			
 	}
-	
-		
+
+	public static List<IMesh> getTrafficLight() {
+
+		final URL obj = StreetExample.class.getClassLoader().getResource("assets/trafficLight/trafficLight1.obj");
+
+		final List<IMesh> meshes = new ArrayList<>();
+		try {
+			new ObjReader(obj).getMeshes().forEach(mesh -> meshes.add(mesh));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("number of meshes before merging: " + meshes.size());
+		final List<IMesh> merged = MeshUtilities.mergeMeshes(meshes);
+		System.out.println("number of meshes after merging: " + merged.size());
+
+
+		return merged;
+	}
+
+
 }

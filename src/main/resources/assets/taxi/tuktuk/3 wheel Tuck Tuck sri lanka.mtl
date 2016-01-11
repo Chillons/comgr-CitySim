@@ -1,0 +1,30 @@
+# Max2Mtl Version 4.0 Mar 10th, 2001
+#
+newmtl Standard_7
+Ka  0.6 0.6 0.6
+Kd  0.6 0.6 0.6
+Ks  0.9 0.9 0.9
+d  1.0
+Ns  0.0
+illum 2
+map_Kd 2.bmp
+map_d 3.bmp
+#
+newmtl Standard_1
+Ka  0.6 0.6 0.6
+Kd  0.6 0.6 0.6
+Ks  0.9 0.9 0.9
+d  1.0
+Ns  0.0
+illum 2
+map_Kd 1.bmp
+#
+newmtl Standard_2
+Ka  0.6 0.6 0.6
+Kd  0.6 0.6 0.6
+Ks  0.9 0.9 0.9
+d  0.5
+Ns  4.7
+illum 2
+#
+# EOF
