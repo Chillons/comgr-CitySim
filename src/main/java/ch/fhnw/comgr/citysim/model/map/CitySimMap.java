@@ -66,6 +66,9 @@ public class CitySimMap {
         } else if (object instanceof DynamicObject) {
           dynamicObjects.add((DynamicObject) object);
           return true;
+        } else if (object instanceof StaticObject) {
+          staticObjects.add((StaticObject) object);
+          return true;
         } else {
           return false;
         }
