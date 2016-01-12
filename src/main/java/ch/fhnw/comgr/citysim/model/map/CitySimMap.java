@@ -29,32 +29,32 @@ public class CitySimMap {
     public static final int H0N = 12;
     //Ausrichtung nach oben. Braucht links noch einmal gras
     public static final int H1N = 13;
-
+    
     public static final int T_N = 21;
     public static final int T_E = 22;
     public static final int T_S = 23;
     public static final int T_W = 24;
-
+    
 
     public static final int[][] MAP = {
                                                                                                           // 13
     { S_E,	E_W,	E_W,	E_W,	T_S, 	E_W, 	E_W ,	E_W,	T_S,	E_W,	E_W, 	E_W, 	E_W ,	T_S, 	E_W, 	E_W ,	E_W,	T_S,	E_W,	E_W, 	E_W, 	E_W ,	S_W},
-    { N_S,	H1S,	GRA,	H0S,	N_S, 	H0S, 	GRA ,	H0S,	N_S,	GRA,	H0S, 	GRA, 	H0S ,	N_S, 	H0S, 	H1S, 	GRA,	N_S,	GRA,	H1S, 	GRA, 	GRA ,	N_S},
+    { N_S,	H1S,	GRA,	H0S,	N_S, 	H1S, 	GRA ,	H0S,	N_S,	H0S,	H1S, 	GRA, 	H0S ,	N_S, 	H0S, 	H1S, 	GRA,	N_S,	H0S,	H1S, 	GRA, 	H0S ,	N_S},
     { N_E,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	T_W},
-    { H0S,	GRA,	H0S,	GRA, 	N_S, 	GRA, 	H0S, 	H0S,	N_S,	GRA,	H0S, 	H0S, 	GRA ,	N_S, 	GRA, 	H0S, 	GRA,	N_S,	H1S,	GRA, 	H1S, 	GRA ,	N_S},
+    { H0S,	H0S,	H1S,	GRA, 	N_S, 	H0S, 	H1S, 	GRA,	N_S,	H0S,	H0S, 	H1S, 	GRA ,	N_S, 	H0S, 	H1S, 	GRA,	N_S,	H1S,	GRA, 	H1S, 	GRA ,	N_S},
     { S_E,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	T_W},
-    { N_S,	GRA,	GRA,	GRA, 	N_S,	GRA, 	GRA, 	GRA,	N_S,	GRA,	H1S, 	GRA, 	GRA ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S},
+    { N_S,	H1S,	GRA,	H0S, 	N_S,	H1S, 	GRA, 	H0S,	N_S,	H0S,	H1S, 	GRA, 	H0S ,	N_S, 	H1S, 	GRA, 	H0S,	N_S,	H1S,	GRA, 	H0S, 	H0S ,	N_S},
     { T_E,	E_W, 	E_W,	E_W,	T_N, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	T_W},
-    { N_S,	GRA,	GRA,	GRA, 	GRA, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S},
-    { N_S,	H0S,	H0S,	GRA, 	GRA, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	H1S, 	GRA, 	H0S ,	N_S, 	GRA, 	H1S, 	GRA,	N_S,	GRA,	H0S, 	GRA, 	GRA ,	N_S},
+    { N_S,	H1S,	GRA,	H1S, 	GRA, 	H0S, 	H1S, 	GRA,	N_S,	H1S,	GRA, 	H0S, 	H0S ,	N_S, 	H1S, 	GRA, 	H0S,	N_S,	H0S,	H0S, 	H1S, 	GRA ,	N_S},
+    { N_S,	H0S,	H0S,	H0S, 	H1S, 	GRA, 	H0S, 	H0S,	N_S,	H0S,	H1S, 	GRA, 	H0S ,	N_S, 	H0S, 	H1S, 	GRA,	N_S,	H0S,	H0S, 	H1S, 	GRA ,	N_S},
     { T_E,	E_W, 	E_W,	E_W,	T_S, 	E_W, 	E_W , 	E_W,	T_N,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	T_W},
-    { N_S,	GRA,	GRA,	GRA, 	N_S,	GRA, 	GRA, 	GRA,	GRA,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S},
-    { N_S,	GRA,	H1S,	GRA, 	N_S,	H1S, 	GRA, 	GRA,	H0S,	H0S,	H1S, 	GRA, 	H0S ,	N_S, 	H1S, 	GRA, 	GRA,	N_S,	GRA,	H0S, 	H1S, 	GRA ,	N_S},
+    { N_S,	H1S,	GRA,	H0S, 	N_S,	H0S, 	H1S, 	GRA,	H1S,	GRA,	H0S, 	H0S, 	H0S ,	N_S, 	H1S, 	GRA, 	H0S,	N_S,	H1S,	GRA, 	H0S, 	H0S ,	N_S},
+    { N_S,	H0S,	H1S,	GRA, 	N_S,	H1S, 	GRA, 	H0S,	H0S,	H0S,	H1S, 	GRA, 	H0S ,	N_S, 	H1S, 	GRA, 	H0S,	N_S,	H0S,	H0S, 	H1S, 	GRA ,	N_S},
     { T_E,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	T_S,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	T_W},
-    { N_S,	GRA,	GRA,	GRA, 	N_S,	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	H0S, 	H0S,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S},
-    { T_E,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	T_W,	GRA,	GRA, 	GRA, 	GRA ,	N_S},
-    { N_S,	GRA,	GRA,	GRA, 	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S, 	GRA, 	GRA, 	GRA,	N_S,	GRA,	GRA, 	GRA, 	GRA ,	N_S},
-    { N_S,	GRA,	GRA,	GRA, 	N_S, 	GRA, 	GRA, 	GRA,	N_S,	H0S,	H1S, 	GRA, 	GRA ,	N_S, 	H0S, 	H1S, 	GRA,	N_S,	H0S,	H1S, 	GRA, 	GRA ,	N_S},
+    { N_S,	H1S,	GRA,	H0S, 	N_S,	H0S, 	H1S, 	GRA,	N_S,	H1S,	GRA, 	H1S, 	GRA ,	N_S, 	H0S, 	H0S, 	H0S,	N_S,	H0S,	H0S, 	H1S, 	GRA ,	N_S},
+    { T_E,	E_W, 	E_W,	E_W,	CRO, 	E_W, 	E_W , 	E_W,	CRO,	E_W,	E_W, 	E_W, 	E_W ,	CRO, 	E_W, 	E_W , 	E_W,	T_W,	H0S,	H1S, 	GRA, 	H0S ,	N_S},
+    { N_S,	H1S,	GRA,	H0S, 	N_S, 	H0S, 	H1S, 	GRA,	N_S,	H0S,	H0S, 	H1S, 	GRA ,	N_S, 	H0S, 	H0S, 	H0S,	N_S,	H1S,	GRA, 	H0S, 	H0S ,	N_S},
+    { N_S,	H0S,	H1S,	GRA, 	N_S, 	H0S, 	H1S, 	GRA,	N_S,	H0S,	H1S, 	GRA, 	H0S ,	N_S, 	H0S, 	H1S, 	GRA,	N_S,	H0S,	H1S, 	GRA, 	H0S ,	N_S},
     { N_E,	E_W,	E_W,	E_W,	T_N, 	E_W, 	E_W ,	E_W,	T_N,	E_W,	E_W, 	E_W, 	E_W ,	T_N, 	E_W, 	E_W ,	E_W,	T_N,	E_W,	E_W, 	E_W, 	E_W ,	N_W}  // 17
     };
 
