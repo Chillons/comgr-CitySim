@@ -1,29 +1,26 @@
-package ch.fhnw.comgr.citysim.util;
+package ch.fhnw.comgr.citysim.tools;
+
+import ch.fhnw.comgr.citysim.CityController;
+import ch.fhnw.comgr.citysim.TrafficLightAction;
+import ch.fhnw.comgr.citysim.model.map.CitySimMap;
+import ch.fhnw.comgr.citysim.model.map.layer.InteractionObject;
+import ch.fhnw.ether.controller.event.IPointerEvent;
+import ch.fhnw.ether.controller.tool.AbstractTool;
+import ch.fhnw.ether.controller.tool.PickUtilities;
+import ch.fhnw.ether.controller.tool.PickUtilities.PickMode;
+import ch.fhnw.ether.scene.I3DObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import ch.fhnw.comgr.citysim.CityController;
-import ch.fhnw.comgr.citysim.DriveAnimation;
-import ch.fhnw.comgr.citysim.Taxi;
-import ch.fhnw.comgr.citysim.TrafficLightAction;
-import ch.fhnw.comgr.citysim.model.map.CitySimMap;
-import ch.fhnw.comgr.citysim.model.map.InteractionObject;
-import ch.fhnw.ether.controller.event.IPointerEvent;
-import ch.fhnw.ether.controller.tool.AbstractTool;
-import ch.fhnw.ether.controller.tool.PickUtilities;
-import ch.fhnw.ether.controller.tool.PickUtilities.PickMode;
-import ch.fhnw.ether.scene.I3DObject;
-import ch.fhnw.util.math.Vec3;
 
-
-public class PickFieldTool extends AbstractTool {
-		Taxi currentTaxi;
-		DriveAnimation driveAnimation;
-
-		public PickFieldTool(CityController controller) {
+public class GameTool extends AbstractTool {
+		
+		private CityController cityController;
+		
+		public GameTool(CityController controller) {
 			super(controller);
 		}
 
@@ -81,18 +78,6 @@ public class PickFieldTool extends AbstractTool {
 					}
 				}
 			}
-				System.out.println("No Mesh Clicked");
-			else{
-				Vec3 newCarPosition = pickables.values().iterator().next().getPosition();
-
-				driveAnimation.setTarget(CityController.getField(newCarPosition));
-			}
-
-		}
-
-		public void setCurrentTaxi(Taxi t, DriveAnimation d){
-			currentTaxi = t;
-			driveAnimation = d;
 		}
 	}
 

@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
+import ch.fhnw.comgr.citysim.PathAlgorithm;
 import ch.fhnw.ether.scene.attribute.IAttribute;
 import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
@@ -151,7 +152,7 @@ public class Field implements IMesh {
 		float distanceXWithinTheField = carPosition.x % 1;
 		float distanceYWithinTheField = carPosition.y % 1;
 
-		double fieldX = PathAlgorithm.getFields()[0][0].getBounds().getMaxX() - PathAlgorithm.getFields()[0][0].getBounds().getMinX(); 
+		double fieldX = PathAlgorithm.getFields()[0][0].getBounds().getMaxX() - PathAlgorithm.getFields()[0][0].getBounds().getMinX();
 		double fieldY = PathAlgorithm.getFields()[0][0].getBounds().getMaxY() - PathAlgorithm.getFields()[0][0].getBounds().getMinY(); 
 		
 		if (distanceXWithinTheField < (fieldX/10)) {

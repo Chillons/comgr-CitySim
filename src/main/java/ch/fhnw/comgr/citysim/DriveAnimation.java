@@ -2,6 +2,8 @@ package ch.fhnw.comgr.citysim;
 
 import java.util.LinkedList;
 
+import ch.fhnw.comgr.citysim.model.Field;
+import ch.fhnw.comgr.citysim.model.taxi.Taxi;
 import ch.fhnw.ether.controller.event.IEventScheduler.IAnimationAction;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;

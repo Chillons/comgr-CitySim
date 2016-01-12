@@ -1,5 +1,10 @@
 package ch.fhnw.comgr.citysim.model.map;
 
+import ch.fhnw.comgr.citysim.model.map.layer.DynamicObject;
+import ch.fhnw.comgr.citysim.model.map.layer.InteractionObject;
+import ch.fhnw.comgr.citysim.model.map.layer.LayerObject;
+import ch.fhnw.comgr.citysim.model.map.layer.StaticObject;
+
 import java.util.ArrayList;
 import java.util.List;
 

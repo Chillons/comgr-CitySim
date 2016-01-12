@@ -1,6 +1,6 @@
 package ch.fhnw.comgr.citysim;
 
-import ch.fhnw.comgr.citysim.model.map.InteractionObject;
+import ch.fhnw.comgr.citysim.model.map.layer.InteractionObject;
 import ch.fhnw.ether.controller.IController;
 import ch.fhnw.ether.controller.event.IEventScheduler;
 

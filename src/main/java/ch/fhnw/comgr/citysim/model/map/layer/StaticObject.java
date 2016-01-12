@@ -1,4 +1,4 @@
-package ch.fhnw.comgr.citysim.model.map;
+package ch.fhnw.comgr.citysim.model.map.layer;
 
 import ch.fhnw.ether.scene.mesh.IMesh;
 

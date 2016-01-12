@@ -1,5 +1,7 @@
 package ch.fhnw.comgr.citysim;
 
+import ch.fhnw.comgr.citysim.model.Field;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
