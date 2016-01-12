@@ -1,9 +1,9 @@
-package ch.fhnw.comgr.citysim.tools;
+package ch.fhnw.comgr.citysim.tool;
 
 import java.util.Map;
 
 import ch.fhnw.comgr.citysim.CityController;
-import ch.fhnw.comgr.citysim.DriveAnimation;
+import ch.fhnw.comgr.citysim.action.DriveAnimation;
 import ch.fhnw.comgr.citysim.model.Taxi;
 import ch.fhnw.ether.controller.event.IPointerEvent;
 import ch.fhnw.ether.controller.tool.AbstractTool;
@@ -14,8 +14,9 @@ import ch.fhnw.util.math.Vec3;
 
 
 public class TaxiMoverTool extends AbstractTool {
-		Taxi currentTaxi;
-		DriveAnimation driveAnimation;
+
+		private Taxi currentTaxi;
+		private DriveAnimation driveAnimation;
 
 		public TaxiMoverTool(CityController controller) {
 			super(controller);

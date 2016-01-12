@@ -1,7 +1,9 @@
-package ch.fhnw.comgr.citysim;
+package ch.fhnw.comgr.citysim.action;
 
 import java.util.LinkedList;
 
+import ch.fhnw.comgr.citysim.CityController;
+import ch.fhnw.comgr.citysim.PathAlgorithm;
 import ch.fhnw.comgr.citysim.model.Field;
 import ch.fhnw.comgr.citysim.model.Taxi;
 import ch.fhnw.ether.controller.event.IEventScheduler.IAnimationAction;
@@ -76,7 +78,7 @@ public class DriveAnimation implements IAnimationAction {
 				target = tempTarget; // reset
 				
 			}else{				
-					stations = PathAlgorithm.getPathFromTo(carPositionAsField, target);					
+					stations = PathAlgorithm.getPathFromTo(carPositionAsField, target);
 					if (stations != null) {
 						// es wurde auf eine Kreuzung geklickt
 						stationCounter = 1;

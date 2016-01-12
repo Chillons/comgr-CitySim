@@ -1,6 +1,7 @@
 package ch.fhnw.comgr.citysim;
 
 import ch.fhnw.comgr.citysim.model.Field;
+import ch.fhnw.comgr.citysim.ui.InteractionPanel;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.image.Frame;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
@@ -93,7 +94,7 @@ public class CityController extends DefaultController{
 	private static Field createField(String asset) {
 		IMaterial m = null;
 		try {
-			m = new ColorMapMaterial(RGBA.WHITE, Frame.create(StreetExample.class.getResource(asset)).getTexture(), true);
+			m = new ColorMapMaterial(RGBA.WHITE, Frame.create(CitySimGame.class.getResource(asset)).getTexture(), true);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

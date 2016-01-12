@@ -1,4 +1,4 @@
-package ch.fhnw.comgr.citysim;
+package ch.fhnw.comgr.citysim.action;
 
 import ch.fhnw.comgr.citysim.model.map.layer.InteractionObject;
 import ch.fhnw.ether.controller.IController;

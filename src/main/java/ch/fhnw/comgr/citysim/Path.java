@@ -5,15 +5,15 @@ import ch.fhnw.comgr.citysim.model.Field;
 public class Path{
 	  private final Field source;
 	  private final Field destination;
-	  private final int weight; 
-	  
+	  private final int weight;
+
 
 	  public Path(Field source, Field destination, int weight) {
 	    this.source = source;
 	    this.destination = destination;
 	    this.weight = weight;
 	  }
-	  
+
 	  public Field getDestination() {
 	    return destination;
 	  }
@@ -24,11 +24,11 @@ public class Path{
 	  public int getWeight() {
 	    return weight;
 	  }
-	  
+
 	  @Override
 	  public String toString() {
 	    return source + " " + destination;
 	  }
-	  
-	  
-	} 
+
+
+	}

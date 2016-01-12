@@ -1,7 +1,7 @@
-package ch.fhnw.comgr.citysim.tools;
+package ch.fhnw.comgr.citysim.tool;
 
 import ch.fhnw.comgr.citysim.CityController;
-import ch.fhnw.comgr.citysim.TrafficLightAction;
+import ch.fhnw.comgr.citysim.action.TrafficLightAction;
 import ch.fhnw.comgr.citysim.model.map.CitySimMap;
 import ch.fhnw.comgr.citysim.model.map.layer.InteractionObject;
 import ch.fhnw.ether.controller.event.IPointerEvent;

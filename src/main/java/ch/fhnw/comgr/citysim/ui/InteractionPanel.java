@@ -1,6 +1,6 @@
 
 
-package ch.fhnw.comgr.citysim;
+package ch.fhnw.comgr.citysim.ui;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;

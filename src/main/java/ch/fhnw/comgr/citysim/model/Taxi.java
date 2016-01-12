@@ -1,13 +1,10 @@
 package ch.fhnw.comgr.citysim.model;
 
-import ch.fhnw.comgr.citysim.util.TaxiLoader;
-import ch.fhnw.comgr.citysim.util.TaxiType;
-import ch.fhnw.ether.controller.event.IEventScheduler.IAnimationAction;
+import ch.fhnw.comgr.citysim.util.AssetsLoader;
 import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class Taxi{
@@ -23,7 +20,7 @@ public class Taxi{
 		this.taxiType = taxiType;
 		this.transform = Mat4.ID;
 		// Get Meshes from File
-		this.taxi = TaxiLoader.getTaxi(taxiType);
+		this.taxi = AssetsLoader.getObject(taxiType.toString());
 
 		// Get Starttransformation
 		this.startTransform = taxiType.getTransform();

@@ -9,14 +9,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TaxiLoader {
+public class AssetsLoader {
 
-    private TaxiLoader() {
+    private AssetsLoader() {
 
     }
 
-    public static List<IMesh> getTaxi(TaxiType type) {
-        final URL obj = TaxiLoader.class.getClassLoader().getResource("assets/taxi/" + type.toString() + ".obj");
+    public static List<IMesh> getObject(final String name) {
+        final URL obj = AssetsLoader.class.getClassLoader().getResource("assets/" + name + ".obj");
 
         final List<IMesh> meshes = new ArrayList<>();
         try {
@@ -30,4 +30,23 @@ public class TaxiLoader {
 
         return merged;
     }
+
+    /**
+     * Gets all three meshes
+     *
+     * @param name the base name.
+     * @return an array with base model, deactivated state, activated state
+     */
+    public static List[] getDynamicObject(final String name) {
+
+        List[] ans = new List[3];
+
+        ans[0] = getObject(name);
+        ans[1] = getObject(name + "Inactive");
+        ans[2] = getObject(name + "Active");
+
+
+        return ans;
+    }
+
 }
