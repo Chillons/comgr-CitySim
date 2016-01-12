@@ -1,6 +1,4 @@
-package ch.fhnw.comgr.citysim;
-
-import ch.fhnw.comgr.citysim.model.Field;
+package ch.fhnw.comgr.citysim.model;
 
 public class Path{
 	  private final Field source;

@@ -1,6 +1,7 @@
 package ch.fhnw.comgr.citysim;
 
 import ch.fhnw.comgr.citysim.model.Field;
+import ch.fhnw.comgr.citysim.model.Path;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,7 +17,7 @@ public class PathAlgorithm {
 
   private static Field[][] fields;
   private static List<Field> nodes;
-  private static List<Path> paths;	
+  private static List<Path> paths;
   private static LinkedList<Field> pathsProNode;
 
   private static Set<Field> settledNodes;
@@ -38,9 +39,9 @@ public class PathAlgorithm {
   public static LinkedList<Field> getPathFromTo(Field source, Field target){  
 	  LinkedList <Field> path = new LinkedList<Field>();
 	  searchForPaths();
-	  for(int i=0; i<nodes.size(); i++) { 
-		  if(source.equals(nodes.get(i))){ 
-			  PathAlgorithm.execute(nodes.get(i));
+	  for (Field node : nodes) {
+		  if (source.equals(node)) {
+			  PathAlgorithm.execute(node);
 			  return PathAlgorithm.getPath(target);
 		  }
 	  }
@@ -53,13 +54,13 @@ public class PathAlgorithm {
   public static int getDistanceFromTo(Field source, Field target){  
 	  LinkedList <Field> path = new LinkedList<Field>();
 	  searchForPaths();
-	  for(int i=0; i<nodes.size(); i++) { 
-		  if(source.equals(nodes.get(i))){ 
-			  PathAlgorithm.execute(nodes.get(i));
+	  for (Field node : nodes) {
+		  if (source.equals(node)) {
+			  PathAlgorithm.execute(node);
 			  int distTotal = 0;
 			  LinkedList<Field> stations = PathAlgorithm.getPath(target);
-			  for(int j=0; j< stations.size()-1; j++){
-				  distTotal += getDistance(stations.get(j), stations.get(j+1));
+			  for (int j = 0; j < stations.size() - 1; j++) {
+				  distTotal += getDistance(stations.get(j), stations.get(j + 1));
 			  }
 			  return distTotal;
 		  }
@@ -70,12 +71,11 @@ public class PathAlgorithm {
   public static int getTimeFromTo(Field source, Field target){  
 	  LinkedList <Field> path = new LinkedList<Field>();
 	  searchForPaths();
-	  for(int i=0; i<nodes.size(); i++) { 
-		  if(source.equals(nodes.get(i))){ 
-			  PathAlgorithm.execute(nodes.get(i));
+	  for (Field node : nodes) {
+		  if (source.equals(node)) {
+			  PathAlgorithm.execute(node);
 			  int distance = PathAlgorithm.getPath(target).size();
-			  int time = (60 * distance) / 50; //für eine Geschwindigkeit von 50km/h
-			  return time;
+			  return (60 * distance) / 50; //für eine Geschwindigkeit von 50km/h
 		  }
 	  }
 
@@ -111,8 +111,8 @@ public class PathAlgorithm {
 	  for(int i=0; i<nodes.size(); i++) {
 		  pathsProNode = new LinkedList<Field>();
 		  PathAlgorithm.execute(nodes.get(i));
-		  for(int j=0; j<nodes.size();j++){  
-			  pathsProNode = PathAlgorithm.getPath(nodes.get(j));
+		  for (Field node : nodes) {
+			  pathsProNode = PathAlgorithm.getPath(node);
 		  }
 	  }
 	  return paths;

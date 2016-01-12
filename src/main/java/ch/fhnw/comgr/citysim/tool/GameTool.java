@@ -37,7 +37,6 @@ public class GameTool extends AbstractTool {
 				System.out.println("No Mesh");
 			else{
 				Collection<I3DObject> pickableObjects = pickables.values();
-				int objects = 0;
 				List<InteractionObject> interactionObjects = CitySimMap.getInstance().getInteractionObjects();
 
 				boolean trafficLightFound = false;
@@ -55,6 +54,7 @@ public class GameTool extends AbstractTool {
 								foundTrafficLights.add(interactionObject);
 								trafficLightFound = true;
 								System.out.println("Setting color to red");
+								break;
 							} else {
 								System.out.println("But already red!");
 							}

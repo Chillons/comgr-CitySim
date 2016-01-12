@@ -2,9 +2,9 @@ package ch.fhnw.comgr.citysim.action;
 
 import ch.fhnw.comgr.citysim.model.map.layer.InteractionObject;
 import ch.fhnw.ether.controller.IController;
-import ch.fhnw.ether.controller.event.IEventScheduler;
+import ch.fhnw.ether.controller.event.IEventScheduler.IAnimationAction;
 
-public class TrafficLightAction implements IEventScheduler.IAnimationAction {
+public class TrafficLightAction implements IAnimationAction {
 
     private final InteractionObject interactionObject;
     private final IController controller;
