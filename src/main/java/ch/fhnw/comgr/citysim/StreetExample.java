@@ -2,17 +2,13 @@
 package ch.fhnw.comgr.citysim;
 
 import ch.fhnw.comgr.citysim.model.Field;
-import ch.fhnw.comgr.citysim.model.map.layer.InteractionObject;
-import ch.fhnw.comgr.citysim.model.map.CitySimMap;
-import ch.fhnw.comgr.citysim.model.taxi.Taxi;
+import ch.fhnw.comgr.citysim.model.Taxi;
 
 import java.util.List;
 
 import ch.fhnw.comgr.citysim.util.HouseLoader;
 import ch.fhnw.comgr.citysim.tools.TaxiMoverTool;
 import ch.fhnw.comgr.citysim.util.TaxiType;
-import ch.fhnw.comgr.citysim.util.TrafficLightLoader;
-import ch.fhnw.ether.formats.obj.ObjReader;
 import ch.fhnw.ether.scene.DefaultScene;
 import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.camera.Camera;
@@ -21,18 +17,12 @@ import ch.fhnw.ether.scene.camera.ICamera;
 import ch.fhnw.ether.scene.light.DirectionalLight;
 import ch.fhnw.ether.scene.light.ILight;
 import ch.fhnw.ether.scene.mesh.IMesh;
-import ch.fhnw.ether.scene.mesh.MeshUtilities;
 import ch.fhnw.ether.view.IView;
 import ch.fhnw.ether.view.IView.ViewType;
 import ch.fhnw.ether.view.gl.DefaultView;
 import ch.fhnw.util.color.RGB;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
-
-import javax.imageio.spi.IIORegistry;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 
 public final class StreetExample {
 	
@@ -87,8 +77,8 @@ public final class StreetExample {
 		
 	public static void main(String[] args) {
 
-			IIORegistry registry = IIORegistry.getDefaultInstance();
-			registry.registerServiceProvider(new com.realityinteractive.imageio.tga.TGAImageReaderSpi());
+//			IIORegistry registry = IIORegistry.getDefaultInstance();
+//			registry.registerServiceProvider(new com.realityinteractive.imageio.tga.TGAImageReaderSpi());
 		new StreetExample();
 	}
 
@@ -102,11 +92,12 @@ public final class StreetExample {
 		controller.run(time -> {
 			// Create view
 			// Neues Config machen
-			IView view = new DefaultView(controller, 100, 100, 800, 600,
-							new IView.Config(ViewType.INTERACTIVE_VIEW, 0, new IView.ViewFlag[0]), "City Sim");
+			IView view = new DefaultView(controller, 100, 100, 800, 600, new IView.Config(ViewType.INTERACTIVE_VIEW, 0, new IView.ViewFlag[0]), "City Sim");
 			ICamera camera = new Camera(new Vec3(0, 5, 5), Vec3.ZERO);
 			FrameCameraControl fcc = new FrameCameraControl(camera, PathAlgorithm.getNodes());
 			fcc.frame();
+
+
 
 			// Create scene and add triangle
 			IScene scene = new DefaultScene(controller);
@@ -141,28 +132,71 @@ public final class StreetExample {
 			//Field target = fields[14][22];
 			//drive.setTarget(target);
 
+
+
 			for (int i = 0; i < fields.length; i++) {
 				for (int j = 0; j < fields[i].length; j++) {
 					if (strasse[i][j] == H0S) {
 						Vec3 pos = fields[i][j].getPosition();
 						List<IMesh> house = HouseLoader.getHouse("Bambo_House");
-						Mat4 trans = Mat4.multiply(Mat4.rotate(90, 1, 0, 0),
-										Mat4.translate(new Vec3(-0.5f, 0.01, 0.33f)), Mat4.scale(0.06f)); // 0.048
-						house.forEach(h -> h.setTransform(
-										trans.preMultiply(Mat4.translate(pos.x + 0.7f, pos.y + 0.5f, 0))));
+						Mat4 trans = Mat4.multiply(Mat4.rotate(90, 1,0,0),Mat4.translate(new Vec3(-0.5f, 0.01, 0.33f)),Mat4.scale(0.06f)); // 0.048
+						house.forEach(h -> h.setTransform(trans.preMultiply(Mat4.translate(pos.x + 0.7f, pos.y + 0.5f, 0))));
 						scene.add3DObjects(house);
 					}
 					if (strasse[i][j] == H1S) {
 						Vec3 pos = fields[i][j].getPosition();
 						List<IMesh> house = HouseLoader.getHouse("hOUSE");
 						// y, höhe, x
-						Mat4 trans = Mat4.multiply(Mat4.rotate(90, 1, 0, 0), Mat4.rotate(90, 0, 1, 0),
-										Mat4.translate(new Vec3(0.0078f, 0.537, 0.4f)), Mat4.scale(0.0015f));
-						house.forEach(h -> h.setTransform(
-										trans.preMultiply(Mat4.translate(pos.x + 0.7f, pos.y + 0.5f, 0))));
+						Mat4 trans = Mat4.multiply(Mat4.rotate(90, 1,0,0),Mat4.rotate(90, 0,1,0) ,Mat4.translate(new Vec3(0.0078f, 0.537, 0.4f)),Mat4.scale(0.0015f));
+						house.forEach(h -> h.setTransform(trans.preMultiply(Mat4.translate(pos.x + 0.7f, pos.y + 0.5f, 0))));
 						scene.add3DObjects(house);
 					}
 				}
+			}
+
+
+			//InteractionPanel
+			InteractionPanel plane = new InteractionPanel(0, 0, 1800, 1600);
+			controller.getRenderManager().addMesh(plane.getMesh());
+			CityController.setInteractionPanel(plane);
+
+			String[] message = new String[2];
+			message[0] = "Hallo mein Name ist John. Ich bin der Taxifahrer von CitySim.";
+			message[1] = "Klicke auf eine Kreuzung um mir einen neuen Fahrziel zu setzen.";
+			plane.sendMessage(message);
+
+
+			ILight light = new DirectionalLight(new Vec3(5,5,5), RGB.WHITE, RGB.WHITE);
+			ILight light2 = new DirectionalLight(new Vec3(-10,-10,5), RGB.WHITE, RGB.WHITE);
+			scene.add3DObject(light);
+			scene.add3DObject(light2);
+
+		});
+	}
+//
+//	public static List<IMesh> getTrafficLight() {
+//
+//		final URL obj = StreetExample.class.getClassLoader().getResource("assets/trafficLight/trafficLight1.obj");
+//
+//		final List<IMesh> meshes = new ArrayList<>();
+//		try {
+//			new ObjReader(obj).getMeshes().forEach(mesh -> meshes.add(mesh));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		System.out.println("number of meshes before merging: " + meshes.size());
+//		final List<IMesh> merged = MeshUtilities.mergeMeshes(meshes);
+//		System.out.println("number of meshes after merging: " + merged.size());
+//
+//
+//		return merged;
+//	}
+
+
+}
+
+
+
 //			Taxi taxi = new Taxi(TaxiType.YELLOW_CAB);
 //
 //			car = taxi.getMesh();
@@ -173,62 +207,22 @@ public final class StreetExample {
 //			controller.addTaxi(car);
 //			scene.add3DObjects(car);
 
-				/////// Traffic Light dummy ///////
+/////// Traffic Light dummy ///////
 
 //			InteractionObject interactionObject = new InteractionObject(MeshUtilities.createCube(InteractionObject.greenBlock));
 
-				CitySimMap map = CitySimMap.getInstance();
-
-				InteractionObject interactionObject2 = new InteractionObject(TrafficLightLoader.getStatic(getClass()),
-								TrafficLightLoader.getEnabled(getClass()), TrafficLightLoader.getDisabled(getClass()));
-
-				map.addObjectToLayer(interactionObject2);
-
-				for (InteractionObject intObj : map.getInteractionObjects()) {
-					scene.add3DObjects(intObj.getMesh());
-				}
-
-				// Traffic Light
-				List<IMesh> trafficLight = getTrafficLight();
-
-				scene.add3DObjects(trafficLight);
-
-				//InteractionPanel
-				InteractionPanel plane = new InteractionPanel(0, 0, 1800, 1600);
-				controller.getRenderManager().addMesh(plane.getMesh());
-				CityController.setInteractionPanel(plane);
-
-				String[] message = new String[2];
-				message[0] = "Hallo mein Name ist John. Ich bin der Taxifahrer von CitySim.";
-				message[1] = "Klicke auf eine Kreuzung um mir einen neuen Fahrziel zu setzen.";
-				plane.sendMessage(message);
-
-				ILight light = new DirectionalLight(new Vec3(5, 5, 5), RGB.WHITE, RGB.WHITE);
-				ILight light2 = new DirectionalLight(new Vec3(-10, -10, 5), RGB.WHITE, RGB.WHITE);
-				scene.add3DObject(light);
-				scene.add3DObject(light2);
-
-			}
-		});
-	}
-
-	public static List<IMesh> getTrafficLight() {
-
-		final URL obj = StreetExample.class.getClassLoader().getResource("assets/trafficLight/trafficLight1.obj");
-
-		final List<IMesh> meshes = new ArrayList<>();
-		try {
-			new ObjReader(obj).getMeshes().forEach(mesh -> meshes.add(mesh));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println("number of meshes before merging: " + meshes.size());
-		final List<IMesh> merged = MeshUtilities.mergeMeshes(meshes);
-		System.out.println("number of meshes after merging: " + merged.size());
-
-
-		return merged;
-	}
-
-
-}
+//				CitySimMap map = CitySimMap.getInstance();
+//
+//				InteractionObject interactionObject2 = new InteractionObject(TrafficLightLoader.getStatic(getClass()),
+//								TrafficLightLoader.getEnabled(getClass()), TrafficLightLoader.getDisabled(getClass()));
+//
+//				map.addObjectToLayer(interactionObject2);
+//
+//				for (InteractionObject intObj : map.getInteractionObjects()) {
+//					scene.add3DObjects(intObj.getMesh());
+//				}
+//
+//				// Traffic Light
+//				List<IMesh> trafficLight = getTrafficLight();
+//
+//				scene.add3DObjects(trafficLight);

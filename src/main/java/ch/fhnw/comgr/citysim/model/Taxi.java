@@ -1,4 +1,4 @@
-package ch.fhnw.comgr.citysim.model.taxi;
+package ch.fhnw.comgr.citysim.model;
 
 import ch.fhnw.comgr.citysim.util.TaxiLoader;
 import ch.fhnw.comgr.citysim.util.TaxiType;

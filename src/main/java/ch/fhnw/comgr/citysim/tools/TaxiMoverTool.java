@@ -4,7 +4,7 @@ import java.util.Map;
 
 import ch.fhnw.comgr.citysim.CityController;
 import ch.fhnw.comgr.citysim.DriveAnimation;
-import ch.fhnw.comgr.citysim.model.taxi.Taxi;
+import ch.fhnw.comgr.citysim.model.Taxi;
 import ch.fhnw.ether.controller.event.IPointerEvent;
 import ch.fhnw.ether.controller.tool.AbstractTool;
 import ch.fhnw.ether.controller.tool.PickUtilities;
