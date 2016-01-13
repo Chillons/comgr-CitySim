@@ -1,7 +1,10 @@
 package ch.fhnw.comgr.citysim.model.map.layer;
 
+import ch.fhnw.comgr.citysim.CitySimGame;
+import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.util.math.Mat4;
+import javafx.scene.Scene;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,17 +12,25 @@ import java.util.List;
 public abstract class LayerObject {
 
   private final List<IMesh> mesh;
-  private final List<Mat4> baseTransformations;
+  protected final List<Mat4> baseTransformations;
+
   private int fieldX;
   private int fieldY;
 
   public LayerObject(IMesh mesh) {
+
     this.mesh = new ArrayList<>();
     this.mesh.add(mesh);
 
     baseTransformations = new ArrayList<>();
     baseTransformations.add(mesh.getTransform());
 
+    CitySimGame.scene.add3DObjects(mesh);
+  }
+
+  public void setBaseTransformations(Mat4 transformation) {
+    this.baseTransformations.clear();
+    this.baseTransformations.add(transformation);
   }
 
   public LayerObject(List<IMesh> mesh) {

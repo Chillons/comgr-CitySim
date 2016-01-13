@@ -5,6 +5,7 @@ import ch.fhnw.comgr.citysim.action.DriveAnimation;
 import ch.fhnw.comgr.citysim.model.Field;
 import ch.fhnw.comgr.citysim.model.Taxi;
 import ch.fhnw.comgr.citysim.model.map.CitySimMap;
+import ch.fhnw.comgr.citysim.model.map.layer.InteractionObject;
 import ch.fhnw.comgr.citysim.tool.GameTool;
 import ch.fhnw.comgr.citysim.tool.TaxiMoverTool;
 import ch.fhnw.comgr.citysim.ui.InstructionField;
@@ -37,7 +38,8 @@ public final class CitySimGame {
 	public static GameTool gameTool;
 	public static ScorePanel scorePanel;
 	public static int time;
-	
+	public static IScene scene;
+
 	public static void main(String[] args) {
 		new CitySimGame();
 	}
@@ -50,7 +52,7 @@ public final class CitySimGame {
 
 		taxiMoverTool = new TaxiMoverTool(controller);
 		gameTool = new GameTool(controller);
-		
+
 		controller.run(time -> {
 			// Create view
 			// Neues Config machen
@@ -60,7 +62,7 @@ public final class CitySimGame {
 			fcc.frame();
 
 			// Create scene and add triangle
-			IScene scene = new DefaultScene(controller);
+			scene = new DefaultScene(controller);
 			controller.setScene(scene);
 
 			scene.add3DObject(camera);
@@ -86,7 +88,7 @@ public final class CitySimGame {
 			scene.add3DObjects(taxi.getMesh());
 			taxiMoverTool.setCurrentTaxi(taxi, drive);
 
-			Field[][] fields = PathAlgorithm.getFields();
+			Field[][] fields = CityController.getFields();
 
 			//Field target = fields[14][22];
 			//drive.setTarget(target);
@@ -120,14 +122,14 @@ public final class CitySimGame {
 			controller.getRenderManager().addMesh(instructionField.getMesh());
 			controller.getRenderManager().addMesh(scorePanel.getMesh());
 
-			
+
 			CityController.setInstructionField(instructionField);
 
 			String[] instruction = new String[2];
 			instruction[0] = "Hallo, mein Name ist John. Ich bin der Taxifahrer von CitySim.";
 			instruction[1] = "Klicke auf eine Kreuzung um mir einen neuen Fahrziel zu setzen.";
 			instructionField.sendInstruction(instruction);
-			
+
 			time = 0;
 			String[] score = new String[2];
 			score[0] = "Deine Punktzahl:";
@@ -140,38 +142,12 @@ public final class CitySimGame {
 			scene.add3DObject(light);
 			scene.add3DObject(light2);
 
+
+			CitySimMap map = CitySimMap.getInstance();
+
+			map.createRandomTrafficLights(4);
+
+
 		});
 	}
 }
-
-
-
-//			Taxi taxi = new Taxi(TaxiType.YELLOW_CAB);
-//
-//			car = taxi.getMesh();
-//			for (IMesh mesh : car) {
-//				mesh.setTransform(taxi.getTransform());
-//			}
-//
-//			controller.addTaxi(car);
-//			scene.add3DObjects(car);
-
-/////// Traffic Light dummy ///////
-
-//			InteractionObject interactionObject = new InteractionObject(MeshUtilities.createCube(InteractionObject.greenBlock));
-
-//				CitySimMap map = CitySimMap.getInstance();
-//
-//				InteractionObject interactionObject2 = new InteractionObject(TrafficLightLoader.getStatic(getClass()),
-//								TrafficLightLoader.getEnabled(getClass()), TrafficLightLoader.getDisabled(getClass()));
-//
-//				map.addObjectToLayer(interactionObject2);
-//
-//				for (InteractionObject intObj : map.getInteractionObjects()) {
-//					scene.add3DObjects(intObj.getMesh());
-//				}
-//
-//				// Traffic Light
-//				List<IMesh> trafficLight = getTrafficLight();
-//
-//				scene.add3DObjects(trafficLight);

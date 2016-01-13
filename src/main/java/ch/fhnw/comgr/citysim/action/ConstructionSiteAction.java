@@ -37,9 +37,7 @@ public class ConstructionSiteAction implements IEventScheduler.IAnimationAction 
     public void setAuthoToFalse() {
     	int[] old = field.getAuthorisations();
     	tmpAuthorization = new int[old.length];
-    	for (int i = 0; i < old.length; i++) {
-    		tmpAuthorization[i] = old[i];
-    	}
+        System.arraycopy(old, 0, tmpAuthorization, 0, old.length);
     	
     	field.setAuthorisations(CitySimMap.GRA);
     }

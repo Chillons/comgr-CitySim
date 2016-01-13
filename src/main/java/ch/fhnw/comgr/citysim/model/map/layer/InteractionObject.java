@@ -1,7 +1,8 @@
 package ch.fhnw.comgr.citysim.model.map.layer;
 
+import ch.fhnw.comgr.citysim.CitySimGame;
+import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.mesh.IMesh;
-import ch.fhnw.util.math.Mat4;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,21 +12,33 @@ public class InteractionObject extends LayerObject {
     private boolean active;
     private double activationTime;
 
+
+
     private final List<IMesh> activatedMeshes;
     private final List<IMesh> deactivatedMeshes;
 
-    public InteractionObject(IMesh staticMesh, IMesh activatedMesh, IMesh deactivatedMesh) {
+    public InteractionObject(IMesh staticMesh, IMesh deactivatedMesh, IMesh activatedMesh, IScene scene) {
         super(staticMesh);
+
         this.activatedMeshes = new ArrayList<>();
         this.activatedMeshes.add(activatedMesh);
         this.deactivatedMeshes = new ArrayList<>();
         this.deactivatedMeshes.add(deactivatedMesh);
+
+        setBaseTransformations();
+
+        scene.add3DObjects(deactivatedMeshes);
     }
 
-    public InteractionObject(List<IMesh> staticMeshes, List<IMesh> activatedMeshes, List<IMesh> deactivatedMeshes) {
+    public InteractionObject(List<IMesh> staticMeshes, List<IMesh> deactivatedMeshes, List<IMesh> activatedMeshes) {
         super(staticMeshes);
         this.activatedMeshes = activatedMeshes;
         this.deactivatedMeshes = deactivatedMeshes;
+
+        setBaseTransformations();
+
+        CitySimGame.scene.add3DObjects(staticMeshes);
+        CitySimGame.scene.add3DObjects(deactivatedMeshes);
     }
 
     @Override
@@ -37,25 +50,24 @@ public class InteractionObject extends LayerObject {
         return returns;
     }
 
-
     public void deactivate() {
         active = false;
-        for (IMesh mesh : activatedMeshes) {
-            mesh.setTransform(Mat4.scale(0.01f));
-        }
-        for (IMesh mesh : deactivatedMeshes) {
-            mesh.setTransform(Mat4.scale(1f));
-        }
-
+        CitySimGame.scene.add3DObjects(deactivatedMeshes);
+        CitySimGame.scene.remove3DObjects(activatedMeshes);
     }
 
     public void activate() {
         active = true;
-        for (IMesh mesh : activatedMeshes) {
-            mesh.setTransform(Mat4.scale(1f));
+        CitySimGame.scene.add3DObjects(activatedMeshes);
+        CitySimGame.scene.remove3DObjects(deactivatedMeshes);
+    }
+
+    private void setBaseTransformations() {
+        for (IMesh mesh: activatedMeshes) {
+            mesh.setTransform(baseTransformations.get(0));
         }
-        for (IMesh mesh : deactivatedMeshes) {
-            mesh.setTransform(Mat4.scale(0.01f));
+        for (IMesh mesh: deactivatedMeshes) {
+            mesh.setTransform(baseTransformations.get(0));
         }
     }
 

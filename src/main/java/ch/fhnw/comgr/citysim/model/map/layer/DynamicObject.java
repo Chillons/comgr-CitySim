@@ -1,12 +1,13 @@
 package ch.fhnw.comgr.citysim.model.map.layer;
 
-import ch.fhnw.ether.scene.mesh.MeshUtilities;
+import ch.fhnw.ether.scene.IScene;
+import ch.fhnw.ether.scene.mesh.IMesh;
 
 public class DynamicObject extends LayerObject {
 
-    private DynamicObject() {
+    private DynamicObject(IMesh mesh) {
         // FIXME dummy implementation
-        super(MeshUtilities.createCube());
+        super(mesh);
     }
 
 

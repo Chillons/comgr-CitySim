@@ -37,10 +37,10 @@ public class AssetsLoader {
      * @param name the base name.
      * @return an array with base model, deactivated state, activated state
      */
-    public static List[] getDynamicObject(final String name) {
+    public static List<IMesh>[] getDynamicObject(final String name) {
 
-        List[] ans = new List[3];
-
+        //noinspection unchecked
+        List<IMesh>[] ans = new List[3];
         ans[0] = getObject(name);
         ans[1] = getObject(name + "Inactive");
         ans[2] = getObject(name + "Active");

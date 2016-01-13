@@ -1,12 +1,19 @@
 package ch.fhnw.comgr.citysim.model.map;
 
+import ch.fhnw.comgr.citysim.CityController;
 import ch.fhnw.comgr.citysim.CitySimGame;
+import ch.fhnw.comgr.citysim.model.Field;
 import ch.fhnw.comgr.citysim.model.map.layer.DynamicObject;
 import ch.fhnw.comgr.citysim.model.map.layer.InteractionObject;
 import ch.fhnw.comgr.citysim.model.map.layer.LayerObject;
 import ch.fhnw.comgr.citysim.model.map.layer.StaticObject;
+import ch.fhnw.comgr.citysim.util.AssetsLoader;
+import ch.fhnw.ether.scene.mesh.IMesh;
+import ch.fhnw.util.math.Mat4;
+import ch.fhnw.util.math.Vec3;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -138,6 +145,43 @@ public class CitySimMap {
 
     public List<StaticObject> getStaticObjects() {
         return staticObjects;
+    }
+
+
+    public void createRandomTrafficLights(int n) {
+
+        List<Field> crossings = new ArrayList<>();
+
+        final Field[][] fields = CityController.getFields();
+
+        for (int i = 0; i < fields.length; i++) {
+            for (int j = 0; j < fields[i].length; j++) {
+                if (CitySimMap.MAP[i][j] == CitySimMap.CRO) {
+                    crossings.add(fields[i][j]);
+                }
+            }
+        }
+
+        Collections.shuffle(crossings);
+
+        int num = n > crossings.size() ? crossings.size() : n;
+        for (int i = 0; i < num; i++) {
+            createTrafficLight(crossings.get(i));
+        }
+
+    }
+
+    public void createTrafficLight(Field field ){
+        Vec3 pos = field.getPosition();
+
+        List<IMesh>[] tlMeshes = AssetsLoader.getDynamicObject("trafficLight/TrafficLight1");
+        // 																								t   h   b
+        Mat4 trans = Mat4.multiply(Mat4.rotate(90, 1,0,0),Mat4.rotate(90, 0,1,0) ,Mat4.translate(new Vec3(0.8, 0, 0.3f)),Mat4.scale(0.005f));
+        tlMeshes[0].forEach(h -> h.setTransform(trans.preMultiply(Mat4.translate(pos.x + 0.7f, pos.y + 0.5f, 0))));
+
+        InteractionObject interactionObject = new InteractionObject(tlMeshes[0], tlMeshes[1], tlMeshes[2]);
+
+        addObjectToLayer(interactionObject);
     }
 
 }

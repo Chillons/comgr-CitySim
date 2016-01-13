@@ -13,6 +13,7 @@ import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Vec3;
 
 public class CityController extends DefaultController {
+
     private static Field[][] fields;
     private static InstructionField instructionField;
 
@@ -109,6 +110,10 @@ public class CityController extends DefaultController {
         }
         IGeometry g = Util.getDefaultField();
         return new Field(m, g);
+    }
+
+    public static Field[][] getFields() {
+        return fields;
     }
 
 }
