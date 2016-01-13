@@ -7,6 +7,7 @@ import ch.fhnw.comgr.citysim.CitySimGame;
 import ch.fhnw.comgr.citysim.PathAlgorithm;
 import ch.fhnw.comgr.citysim.model.Field;
 import ch.fhnw.comgr.citysim.model.Taxi;
+import ch.fhnw.comgr.citysim.ui.ScorePanel;
 import ch.fhnw.ether.controller.event.IEventScheduler.IAnimationAction;
 import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
@@ -132,7 +133,10 @@ public class DriveAnimation implements IAnimationAction {
 				String[] score = new String[2];
 				score[0] = "Deine Punktzahl:";
 				score[1] = Double.toString(CitySimGame.time);
+				controller.getRenderManager().removeMesh(CitySimGame.scorePanel.getMesh());
+				CitySimGame.scorePanel = new ScorePanel();
 				CitySimGame.scorePanel.sendScore(score);
+				controller.getRenderManager().addMesh(CitySimGame.scorePanel.getMesh());
 				plusTime = 0;
 				
 				CityController.getInstructionField().sendInstruction(instruction);

@@ -122,7 +122,6 @@ public final class CitySimGame {
 			controller.getRenderManager().addMesh(instructionField.getMesh());
 			controller.getRenderManager().addMesh(scorePanel.getMesh());
 
-
 			CityController.setInstructionField(instructionField);
 
 			String[] instruction = new String[2];
