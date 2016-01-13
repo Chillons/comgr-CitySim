@@ -24,9 +24,9 @@ public class AssetsLoader {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("number of meshes before merging: " + meshes.size());
+//        System.out.println("number of meshes before merging: " + meshes.size());
         final List<IMesh> merged = MeshUtilities.mergeMeshes(meshes);
-        System.out.println("number of meshes after merging: " + merged.size());
+//        System.out.println("number of meshes after merging: " + merged.size());
 
         return merged;
     }

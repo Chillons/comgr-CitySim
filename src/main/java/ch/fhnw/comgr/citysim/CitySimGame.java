@@ -118,26 +118,6 @@ public final class CitySimGame {
 
 		});
 	}
-//
-//	public static List<IMesh> getTrafficLight() {
-//
-//		final URL obj = StreetExample.class.getClassLoader().getResource("assets/trafficLight/trafficLight1.obj");
-//
-//		final List<IMesh> meshes = new ArrayList<>();
-//		try {
-//			new ObjReader(obj).getMeshes().forEach(mesh -> meshes.add(mesh));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		System.out.println("number of meshes before merging: " + meshes.size());
-//		final List<IMesh> merged = MeshUtilities.mergeMeshes(meshes);
-//		System.out.println("number of meshes after merging: " + merged.size());
-//
-//
-//		return merged;
-//	}
-
-
 }
 
 

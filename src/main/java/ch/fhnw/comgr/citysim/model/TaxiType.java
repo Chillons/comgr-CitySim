@@ -12,7 +12,7 @@ public enum TaxiType {
     private final Mat4 transform;
 
 
-    private TaxiType(String name, Mat4 transform) {
+    TaxiType(String name, Mat4 transform) {
         this.name = name;
         this.transform = transform;
     }

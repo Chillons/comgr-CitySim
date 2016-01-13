@@ -16,22 +16,22 @@ public class CityController extends DefaultController {
     private static Field[][] fields;
     private static InteractionPanel interactionPanel;
 
-    public CityController(int[][] strasse) {
+    public CityController(int[][] map) {
 
-        fields = new Field[strasse.length][strasse[0].length];
+        fields = new Field[map.length][map[0].length];
 
         float startX = 0;
         float startY = 0;
 
-        for (int i = 0; i < strasse.length; i++) {
-            for (int j = 0; j < strasse[i].length; j++) {
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
 
-                Field field = createField(strasse[i][j]);
+                Field field = createField(map[i][j]);
 
-                field.setContent(strasse[i][j]);
+                field.setContent(map[i][j]);
                 field.setName("Feld " + i + " " + j);
 
-                field.setAuthorisations(strasse[i][j]);
+                field.setAuthorisations(map[i][j]);
 
                 field.setPosition(new Vec3(startX + j, startY - i, 0f));
 
@@ -53,11 +53,11 @@ public class CityController extends DefaultController {
     }
 
     public static Field getField(Vec3 position) {
-        for (int i = 0; i < fields.length; i++) {
-            for (int j = 0; j < fields[i].length; j++) {
-                if (position.x >= fields[i][j].getBounds().getMinX() && position.x < fields[i][j].getBounds().getMaxX()) {
-                    if (position.y >= fields[i][j].getBounds().getMinY() && position.y <= fields[i][j].getBounds().getMaxY()) {
-                        return fields[i][j];
+        for (Field[] field : fields) {
+            for (Field aField : field) {
+                if (position.x >= aField.getBounds().getMinX() && position.x < aField.getBounds().getMaxX()) {
+                    if (position.y >= aField.getBounds().getMinY() && position.y <= aField.getBounds().getMaxY()) {
+                        return aField;
                     }
                 }
             }
