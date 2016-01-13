@@ -39,6 +39,8 @@ public class DriveAnimation implements IAnimationAction {
 	
 	private final CityController controller;
 	
+	private double plusTime = 0;
+	
 	public DriveAnimation(Taxi t, CityController controller){
 		this.animatedTaxi = t;
 		// Initial Position is 0 0
@@ -121,7 +123,7 @@ public class DriveAnimation implements IAnimationAction {
 				run = false;
 				controller.setCurrentTool(CitySimGame.taxiMoverTool);
 				
-				instruction[0] = "Das Ziel wurde erreicht, mit einer Verzögerung von 0 Minuten gemäss Fahrplan.";
+				instruction[0] = "Das Ziel wurde erreicht, mit einer Verzögerung von " + Math.round(plusTime) + " Minuten gemäss Fahrplan.";
 				instruction[1] = "Hast du nun eine neue Wunsch-Destination?";				
 				CityController.getInstructionField().sendInstruction(instruction);
 			}
@@ -142,6 +144,7 @@ public class DriveAnimation implements IAnimationAction {
 
 			if (authorisations[0] == 0 && authorisations[1] == 0 && authorisations[2] == 0 && authorisations[3] == 0) {
 				authorisations = carPositionAsField.getAuthorisations();
+				plusTime += interval;
 				return;
 			}
 			
