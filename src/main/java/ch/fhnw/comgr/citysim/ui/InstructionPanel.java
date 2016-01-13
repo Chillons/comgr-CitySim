@@ -19,7 +19,7 @@ import ch.fhnw.ether.scene.mesh.material.ColorMapMaterial;
 import ch.fhnw.ether.scene.mesh.material.Texture;
 import ch.fhnw.util.color.RGBA;
 
-public class InteractionPanel {
+public class InstructionPanel {
 
 	private DefaultMesh mesh;
 
@@ -32,7 +32,7 @@ public class InteractionPanel {
 	private int w;
 	private int h;
 	
-	public InteractionPanel() {		
+	public InstructionPanel() {		
 		this.x = 0;
 		this.y = 0;
 		this.w = 1600;

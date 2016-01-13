@@ -33,7 +33,7 @@ public class DriveAnimation implements IAnimationAction {
 	boolean authorisedToTurn = false;
 	int stationCounter;
 	Taxi animatedTaxi;
-	String[] message = new String[2];
+	String[] instruction = new String[2];
 	
 	public DriveAnimation(Taxi t){
 		this.animatedTaxi = t;
@@ -70,9 +70,9 @@ public class DriveAnimation implements IAnimationAction {
 		if (!target.equals(tempTarget)) {
 			// Es wurde auf einem neuen Field geklickt
 			if(!carPositionAsField.equals(tempTarget)){
-				message[0] = "Ich habe bereits einen Fahrziel.";
-				message[1] = "Bitte hab ein wenig Geduld für die Setzung eines neuen Fahrziel.";
-				CityController.getMessagePanel().sendMessage(message);
+				instruction[0] = "Ich habe bereits einen Fahrziel.";
+				instruction[1] = "Bitte hab ein wenig Geduld für die Setzung eines neuen Fahrziel.";
+				CityController.getInstructionField().sendInstruction(instruction);
 				target = tempTarget; // reset
 				
 			}else{				
@@ -83,18 +83,18 @@ public class DriveAnimation implements IAnimationAction {
 						interStation = stations.get(stationCounter);
 						run = true;
 						
-						message[0] = "Danke. Ich fahre sofort zu meinem neuen Fahrziel, das " + target.getName() + ".";
-						message[1] = "Dieser Fahrt entspricht eine Distanz von " + PathAlgorithm.getDistanceFromTo(tempTarget, target) +
+						instruction[0] = "Danke. Ich fahre sofort zu meinem neuen Fahrziel, das " + target.getName() + ".";
+						instruction[1] = "Dieser Fahrt entspricht eine Distanz von " + PathAlgorithm.getDistanceFromTo(tempTarget, target) +
 										 "Km. Das sind ungefähr " + PathAlgorithm.getTimeFromTo(tempTarget, target) + " Minuten Fahrt.";				
-						CityController.getMessagePanel().sendMessage(message);
+						CityController.getInstructionField().sendInstruction(instruction);
 						
 						
 					} else {
 						target = tempTarget; // reset
 						
-						message[0] = "Ich kann nur bei Kreuzungen halten";
-						message[1] = "Bitte wähle eine Kreuzung der Stadt aus.";				
-						CityController.getMessagePanel().sendMessage(message);
+						instruction[0] = "Ich kann nur bei Kreuzungen halten";
+						instruction[1] = "Bitte wähle eine Kreuzung der Stadt aus.";				
+						CityController.getInstructionField().sendInstruction(instruction);
 					}
 					tempTarget = target;
 			}
@@ -112,9 +112,9 @@ public class DriveAnimation implements IAnimationAction {
 				// Ziel wurde erreicht
 				run = false;
 				
-				message[0] = "Das Ziel wurde erreicht, mit einer Verzögerung von 0 Minuten gemäss Fahrplan.";
-				message[1] = "Hast du nun eine neue Wunsch-Destination?";				
-				CityController.getMessagePanel().sendMessage(message);
+				instruction[0] = "Das Ziel wurde erreicht, mit einer Verzögerung von 0 Minuten gemäss Fahrplan.";
+				instruction[1] = "Hast du nun eine neue Wunsch-Destination?";				
+				CityController.getInstructionField().sendInstruction(instruction);
 			}
 		}
 

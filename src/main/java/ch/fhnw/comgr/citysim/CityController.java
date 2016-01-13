@@ -1,8 +1,9 @@
 package ch.fhnw.comgr.citysim;
 
+import java.io.IOException;
+
 import ch.fhnw.comgr.citysim.model.Field;
-import ch.fhnw.comgr.citysim.ui.InteractionPanel;
-import ch.fhnw.comgr.citysim.ui.MessagePanel;
+import ch.fhnw.comgr.citysim.ui.InstructionField;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.image.Frame;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
@@ -11,11 +12,9 @@ import ch.fhnw.ether.scene.mesh.material.IMaterial;
 import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Vec3;
 
-import java.io.IOException;
-
 public class CityController extends DefaultController {
     private static Field[][] fields;
-    private static MessagePanel messagePanel;
+    private static InstructionField instructionField;
 
     public CityController(int[][] strasse) {
 
@@ -44,12 +43,12 @@ public class CityController extends DefaultController {
 
     }
 
-    public static MessagePanel getMessagePanel() {
-        return messagePanel;
+    public static InstructionField getInstructionField() {
+        return instructionField;
     }
 
-    public static void setMessagePanel(MessagePanel mp) {
-        CityController.messagePanel = mp;
+    public static void setInstructionField(InstructionField instructionField) {
+        CityController.instructionField = instructionField;
 
     }
 

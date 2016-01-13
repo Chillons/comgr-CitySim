@@ -6,8 +6,9 @@ import ch.fhnw.comgr.citysim.model.Field;
 import ch.fhnw.comgr.citysim.model.Taxi;
 import ch.fhnw.comgr.citysim.model.map.CitySimMap;
 import ch.fhnw.comgr.citysim.tool.TaxiMoverTool;
-import ch.fhnw.comgr.citysim.ui.InteractionPanel;
-import ch.fhnw.comgr.citysim.ui.MessagePanel;
+import ch.fhnw.comgr.citysim.ui.InstructionField;
+import ch.fhnw.comgr.citysim.ui.InstructionPanel;
+import ch.fhnw.comgr.citysim.ui.ScorePanel;
 import ch.fhnw.comgr.citysim.util.AssetsLoader;
 import ch.fhnw.comgr.citysim.model.TaxiType;
 import ch.fhnw.ether.scene.DefaultScene;
@@ -101,19 +102,26 @@ public final class CitySimGame {
 			}
 
 
-			//InteractionPanel
-			InteractionPanel interactionPanel = new InteractionPanel();
-			MessagePanel messagePanel = new MessagePanel();
-			controller.getRenderManager().addMesh(interactionPanel.getMesh());
-			controller.getRenderManager().addMesh(messagePanel.getMesh());
+			//GUI-Panels
+			InstructionPanel instructionPanel = new InstructionPanel();
+			InstructionField instructionField = new InstructionField();
+			ScorePanel scorePanel = new ScorePanel();
+			controller.getRenderManager().addMesh(instructionPanel.getMesh());
+			controller.getRenderManager().addMesh(instructionField.getMesh());
+			controller.getRenderManager().addMesh(scorePanel.getMesh());
 
 			
-			CityController.setMessagePanel(messagePanel);
+			CityController.setInstructionField(instructionField);
 
-			String[] message = new String[2];
-			message[0] = "Hallo, mein Name ist John. Ich bin der Taxifahrer von CitySim.";
-			message[1] = "Klicke auf eine Kreuzung um mir einen neuen Fahrziel zu setzen.";
-			messagePanel.sendMessage(message);
+			String[] instruction = new String[2];
+			instruction[0] = "Hallo, mein Name ist John. Ich bin der Taxifahrer von CitySim.";
+			instruction[1] = "Klicke auf eine Kreuzung um mir einen neuen Fahrziel zu setzen.";
+			instructionField.sendInstruction(instruction);
+			
+			String[] score = new String[2];
+			score[0] = "Deine Punktzahl:";
+			score[1] = "0";
+			scorePanel.sendScore(score);
 
 
 			ILight light = new DirectionalLight(new Vec3(5,5,5), RGB.WHITE, RGB.WHITE);
