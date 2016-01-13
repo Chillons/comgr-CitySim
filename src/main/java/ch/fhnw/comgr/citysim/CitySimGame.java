@@ -5,6 +5,7 @@ import ch.fhnw.comgr.citysim.action.DriveAnimation;
 import ch.fhnw.comgr.citysim.model.Field;
 import ch.fhnw.comgr.citysim.model.Taxi;
 import ch.fhnw.comgr.citysim.model.map.CitySimMap;
+import ch.fhnw.comgr.citysim.tool.GameTool;
 import ch.fhnw.comgr.citysim.tool.TaxiMoverTool;
 import ch.fhnw.comgr.citysim.ui.InstructionField;
 import ch.fhnw.comgr.citysim.ui.InstructionPanel;
@@ -27,9 +28,12 @@ import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public final class CitySimGame {
 
+	public static final AtomicInteger counterConstructions = new AtomicInteger(0);
+	
 	public static void main(String[] args) {
 		new CitySimGame();
 	}
@@ -56,6 +60,7 @@ public final class CitySimGame {
 			controller.setCamera(view, camera);
 
 			TaxiMoverTool taxiMoverTool = new TaxiMoverTool(controller);
+			GameTool gt = new GameTool(controller);
 			controller.setCurrentTool(taxiMoverTool);
 
 			/////// CITY ////////
