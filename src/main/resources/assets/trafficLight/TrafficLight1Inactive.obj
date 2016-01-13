@@ -1,5 +1,5 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# Datei erstellt: 12.01.2016 11:26:25
+# Datei erstellt: 13.01.2016 23:30:13
 
 mtllib TrafficLight1Inactive.mtl
 
@@ -1537,7 +1537,7 @@ vt 0.9688 -0.0000 0.0000
 # 559 texture coords
 
 g KugelGruen
-usemtl wire_087225087
+usemtl wire_027177027
 s 1
 f 1/1/1 2/2/2 3/3/3 
 f 1/4/1 3/3/3 4/5/4 
