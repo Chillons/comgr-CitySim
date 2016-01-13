@@ -111,7 +111,7 @@ public final class CitySimGame {
 			CityController.setMessagePanel(messagePanel);
 
 			String[] message = new String[2];
-			message[0] = "Hallo mein Name ist John. Ich bin der Taxifahrer von CitySim.";
+			message[0] = "Hallo, mein Name ist John. Ich bin der Taxifahrer von CitySim.";
 			message[1] = "Klicke auf eine Kreuzung um mir einen neuen Fahrziel zu setzen.";
 			messagePanel.sendMessage(message);
 

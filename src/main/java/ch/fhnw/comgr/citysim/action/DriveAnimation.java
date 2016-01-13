@@ -309,7 +309,7 @@ public class DriveAnimation implements IAnimationAction {
 			}
 
 			if (turnLeft) {
-				geradeFahren(9);
+				geradeFahren(18);
 			} else if (turnRight) {
 				geradeFahren(10);
 			} else if (turnBack) {
@@ -318,12 +318,12 @@ public class DriveAnimation implements IAnimationAction {
 				geradeFahren(30);
 			}
 
-			if (turnLeft && rotation % 90 != 0 && authorisedToTurn) {
-				animatedTaxi.addTransform(Mat4.rotate(0.5f, new Vec3(0, 1, 0)));
-				rotation += 0.5;
+			if (turnLeft && rotation % 91 != 0 && authorisedToTurn) {
+				animatedTaxi.addTransform(Mat4.rotate(1f, new Vec3(0, 1, 0)));
+				rotation += 1;
 			}
 
-			if (turnRight && rotation % 90 != 0 && authorisedToTurn) {
+			if (turnRight && rotation % 91 != 0 && authorisedToTurn) {
 				animatedTaxi.addTransform(Mat4.rotate(-1f, new Vec3(0, 1, 0)));
 				rotation -= 1;
 			}
@@ -334,12 +334,12 @@ public class DriveAnimation implements IAnimationAction {
 			}
 
 			
-			if (rotation % 90 == 0 && (turnLeft || turnRight)) {
+			if (rotation % 91== 0 && (turnLeft || turnRight)) {
 				authorisedToTurn = false;
 				turnLeft = false;
 				turnRight = false;
 				turnBack = false;
-				rotation = 0;				
+				rotation = 0;	
 			}
 
 			if (rotation % 181 == 0 && turnBack) {
