@@ -119,7 +119,6 @@ public final class CitySimGame {
 			controller.getRenderManager().addMesh(instructionPanel.getMesh());
 			controller.getRenderManager().addMesh(instructionField.getMesh());
 			controller.getRenderManager().addMesh(scorePanel.getMesh());
-
 			
 			CityController.setInstructionField(instructionField);
 
