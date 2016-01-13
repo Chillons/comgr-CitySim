@@ -83,17 +83,10 @@ public class GameTool extends AbstractTool {
 					} else {
 						System.err.println("More than one traffice light found with a click. This should never happen!");
 					}
-				} else {
-					// check if street
-					// if true 
-					// ev new instance of static object / interaction object (has activiation time)
-					// new instance of construciton site action
-					// trafficLight.setActivationTime(currentTime);
-					// Construction site action
-					
 				}
-				
-				if (pickables.values().size() == 1) {
+
+				// No traffic lignt, add a construction site
+				if (pickables.values().size() == 1 && !trafficLightFound ) {
 					
 					Field f = CityController.getField(pickables.values().iterator().next().getPosition());
 					int fieldType = f.getContent();

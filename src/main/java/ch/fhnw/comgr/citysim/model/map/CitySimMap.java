@@ -175,11 +175,11 @@ public class CitySimMap {
         Vec3 pos = field.getPosition();
 
         List<IMesh>[] tlMeshes = AssetsLoader.getDynamicObject("trafficLight/TrafficLight1");
-        // 																								t   h   b
-        Mat4 trans = Mat4.multiply(Mat4.rotate(90, 1,0,0),Mat4.rotate(90, 0,1,0) ,Mat4.translate(new Vec3(0.8, 0, 0.3f)),Mat4.scale(0.005f));
-        tlMeshes[0].forEach(h -> h.setTransform(trans.preMultiply(Mat4.translate(pos.x + 0.7f, pos.y + 0.5f, 0))));
+        // 																								     t   h   b
+        Mat4 trans = Mat4.multiply(Mat4.rotate(90, 1,0,0),Mat4.rotate(90, 0,1,0) ,Mat4.translate(new Vec3(0.82, 0, 0.31)),Mat4.scale(0.005f));
+        tlMeshes[0].forEach(mesh -> mesh.setTransform(trans.preMultiply(Mat4.translate(pos.x, pos.y, 0))));
 
-        InteractionObject interactionObject = new InteractionObject(tlMeshes[0], tlMeshes[1], tlMeshes[2]);
+        InteractionObject interactionObject = new InteractionObject(tlMeshes[0], tlMeshes[1], tlMeshes[2], field);
 
         addObjectToLayer(interactionObject);
     }

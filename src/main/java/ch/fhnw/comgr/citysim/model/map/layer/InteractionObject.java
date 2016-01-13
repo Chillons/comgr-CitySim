@@ -1,6 +1,8 @@
 package ch.fhnw.comgr.citysim.model.map.layer;
 
+import ch.fhnw.comgr.citysim.CityController;
 import ch.fhnw.comgr.citysim.CitySimGame;
+import ch.fhnw.comgr.citysim.model.Field;
 import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.mesh.IMesh;
 
@@ -16,9 +18,11 @@ public class InteractionObject extends LayerObject {
 
     private final List<IMesh> activatedMeshes;
     private final List<IMesh> deactivatedMeshes;
+    private final Field field;
 
-    public InteractionObject(IMesh staticMesh, IMesh deactivatedMesh, IMesh activatedMesh, IScene scene) {
+    public InteractionObject(IMesh staticMesh, IMesh deactivatedMesh, IMesh activatedMesh, Field field) {
         super(staticMesh);
+        this.field = field;
 
         this.activatedMeshes = new ArrayList<>();
         this.activatedMeshes.add(activatedMesh);
@@ -27,13 +31,14 @@ public class InteractionObject extends LayerObject {
 
         setBaseTransformations();
 
-        scene.add3DObjects(deactivatedMeshes);
+        CitySimGame.scene.add3DObjects(deactivatedMeshes);
     }
 
-    public InteractionObject(List<IMesh> staticMeshes, List<IMesh> deactivatedMeshes, List<IMesh> activatedMeshes) {
+    public InteractionObject(List<IMesh> staticMeshes, List<IMesh> deactivatedMeshes, List<IMesh> activatedMeshes, Field field) {
         super(staticMeshes);
         this.activatedMeshes = activatedMeshes;
         this.deactivatedMeshes = deactivatedMeshes;
+        this.field = field;
 
         setBaseTransformations();
 
@@ -82,5 +87,9 @@ public class InteractionObject extends LayerObject {
 
     public boolean isActive() {
         return active;
+    }
+
+    public Field getField() {
+        return field;
     }
 }

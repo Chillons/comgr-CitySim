@@ -1,6 +1,5 @@
 package ch.fhnw.comgr.citysim.action;
 
-import java.util.Arrays;
 import java.util.List;
 
 import ch.fhnw.comgr.citysim.CitySimGame;
@@ -31,10 +30,10 @@ public class ConstructionSiteAction implements IEventScheduler.IAnimationAction 
         System.out.println(field.getName());
         addConstruction();
         activationTime = controller.getScheduler().getTime();
-        setAuthoToFalse();
+        setAuthorizationsToFalse();
     }
     
-    public void setAuthoToFalse() {
+    private void setAuthorizationsToFalse() {
     	int[] old = field.getAuthorisations();
     	tmpAuthorization = new int[old.length];
         System.arraycopy(old, 0, tmpAuthorization, 0, old.length);
@@ -42,7 +41,7 @@ public class ConstructionSiteAction implements IEventScheduler.IAnimationAction 
     	field.setAuthorisations(CitySimMap.GRA);
     }
     
-    public void setAuthoBack() {
+    private void revertAuthorizations() {
     	field.setAuthorisations(tmpAuthorization);
     }
     
@@ -61,7 +60,7 @@ public class ConstructionSiteAction implements IEventScheduler.IAnimationAction 
             System.out.println("Time is up! Remove Construction Site");
             controller.getScene().remove3DObjects(obj);
             CitySimGame.counterConstructions.decrementAndGet();
-            setAuthoBack();
+            revertAuthorizations();
             controller.kill(this);
         }
     }
