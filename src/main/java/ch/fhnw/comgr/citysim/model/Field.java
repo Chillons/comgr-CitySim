@@ -29,7 +29,7 @@ public class Field implements IMesh {
     private Vec3 position = Vec3.ZERO;
     private Mat4 transform = Mat4.ID;
     private BoundingBox bb;
-    private int[] authorisations;
+    private volatile int[] authorisations;
 
     public Field(IMaterial material, IGeometry geometry) {
         this(material, geometry, Queue.DEPTH);
@@ -101,6 +101,13 @@ public class Field implements IMesh {
 
     public int[] getAuthorisations() {
         return this.authorisations;
+    }
+    
+    public void setAuthorisations(int[] auth) {
+    	this.authorisations = new int[4];
+    	for (int i = 0; i < auth.length; i++) {
+    		this.authorisations[i] = auth[i];
+    	}
     }
 
     public void setAuthorisations(int type) {

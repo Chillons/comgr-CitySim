@@ -1,5 +1,6 @@
 package ch.fhnw.comgr.citysim.action;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 import ch.fhnw.comgr.citysim.CityController;
@@ -23,7 +24,7 @@ public class DriveAnimation implements IAnimationAction {
 
 	float rotation = 0;
 
-	int[] authorisations;
+	volatile int[] authorisations;
 	int entryPointOfTaxi;
 	LinkedList<Field> stations;
 	Field interStation;
@@ -139,6 +140,12 @@ public class DriveAnimation implements IAnimationAction {
 
 			tempCarPositionAsField = carPositionAsField;
 
+			if (authorisations[0] == 0 && authorisations[1] == 0 && authorisations[2] == 0 && authorisations[3] == 0) {
+				authorisations = carPositionAsField.getAuthorisations();
+				return;
+			}
+			
+			
 			// North East
 			if (entryPointOfTaxi == 0 && authorisations[2] == 1 && !turnLeft
 					&& authorisedToTurn) {
