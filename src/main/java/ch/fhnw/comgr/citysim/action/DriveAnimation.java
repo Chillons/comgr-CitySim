@@ -72,9 +72,7 @@ public class DriveAnimation implements IAnimationAction {
 			if(!carPositionAsField.equals(tempTarget)){
 				message[0] = "Ich habe bereits einen Fahrziel.";
 				message[1] = "Bitte hab ein wenig Geduld für die Setzung eines neuen Fahrziel.";
-				CityController.getInteractionPanel().clear();
-				CityController.getInteractionPanel().sendMessage(message);
-				CityController.getInteractionPanel().update();
+				CityController.getMessagePanel().sendMessage(message);
 				target = tempTarget; // reset
 				
 			}else{				
@@ -88,7 +86,7 @@ public class DriveAnimation implements IAnimationAction {
 						message[0] = "Danke. Ich fahre sofort zu meinem neuen Fahrziel, das " + target.getName() + ".";
 						message[1] = "Dieser Fahrt entspricht eine Distanz von " + PathAlgorithm.getDistanceFromTo(tempTarget, target) +
 										 "Km. Das sind ungefähr " + PathAlgorithm.getTimeFromTo(tempTarget, target) + " Minuten Fahrt.";				
-						CityController.getInteractionPanel().sendMessage(message);
+						CityController.getMessagePanel().sendMessage(message);
 						
 						
 					} else {
@@ -96,7 +94,7 @@ public class DriveAnimation implements IAnimationAction {
 						
 						message[0] = "Ich kann nur bei Kreuzungen halten";
 						message[1] = "Bitte wähle eine Kreuzung der Stadt aus.";				
-						CityController.getInteractionPanel().sendMessage(message);
+						CityController.getMessagePanel().sendMessage(message);
 					}
 					tempTarget = target;
 			}
@@ -116,7 +114,7 @@ public class DriveAnimation implements IAnimationAction {
 				
 				message[0] = "Das Ziel wurde erreicht, mit einer Verzögerung von 0 Minuten gemäss Fahrplan.";
 				message[1] = "Hast du nun eine neue Wunsch-Destination?";				
-				CityController.getInteractionPanel().sendMessage(message);
+				CityController.getMessagePanel().sendMessage(message);
 			}
 		}
 

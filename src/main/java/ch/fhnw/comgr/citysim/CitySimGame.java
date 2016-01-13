@@ -7,6 +7,7 @@ import ch.fhnw.comgr.citysim.model.Taxi;
 import ch.fhnw.comgr.citysim.model.map.CitySimMap;
 import ch.fhnw.comgr.citysim.tool.TaxiMoverTool;
 import ch.fhnw.comgr.citysim.ui.InteractionPanel;
+import ch.fhnw.comgr.citysim.ui.MessagePanel;
 import ch.fhnw.comgr.citysim.util.AssetsLoader;
 import ch.fhnw.comgr.citysim.model.TaxiType;
 import ch.fhnw.ether.scene.DefaultScene;
@@ -101,14 +102,18 @@ public final class CitySimGame {
 
 
 			//InteractionPanel
-			InteractionPanel panel = new InteractionPanel(0, 0, 1800, 1600);
-			controller.getRenderManager().addMesh(panel.getMesh());
-			CityController.setInteractionPanel(panel);
+			InteractionPanel interactionPanel = new InteractionPanel();
+			MessagePanel messagePanel = new MessagePanel();
+			controller.getRenderManager().addMesh(interactionPanel.getMesh());
+			controller.getRenderManager().addMesh(messagePanel.getMesh());
+
+			
+			CityController.setMessagePanel(messagePanel);
 
 			String[] message = new String[2];
 			message[0] = "Hallo mein Name ist John. Ich bin der Taxifahrer von CitySim.";
 			message[1] = "Klicke auf eine Kreuzung um mir einen neuen Fahrziel zu setzen.";
-			panel.sendMessage(message);
+			messagePanel.sendMessage(message);
 
 
 			ILight light = new DirectionalLight(new Vec3(5,5,5), RGB.WHITE, RGB.WHITE);

@@ -2,6 +2,7 @@ package ch.fhnw.comgr.citysim;
 
 import ch.fhnw.comgr.citysim.model.Field;
 import ch.fhnw.comgr.citysim.ui.InteractionPanel;
+import ch.fhnw.comgr.citysim.ui.MessagePanel;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.image.Frame;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
@@ -14,7 +15,7 @@ import java.io.IOException;
 
 public class CityController extends DefaultController {
     private static Field[][] fields;
-    private static InteractionPanel interactionPanel;
+    private static MessagePanel messagePanel;
 
     public CityController(int[][] strasse) {
 
@@ -43,12 +44,12 @@ public class CityController extends DefaultController {
 
     }
 
-    public static InteractionPanel getInteractionPanel() {
-        return interactionPanel;
+    public static MessagePanel getMessagePanel() {
+        return messagePanel;
     }
 
-    public static void setInteractionPanel(InteractionPanel ip) {
-        CityController.interactionPanel = ip;
+    public static void setMessagePanel(MessagePanel mp) {
+        CityController.messagePanel = mp;
 
     }
 
