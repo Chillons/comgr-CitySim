@@ -33,6 +33,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public final class CitySimGame {
 
 	public static final AtomicInteger counterConstructions = new AtomicInteger(0);
+	public static TaxiMoverTool taxiMoverTool;
+	public static GameTool gameTool;
 	
 	public static void main(String[] args) {
 		new CitySimGame();
@@ -44,6 +46,9 @@ public final class CitySimGame {
 		
 		CityController controller = new CityController(CitySimMap.MAP);
 
+		taxiMoverTool = new TaxiMoverTool(controller);
+		gameTool = new GameTool(controller);
+		
 		controller.run(time -> {
 			// Create view
 			// Neues Config machen
@@ -58,10 +63,8 @@ public final class CitySimGame {
 
 			scene.add3DObject(camera);
 			controller.setCamera(view, camera);
-
-			TaxiMoverTool taxiMoverTool = new TaxiMoverTool(controller);
-			GameTool gt = new GameTool(controller);
-			controller.setCurrentTool(taxiMoverTool);
+			
+			controller.setCurrentTool(taxiMoverTool);				
 
 			/////// CITY ////////
 
@@ -76,7 +79,7 @@ public final class CitySimGame {
 			Taxi taxi = new Taxi(TaxiType.YELLOW_CAB);
 			taxi.setTransform(Mat4.translate(1, 0, 0));
 
-			DriveAnimation drive = new DriveAnimation(taxi);
+			DriveAnimation drive = new DriveAnimation(taxi, controller);
 			controller.animate(drive);
 			scene.add3DObjects(taxi.getMesh());
 			taxiMoverTool.setCurrentTaxi(taxi, drive);

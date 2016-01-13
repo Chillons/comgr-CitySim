@@ -3,6 +3,7 @@ package ch.fhnw.comgr.citysim.action;
 import java.util.LinkedList;
 
 import ch.fhnw.comgr.citysim.CityController;
+import ch.fhnw.comgr.citysim.CitySimGame;
 import ch.fhnw.comgr.citysim.PathAlgorithm;
 import ch.fhnw.comgr.citysim.model.Field;
 import ch.fhnw.comgr.citysim.model.Taxi;
@@ -35,7 +36,9 @@ public class DriveAnimation implements IAnimationAction {
 	Taxi animatedTaxi;
 	String[] instruction = new String[2];
 	
-	public DriveAnimation(Taxi t){
+	private final CityController controller;
+	
+	public DriveAnimation(Taxi t, CityController controller){
 		this.animatedTaxi = t;
 		// Initial Position is 0 0
 		this.carPositionAsField = CityController.getField(Vec3.ZERO);
@@ -45,6 +48,8 @@ public class DriveAnimation implements IAnimationAction {
 
 		this.target = CityController.getField(Vec3.ZERO);
 		this.tempTarget = this.target;
+		
+		this.controller = controller;
 	}
 	
 	
@@ -83,6 +88,8 @@ public class DriveAnimation implements IAnimationAction {
 						interStation = stations.get(stationCounter);
 						run = true;
 						
+						controller.setCurrentTool(CitySimGame.gameTool);
+						
 						instruction[0] = "Danke. Ich fahre sofort zu meinem neuen Fahrziel, das " + target.getName() + ".";
 						instruction[1] = "Dieser Fahrt entspricht eine Distanz von " + PathAlgorithm.getDistanceFromTo(tempTarget, target) +
 										 "Km. Das sind ungefähr " + PathAlgorithm.getTimeFromTo(tempTarget, target) + " Minuten Fahrt.";				
@@ -111,6 +118,7 @@ public class DriveAnimation implements IAnimationAction {
 			} else {
 				// Ziel wurde erreicht
 				run = false;
+				controller.setCurrentTool(CitySimGame.taxiMoverTool);
 				
 				instruction[0] = "Das Ziel wurde erreicht, mit einer Verzögerung von 0 Minuten gemäss Fahrplan.";
 				instruction[1] = "Hast du nun eine neue Wunsch-Destination?";				
