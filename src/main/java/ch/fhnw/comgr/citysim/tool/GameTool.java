@@ -1,14 +1,21 @@
 package ch.fhnw.comgr.citysim.tool;
 
 import ch.fhnw.comgr.citysim.CityController;
+import ch.fhnw.comgr.citysim.CitySimGame;
+import ch.fhnw.comgr.citysim.action.ConstructionSiteAction;
 import ch.fhnw.comgr.citysim.action.TrafficLightAction;
+import ch.fhnw.comgr.citysim.model.Field;
 import ch.fhnw.comgr.citysim.model.map.CitySimMap;
 import ch.fhnw.comgr.citysim.model.map.layer.InteractionObject;
+import ch.fhnw.comgr.citysim.model.map.layer.StaticObject;
 import ch.fhnw.ether.controller.event.IPointerEvent;
 import ch.fhnw.ether.controller.tool.AbstractTool;
 import ch.fhnw.ether.controller.tool.PickUtilities;
 import ch.fhnw.ether.controller.tool.PickUtilities.PickMode;
 import ch.fhnw.ether.scene.I3DObject;
+import ch.fhnw.ether.scene.mesh.IMesh;
+import ch.fhnw.ether.scene.mesh.MeshUtilities;
+import ch.fhnw.util.math.Vec3;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -75,6 +82,34 @@ public class GameTool extends AbstractTool {
 
 					} else {
 						System.err.println("More than one traffice light found with a click. This should never happen!");
+					}
+				} else {
+					// check if street
+					// if true 
+					// ev new instance of static object / interaction object (has activiation time)
+					// new instance of construciton site action
+					// trafficLight.setActivationTime(currentTime);
+					// Construction site action
+					
+				}
+				
+				if (pickables.values().size() == 1) {
+					
+					Field f = CityController.getField(pickables.values().iterator().next().getPosition());
+					int fieldType = f.getContent();
+					
+					if (fieldType == CitySimMap.N_S ||fieldType == CitySimMap.E_W) {
+						int actualCnt = CitySimGame.counterConstructions.get();
+						
+						if (actualCnt < 3) {
+							int neu = actualCnt + 1;
+							if (!CitySimGame.counterConstructions.compareAndSet(actualCnt, neu)) {
+								return;
+							}
+							IMesh mesh = MeshUtilities.createCube();
+							ConstructionSiteAction csAction = new ConstructionSiteAction(mesh, getCityController(), f);
+							getCityController().animate(csAction);
+						}
 					}
 				}
 			}

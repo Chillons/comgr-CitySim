@@ -1,7 +1,9 @@
 package ch.fhnw.comgr.citysim;
 
+import java.io.IOException;
+
 import ch.fhnw.comgr.citysim.model.Field;
-import ch.fhnw.comgr.citysim.ui.InteractionPanel;
+import ch.fhnw.comgr.citysim.ui.InstructionField;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.image.Frame;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
@@ -10,11 +12,9 @@ import ch.fhnw.ether.scene.mesh.material.IMaterial;
 import ch.fhnw.util.color.RGBA;
 import ch.fhnw.util.math.Vec3;
 
-import java.io.IOException;
-
 public class CityController extends DefaultController {
     private static Field[][] fields;
-    private static InteractionPanel interactionPanel;
+    private static InstructionField instructionField;
 
     public CityController(int[][] map) {
 
@@ -43,12 +43,12 @@ public class CityController extends DefaultController {
 
     }
 
-    public static InteractionPanel getInteractionPanel() {
-        return interactionPanel;
+    public static InstructionField getInstructionField() {
+        return instructionField;
     }
 
-    public static void setInteractionPanel(InteractionPanel ip) {
-        CityController.interactionPanel = ip;
+    public static void setInstructionField(InstructionField instructionField) {
+        CityController.instructionField = instructionField;
 
     }
 

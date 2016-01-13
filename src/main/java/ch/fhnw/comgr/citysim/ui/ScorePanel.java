@@ -1,8 +1,7 @@
-
-
 package ch.fhnw.comgr.citysim.ui;
 
 import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -20,7 +19,7 @@ import ch.fhnw.ether.scene.mesh.material.ColorMapMaterial;
 import ch.fhnw.ether.scene.mesh.material.Texture;
 import ch.fhnw.util.UpdateRequest;
 
-public class InteractionPanel {
+public class ScorePanel {
 	public static final Font FONT = new Font("SansSerif", Font.BOLD, 24);
 
 	private static final Color CLEAR_COLOR = new Color(0, 0, 0, 0);
@@ -38,14 +37,15 @@ public class InteractionPanel {
 	private int w;
 	private int h;
 	
-	public InteractionPanel(int x, int y, int w, int h) {
+	public ScorePanel() {
+		this.x = 1250;
+		this.y = 800;
+		this.w = 300;
+		this.h = 300;
+		
 		image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 		graphics = image.createGraphics();
 		graphics.setFont(FONT);
-		this.x = x;
-		this.y = y;
-		this.w = w;
-		this.h = h;
 
 		float[] vertices = { x, y, 0, x + w, y, 0, x + w, y + h, 0, x, y, 0, x + w, y + h, 0, x, y + h, 0 };
 		IGeometry geometry = DefaultGeometry.createVM(Primitive.TRIANGLES, vertices, MeshUtilities.DEFAULT_QUAD_TEX_COORDS);
@@ -82,22 +82,23 @@ public class InteractionPanel {
 
 	public void clear() {
 		graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
-		fillRect(CLEAR_COLOR, x, y, w, h);
+		roundRect(CLEAR_COLOR, x, y, w, h);
 		graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
 		updateRequest();
 	}
 
-	public void fillRect(Color color, int x, int y, int w, int h) {
+	public void roundRect(Color color, int x, int y, int w, int h) {
 		graphics.setColor(color);
-		graphics.fillRect(x, y, w, h);
+		graphics.setStroke(new BasicStroke(8));
+		graphics.drawRoundRect(x, y, w, h, 10, 10);
 		updateRequest();
 	}
 
 	
-	public void sendMessage(String[] message){
+	public void sendScore(String[] score){
 		clear();
-		fillRect(Color.darkGray, 0, 1480, 1800, 100);
-		drawStrings(message, 30, 1530);
+		roundRect(Color.WHITE, 0, 0, 300, 100);
+		drawStrings(score, 30, 50);
 		update();
 	}
 	public void drawString(String string, int x, int y) {

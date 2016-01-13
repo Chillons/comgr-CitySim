@@ -5,8 +5,11 @@ import ch.fhnw.comgr.citysim.action.DriveAnimation;
 import ch.fhnw.comgr.citysim.model.Field;
 import ch.fhnw.comgr.citysim.model.Taxi;
 import ch.fhnw.comgr.citysim.model.map.CitySimMap;
+import ch.fhnw.comgr.citysim.tool.GameTool;
 import ch.fhnw.comgr.citysim.tool.TaxiMoverTool;
-import ch.fhnw.comgr.citysim.ui.InteractionPanel;
+import ch.fhnw.comgr.citysim.ui.InstructionField;
+import ch.fhnw.comgr.citysim.ui.InstructionPanel;
+import ch.fhnw.comgr.citysim.ui.ScorePanel;
 import ch.fhnw.comgr.citysim.util.AssetsLoader;
 import ch.fhnw.comgr.citysim.model.TaxiType;
 import ch.fhnw.ether.scene.DefaultScene;
@@ -25,9 +28,12 @@ import ch.fhnw.util.math.Mat4;
 import ch.fhnw.util.math.Vec3;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public final class CitySimGame {
 
+	public static final AtomicInteger counterConstructions = new AtomicInteger(0);
+	
 	public static void main(String[] args) {
 		new CitySimGame();
 	}
@@ -54,6 +60,7 @@ public final class CitySimGame {
 			controller.setCamera(view, camera);
 
 			TaxiMoverTool taxiMoverTool = new TaxiMoverTool(controller);
+			GameTool gt = new GameTool(controller);
 			controller.setCurrentTool(taxiMoverTool);
 
 			/////// CITY ////////
@@ -100,15 +107,26 @@ public final class CitySimGame {
 			}
 
 
-			//InteractionPanel
-			InteractionPanel panel = new InteractionPanel(0, 0, 1800, 1600);
-			controller.getRenderManager().addMesh(panel.getMesh());
-			CityController.setInteractionPanel(panel);
+			//GUI-Panels
+			InstructionPanel instructionPanel = new InstructionPanel();
+			InstructionField instructionField = new InstructionField();
+			ScorePanel scorePanel = new ScorePanel();
+			controller.getRenderManager().addMesh(instructionPanel.getMesh());
+			controller.getRenderManager().addMesh(instructionField.getMesh());
+			controller.getRenderManager().addMesh(scorePanel.getMesh());
 
-			String[] message = new String[2];
-			message[0] = "Hallo mein Name ist John. Ich bin der Taxifahrer von CitySim.";
-			message[1] = "Klicke auf eine Kreuzung um mir einen neuen Fahrziel zu setzen.";
-			panel.sendMessage(message);
+			
+			CityController.setInstructionField(instructionField);
+
+			String[] instruction = new String[2];
+			instruction[0] = "Hallo, mein Name ist John. Ich bin der Taxifahrer von CitySim.";
+			instruction[1] = "Klicke auf eine Kreuzung um mir einen neuen Fahrziel zu setzen.";
+			instructionField.sendInstruction(instruction);
+			
+			String[] score = new String[2];
+			score[0] = "Deine Punktzahl:";
+			score[1] = "0";
+			scorePanel.sendScore(score);
 
 
 			ILight light = new DirectionalLight(new Vec3(5,5,5), RGB.WHITE, RGB.WHITE);

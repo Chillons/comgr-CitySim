@@ -166,8 +166,8 @@ public class Field implements IMesh {
             case 21:
                 // T North
                 this.authorisations[0] = 1;
-                this.authorisations[1] = 1;
-                this.authorisations[2] = 0;
+                this.authorisations[1] = 0;
+                this.authorisations[2] = 1;
                 this.authorisations[3] = 1;
                 break;
             case 22:
@@ -187,8 +187,8 @@ public class Field implements IMesh {
             case 24:
                 // T West
                 this.authorisations[0] = 1;
-                this.authorisations[1] = 0;
-                this.authorisations[2] = 1;
+                this.authorisations[1] = 1;
+                this.authorisations[2] = 0;
                 this.authorisations[3] = 1;
                 break;
         }

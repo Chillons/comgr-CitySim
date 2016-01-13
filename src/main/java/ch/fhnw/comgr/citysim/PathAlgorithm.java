@@ -38,7 +38,6 @@ public class PathAlgorithm {
   
   public static LinkedList<Field> getPathFromTo(Field source, Field target){  
 	  LinkedList <Field> path = new LinkedList<Field>();
-	  searchForPaths();
 	  for (Field node : nodes) {
 		  if (source.equals(node)) {
 			  PathAlgorithm.execute(node);
@@ -53,7 +52,6 @@ public class PathAlgorithm {
   
   public static int getDistanceFromTo(Field source, Field target){  
 	  LinkedList <Field> path = new LinkedList<Field>();
-	  searchForPaths();
 	  for (Field node : nodes) {
 		  if (source.equals(node)) {
 			  PathAlgorithm.execute(node);
@@ -70,14 +68,17 @@ public class PathAlgorithm {
   
   public static int getTimeFromTo(Field source, Field target){  
 	  LinkedList <Field> path = new LinkedList<Field>();
-	  searchForPaths();
 	  for (Field node : nodes) {
 		  if (source.equals(node)) {
 			  PathAlgorithm.execute(node);
-			  int distance = PathAlgorithm.getPath(target).size();
-			  return (60 * distance) / 50; //für eine Geschwindigkeit von 50km/h
+			  int distTotal = 0;
+			  LinkedList<Field> stations = PathAlgorithm.getPath(target);
+			  for (int j = 0; j < stations.size() - 1; j++) {
+				  distTotal += getDistance(stations.get(j), stations.get(j + 1));
+			  }
+			  return (60 * distTotal) / 50; //für eine Geschwindigkeit von 50km/h
+		  	}  
 		  }
-	  }
 
 	  return -1;
   }
@@ -243,6 +244,30 @@ public class PathAlgorithm {
 						searchSouth(i,j);
 						searchWest(i,j);
 						break;
+					case 21:
+						nodes.add(fields[i][j]);
+						searchNorth(i,j);
+						searchEast(i,j);
+						searchWest(i,j);
+						break;
+					case 22:
+						nodes.add(fields[i][j]);
+						searchNorth(i,j);
+						searchSouth(i,j);
+						searchEast(i,j);
+						break;
+					case 23:
+						nodes.add(fields[i][j]);
+						searchSouth(i,j);
+						searchEast(i,j);
+						searchWest(i,j);
+						break;
+					case 24:
+						nodes.add(fields[i][j]);
+						searchNorth(i,j);
+						searchSouth(i,j);
+						searchWest(i,j);
+						break;
 					}
 			}
 		
@@ -260,8 +285,8 @@ public class PathAlgorithm {
 				stopField = fields[i-1][j];
 				length++;
 				i--;
-				//System.out.println(stopField.getName());
-			}else if(fields[i-1][j].getContent() == 6 || fields[i-1][j].getContent() == 7 || fields[i-1][j].getContent() == 3){
+			}else if(fields[i-1][j].getContent() == 6 || fields[i-1][j].getContent() == 7 || fields[i-1][j].getContent() == 3
+					|| fields[i-1][j].getContent() == 22 || fields[i-1][j].getContent() == 23 || fields[i-1][j].getContent() == 24){
 				// Ankunft zur nächste aktzeptierenden Kreuzung
 				stopField = fields[i-1][j];
 				path = new Path(startField, stopField, length);
@@ -284,7 +309,8 @@ public class PathAlgorithm {
 				stopField = fields[i+1][j];
 				length++;
 				i++;
-			}else if(fields[i+1][j].getContent() == 4 || fields[i+1][j].getContent() == 5 || fields[i+1][j].getContent() == 3){
+			}else if(fields[i+1][j].getContent() == 4 || fields[i+1][j].getContent() == 5 || fields[i+1][j].getContent() == 3
+					|| fields[i+1][j].getContent() == 21 || fields[i+1][j].getContent() == 22 || fields[i+1][j].getContent() == 24){
 				// Ankunft zur nächste aktzeptierenden Kreuzung
 				stopField = fields[i+1][j];
 				path = new Path(startField, stopField, length);
@@ -309,7 +335,8 @@ public class PathAlgorithm {
 				stopField = fields[i][j+1];
 				length++;
 				j++;
-			}else if(fields[i][j+1].getContent() == 5 || fields[i][j+1].getContent() == 7 || fields[i][j+1].getContent() == 3){
+			}else if(fields[i][j+1].getContent() == 5 || fields[i][j+1].getContent() == 7 || fields[i][j+1].getContent() == 3
+					|| fields[i][j+1].getContent() == 21 || fields[i][j+1].getContent() == 23 || fields[i][j+1].getContent() == 24){
 				// Ankunft zur nächste aktzeptierenden Kreuzung
 				stopField = fields[i][j+1];
 				path = new Path(startField, stopField, length);
@@ -336,7 +363,8 @@ public class PathAlgorithm {
 				stopField = fields[i][j-1];
 				length++;
 				j--;
-			}else if(fields[i][j-1].getContent() == 4 || fields[i][j-1].getContent() == 6 || fields[i][j-1].getContent() == 3){
+			}else if(fields[i][j-1].getContent() == 4 || fields[i][j-1].getContent() == 6 || fields[i][j-1].getContent() == 3
+					|| fields[i][j-1].getContent() == 21 || fields[i][j-1].getContent() == 22 || fields[i][j-1].getContent() == 23){
 				// Ankunft zur nächste aktzeptierenden Kreuzung
 				stopField = fields[i][j-1];
 				path = new Path(startField, stopField, length);
