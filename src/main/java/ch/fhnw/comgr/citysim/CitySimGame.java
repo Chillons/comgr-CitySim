@@ -126,7 +126,7 @@ public final class CitySimGame {
 
 			String[] instruction = new String[2];
 			instruction[0] = "Hallo, mein Name ist John. Ich bin der Taxifahrer von CitySim.";
-			instruction[1] = "Klicke auf eine Kreuzung um mir einen neuen Fahrziel zu setzen.";
+			instruction[1] = "Klicke auf eine Kreuzung um mir ein neues Fahrziel zu geben.";
 			instructionField.sendInstruction(instruction);
 
 			time = 0;

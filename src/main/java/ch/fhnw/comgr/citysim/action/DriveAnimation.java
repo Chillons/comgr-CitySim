@@ -79,8 +79,8 @@ public class DriveAnimation implements IAnimationAction {
 		if (!target.equals(tempTarget)) {
 			// Es wurde auf einem neuen Field geklickt
 			if(!carPositionAsField.equals(tempTarget)){
-				instruction[0] = "Ich habe bereits einen Fahrziel.";
-				instruction[1] = "Bitte hab ein wenig Geduld für die Setzung eines neuen Fahrziel.";
+				instruction[0] = "Ich habe bereits ein Fahrziel.";
+				instruction[1] = "Bitte hab ein wenig Geduld für die Setzung eines neuen Fahrziels.";
 				CityController.getInstructionField().sendInstruction(instruction);
 				target = tempTarget; // reset
 				
@@ -96,7 +96,7 @@ public class DriveAnimation implements IAnimationAction {
 						
 						expectedTime = PathAlgorithm.getTimeFromTo(tempTarget, target);
 						instruction[0] = "Danke. Ich fahre sofort zu meinem neuen Fahrziel, das " + target.getName() + ".";
-						instruction[1] = "Dieser Fahrt entspricht eine Distanz von " + PathAlgorithm.getDistanceFromTo(tempTarget, target) +
+						instruction[1] = "Diese Fahrt entspricht einer Distanz von " + PathAlgorithm.getDistanceFromTo(tempTarget, target) +
 										 "Km. Das sind ungefähr " + expectedTime + " Minuten Fahrt.";				
 						CityController.getInstructionField().sendInstruction(instruction);
 						
