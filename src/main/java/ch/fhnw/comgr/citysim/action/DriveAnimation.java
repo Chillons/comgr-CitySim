@@ -128,7 +128,7 @@ public class DriveAnimation implements IAnimationAction {
 				instruction[0] = "Das Ziel wurde erreicht, mit einer Verzögerung von " + Math.round(plusTime) + " Minuten gemäss Fahrplan.";
 				instruction[1] = "Hast du nun eine neue Wunsch-Destination?";
 				
-				CitySimGame.time += (expectedTime - Math.round(plusTime));
+				CitySimGame.time += (-((int)expectedTime)/2 + Math.round(plusTime));
 
 				String[] score = new String[2];
 				score[0] = "Deine Punktzahl:";
