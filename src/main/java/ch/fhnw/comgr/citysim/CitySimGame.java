@@ -35,6 +35,8 @@ public final class CitySimGame {
 	public static final AtomicInteger counterConstructions = new AtomicInteger(0);
 	public static TaxiMoverTool taxiMoverTool;
 	public static GameTool gameTool;
+	public static ScorePanel scorePanel;
+	public static int time;
 	
 	public static void main(String[] args) {
 		new CitySimGame();
@@ -113,7 +115,7 @@ public final class CitySimGame {
 			//GUI-Panels
 			InstructionPanel instructionPanel = new InstructionPanel();
 			InstructionField instructionField = new InstructionField();
-			ScorePanel scorePanel = new ScorePanel();
+			scorePanel = new ScorePanel();
 			controller.getRenderManager().addMesh(instructionPanel.getMesh());
 			controller.getRenderManager().addMesh(instructionField.getMesh());
 			controller.getRenderManager().addMesh(scorePanel.getMesh());
@@ -126,6 +128,7 @@ public final class CitySimGame {
 			instruction[1] = "Klicke auf eine Kreuzung um mir einen neuen Fahrziel zu setzen.";
 			instructionField.sendInstruction(instruction);
 			
+			time = 0;
 			String[] score = new String[2];
 			score[0] = "Deine Punktzahl:";
 			score[1] = "0";

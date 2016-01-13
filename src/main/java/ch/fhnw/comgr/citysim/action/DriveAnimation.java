@@ -1,6 +1,5 @@
 package ch.fhnw.comgr.citysim.action;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
 import ch.fhnw.comgr.citysim.CityController;
@@ -40,6 +39,7 @@ public class DriveAnimation implements IAnimationAction {
 	private final CityController controller;
 	
 	private double plusTime = 0;
+	private double expectedTime = 0;
 	
 	public DriveAnimation(Taxi t, CityController controller){
 		this.animatedTaxi = t;
@@ -93,9 +93,10 @@ public class DriveAnimation implements IAnimationAction {
 						
 						controller.setCurrentTool(CitySimGame.gameTool);
 						
+						expectedTime = PathAlgorithm.getTimeFromTo(tempTarget, target);
 						instruction[0] = "Danke. Ich fahre sofort zu meinem neuen Fahrziel, das " + target.getName() + ".";
 						instruction[1] = "Dieser Fahrt entspricht eine Distanz von " + PathAlgorithm.getDistanceFromTo(tempTarget, target) +
-										 "Km. Das sind ungefähr " + PathAlgorithm.getTimeFromTo(tempTarget, target) + " Minuten Fahrt.";				
+										 "Km. Das sind ungefähr " + expectedTime + " Minuten Fahrt.";				
 						CityController.getInstructionField().sendInstruction(instruction);
 						
 						
@@ -124,7 +125,16 @@ public class DriveAnimation implements IAnimationAction {
 				controller.setCurrentTool(CitySimGame.taxiMoverTool);
 				
 				instruction[0] = "Das Ziel wurde erreicht, mit einer Verzögerung von " + Math.round(plusTime) + " Minuten gemäss Fahrplan.";
-				instruction[1] = "Hast du nun eine neue Wunsch-Destination?";				
+				instruction[1] = "Hast du nun eine neue Wunsch-Destination?";
+				
+				CitySimGame.time += (expectedTime - Math.round(plusTime));
+
+				String[] score = new String[2];
+				score[0] = "Deine Punktzahl:";
+				score[1] = Double.toString(CitySimGame.time);
+				CitySimGame.scorePanel.sendScore(score);
+				plusTime = 0;
+				
 				CityController.getInstructionField().sendInstruction(instruction);
 			}
 		}
