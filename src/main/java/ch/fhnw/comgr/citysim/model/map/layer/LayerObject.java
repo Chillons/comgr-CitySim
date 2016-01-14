@@ -1,14 +1,11 @@
 package ch.fhnw.comgr.citysim.model.map.layer;
 
-import ch.fhnw.comgr.citysim.CityController;
-import ch.fhnw.comgr.citysim.CitySimGame;
-import ch.fhnw.ether.scene.IScene;
-import ch.fhnw.ether.scene.mesh.IMesh;
-import ch.fhnw.util.math.Mat4;
-import javafx.scene.Scene;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import ch.fhnw.comgr.citysim.CitySimGame;
+import ch.fhnw.ether.scene.mesh.IMesh;
+import ch.fhnw.util.math.Mat4;
 
 public abstract class LayerObject {
 

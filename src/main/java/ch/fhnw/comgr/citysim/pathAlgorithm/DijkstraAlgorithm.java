@@ -27,6 +27,7 @@ public class DijkstraAlgorithm implements PathAlgorithm {
 
   
 
+  // Initialize Lists
   public DijkstraAlgorithm(Field[][] fields) {
     // create a copy of the array so that we can operate on this array
 	this.fields = fields;
@@ -36,7 +37,7 @@ public class DijkstraAlgorithm implements PathAlgorithm {
   }
   
 
-  
+  // Get Path From To, public
   @Override
   public LinkedList<Field> getPathFromTo(Field source, Field target){
 	  LinkedList <Field> path = new LinkedList<Field>();
@@ -52,6 +53,7 @@ public class DijkstraAlgorithm implements PathAlgorithm {
   }
   
   
+  // Get Distance From To, public
   @Override
   public int getDistanceFromTo(Field source, Field target){
 	  LinkedList <Field> path = new LinkedList<Field>();
@@ -69,6 +71,7 @@ public class DijkstraAlgorithm implements PathAlgorithm {
 	  return -1;
   }
   
+  // Get Time From To, public
   @Override
   public int getTimeFromTo(Field source, Field target){
 	  LinkedList <Field> path = new LinkedList<Field>();
@@ -78,6 +81,7 @@ public class DijkstraAlgorithm implements PathAlgorithm {
 			  int distTotal = 0;
 			  LinkedList<Field> stations = getPath(target);
 			  for (int j = 0; j < stations.size() - 1; j++) {
+				  // Totale distance berrechnen
 				  distTotal += getDistance(stations.get(j), stations.get(j + 1));
 			  }
 			  return (60 * distTotal) / 50; //für eine Geschwindigkeit von 50km/h
@@ -110,7 +114,7 @@ public class DijkstraAlgorithm implements PathAlgorithm {
   }
   
 
-  
+  // Get Paths
   private List<Path> getPaths(){
 	  searchForPaths();
 	  for(int i=0; i<nodes.size(); i++) {
@@ -123,16 +127,20 @@ public class DijkstraAlgorithm implements PathAlgorithm {
 	  return paths;
   }
   
+  // Get all Fields der City
   @Override
   public Field[][] getFields(){
 	  return fields;	  
   }
   
+  // Ein Node ist eine Kreuzung
   @Override
   public List<Field> getNodes(){
 	  return nodes;	  
   }
   
+  
+  // Effektives Algorithmus starten
   private void execute(Field source) {
     settledNodes = new HashSet<Field>();
     unSettledNodes = new HashSet<Field>();
@@ -148,6 +156,7 @@ public class DijkstraAlgorithm implements PathAlgorithm {
     }
   }
 
+  //Minimal Distance zwischen Ziel und Target
   private void findMinimalDistances(Field node) {
     List<Field> adjacentNodes = getNeighbors(node);
     for (Field target : adjacentNodes) {
@@ -162,6 +171,7 @@ public class DijkstraAlgorithm implements PathAlgorithm {
 
   }
 
+  // Private, getDistance
   private int getDistance(Field node, Field target) {
     for (Path p : paths) {
       if (p.getSource().equals(node)
@@ -172,6 +182,7 @@ public class DijkstraAlgorithm implements PathAlgorithm {
     throw new RuntimeException("Should not happen");
   }
 
+  // Private, Nachbaren
   private List<Field> getNeighbors(Field node) {
     List<Field> neighbors = new ArrayList<Field>();
     for (Path p : paths) {
@@ -183,6 +194,7 @@ public class DijkstraAlgorithm implements PathAlgorithm {
     return neighbors;
   }
 
+  // Get Minimum
   private Field getMinimum(Set<Field> vertexes) {
     Field minimum = null;
     for (Field vertex : vertexes) {
@@ -197,10 +209,12 @@ public class DijkstraAlgorithm implements PathAlgorithm {
     return minimum;
   }
 
+  // Wurde bereits verarbeitet
   private boolean isSettled(Field vertex) {
     return settledNodes.contains(vertex);
   }
 
+  // Shortest Distance
   private int getShortestDistance(Field destination) {
     Integer d = distance.get(destination);
     if (d == null) {
@@ -211,6 +225,8 @@ public class DijkstraAlgorithm implements PathAlgorithm {
   }
   
   
+  // Er definiert, ob er N-S-E-W nach einem weiteren
+  // geraden Weg suchen soll
 	private void searchForPaths(){
 		for (int i = 0; i < fields.length; i++) {
 			for (int j = 0; j < fields[i].length; j++) {
@@ -231,44 +247,52 @@ public class DijkstraAlgorithm implements PathAlgorithm {
 						searchWest(i,j);
 						break;
 					case 4:
+						// North East
 						nodes.add(fields[i][j]);
 						searchNorth(i,j);
 						searchEast(i,j);
 						break;
 					case 5:
+						// North West
 						nodes.add(fields[i][j]);
 						searchNorth(i,j);
 						searchWest(i,j);
 						break;
 					case 6:
+						// South East
 						nodes.add(fields[i][j]);
 						searchSouth(i,j);
 						searchEast(i,j);
 						break;
 					case 7:
+						// South West
 						nodes.add(fields[i][j]);
 						searchSouth(i,j);
 						searchWest(i,j);
 						break;
 					case 21:
+						// T-Cross North
 						nodes.add(fields[i][j]);
 						searchNorth(i,j);
 						searchEast(i,j);
 						searchWest(i,j);
 						break;
 					case 22:
+						// T-Cross East
 						nodes.add(fields[i][j]);
 						searchNorth(i,j);
 						searchSouth(i,j);
 						searchEast(i,j);
 						break;
 					case 23:
+						// T-Cross South
 						nodes.add(fields[i][j]);
 						searchSouth(i,j);
 						searchEast(i,j);
 						searchWest(i,j);
 						break;
 					case 24:
+						// T-Cross West
 						nodes.add(fields[i][j]);
 						searchNorth(i,j);
 						searchSouth(i,j);
@@ -280,6 +304,8 @@ public class DijkstraAlgorithm implements PathAlgorithm {
 	}
 	}
 
+	
+	// Er sucht effektiv nach den gerade Wege, N-S-E-W
 	private void searchNorth(int i, int j){
 		Field startField = fields[i][j];
 		Field stopField = fields[i][j];
