@@ -1,7 +1,7 @@
 package ch.fhnw.comgr.citysim.model.map;
 
 import ch.fhnw.comgr.citysim.CityController;
-import ch.fhnw.comgr.citysim.CitySimGame;
+import ch.fhnw.comgr.citysim.pathAlgorithm.PathAlgorithm;
 import ch.fhnw.comgr.citysim.model.Field;
 import ch.fhnw.comgr.citysim.model.map.layer.DynamicObject;
 import ch.fhnw.comgr.citysim.model.map.layer.InteractionObject;
@@ -95,6 +95,7 @@ public class CitySimMap {
     private final List<StaticObject> staticObjects;
     private final List<InteractionObject> interactionObjects;
     private final List<DynamicObject> dynamicObjects;
+    private PathAlgorithm dijkstra;
 
     private CitySimMap() {
         staticObjects = new ArrayList<>();
@@ -105,14 +106,6 @@ public class CitySimMap {
     public static CitySimMap getInstance() {
         return mapInstance;
     }
-
-    public static void main(String[] args) {
-
-//			IIORegistry registry = IIORegistry.getDefaultInstance();
-//			registry.registerServiceProvider(new com.realityinteractive.imageio.tga.TGAImageReaderSpi());
-        new CitySimGame();
-    }
-
 
     /**
      * Adds an object to a layer at a specific position
@@ -184,4 +177,12 @@ public class CitySimMap {
         addObjectToLayer(interactionObject);
     }
 
+
+    public PathAlgorithm getDijkstraPath() {
+        return dijkstra;
+    }
+
+    public void setDijkstra(PathAlgorithm dijkstra) {
+        this.dijkstra = dijkstra;
+    }
 }

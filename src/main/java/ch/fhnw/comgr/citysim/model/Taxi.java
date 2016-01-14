@@ -1,5 +1,6 @@
 package ch.fhnw.comgr.citysim.model;
 
+import ch.fhnw.comgr.citysim.pathAlgorithm.PathAlgorithm;
 import ch.fhnw.comgr.citysim.util.AssetsLoader;
 import ch.fhnw.ether.scene.mesh.IMesh;
 import ch.fhnw.util.math.Mat4;
@@ -13,11 +14,13 @@ public class Taxi{
 	private Mat4 transform;
 	private List<IMesh> taxi;
 	private TaxiType taxiType;
+	private PathAlgorithm pathAlgorithm;
 
 
 
-	public Taxi(TaxiType taxiType) {
+	public Taxi(TaxiType taxiType, PathAlgorithm pathAlgorithm) {
 		this.taxiType = taxiType;
+		this.pathAlgorithm = pathAlgorithm;
 		this.transform = Mat4.ID;
 		// Get Meshes from File
 		this.taxi = AssetsLoader.getObject(taxiType.toString());
@@ -75,4 +78,11 @@ public class Taxi{
 	}
 
 
+	public PathAlgorithm getPathAlgorithm() {
+		return pathAlgorithm;
+	}
+
+	public void setPathAlgorithm(PathAlgorithm pathAlgorithm) {
+		this.pathAlgorithm = pathAlgorithm;
+	}
 }

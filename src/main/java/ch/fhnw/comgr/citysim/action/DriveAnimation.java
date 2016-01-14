@@ -4,7 +4,6 @@ import java.util.LinkedList;
 
 import ch.fhnw.comgr.citysim.CityController;
 import ch.fhnw.comgr.citysim.CitySimGame;
-import ch.fhnw.comgr.citysim.PathAlgorithm;
 import ch.fhnw.comgr.citysim.model.Field;
 import ch.fhnw.comgr.citysim.model.Taxi;
 import ch.fhnw.comgr.citysim.ui.ScorePanel;
@@ -85,7 +84,7 @@ public class DriveAnimation implements IAnimationAction {
 				target = tempTarget; // reset
 				
 			}else{				
-					stations = PathAlgorithm.getPathFromTo(carPositionAsField, target);
+					stations = animatedTaxi.getPathAlgorithm().getPathFromTo(carPositionAsField, target);
 					if (stations != null) {
 						// es wurde auf eine Kreuzung geklickt
 						stationCounter = 1;
@@ -94,9 +93,9 @@ public class DriveAnimation implements IAnimationAction {
 						
 						controller.setCurrentTool(CitySimGame.gameTool);
 						
-						expectedTime = PathAlgorithm.getTimeFromTo(tempTarget, target);
+						expectedTime = animatedTaxi.getPathAlgorithm().getTimeFromTo(tempTarget, target);
 						instruction[0] = "Danke. Ich fahre sofort zu meinem neuen Fahrziel, das " + target.getName() + ".";
-						instruction[1] = "Diese Fahrt entspricht einer Distanz von " + PathAlgorithm.getDistanceFromTo(tempTarget, target) +
+						instruction[1] = "Diese Fahrt entspricht einer Distanz von " + animatedTaxi.getPathAlgorithm().getDistanceFromTo(tempTarget, target) +
 										 "Km. Das sind ungefähr " + expectedTime + " Minuten Fahrt.";				
 						CityController.getInstructionField().sendInstruction(instruction);
 						

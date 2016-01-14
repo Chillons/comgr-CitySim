@@ -3,6 +3,8 @@ package ch.fhnw.comgr.citysim;
 import java.io.IOException;
 
 import ch.fhnw.comgr.citysim.model.Field;
+import ch.fhnw.comgr.citysim.model.map.CitySimMap;
+import ch.fhnw.comgr.citysim.pathAlgorithm.DijkstraAlgorithm;
 import ch.fhnw.comgr.citysim.ui.InstructionField;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.image.Frame;
@@ -16,10 +18,11 @@ public class CityController extends DefaultController {
 
     private static Field[][] fields;
     private static InstructionField instructionField;
+    private static CitySimMap map;
 
     public CityController(int[][] map) {
 
-        fields = new Field[map.length][map[0].length];
+        setFields(new Field[map.length][map[0].length]);
 
         float startX = 0;
         float startY = 0;
@@ -36,11 +39,12 @@ public class CityController extends DefaultController {
 
                 field.setPosition(new Vec3(startX + j, startY - i, 0f));
 
-                fields[i][j] = field;
+                getFields()[i][j] = field;
             }
         }
 
-        PathAlgorithm pathAlgorithm = new PathAlgorithm(CityController.fields);
+        this.map = CitySimMap.getInstance();
+        CitySimMap.getInstance().setDijkstra(new DijkstraAlgorithm(getFields()));
 
     }
 
@@ -54,7 +58,7 @@ public class CityController extends DefaultController {
     }
 
     public static Field getField(Vec3 position) {
-        for (Field[] field : fields) {
+        for (Field[] field : getFields()) {
             for (Field aField : field) {
                 if (position.x >= aField.getBounds().getMinX() && position.x < aField.getBounds().getMaxX()) {
                     if (position.y >= aField.getBounds().getMinY() && position.y <= aField.getBounds().getMaxY()) {
@@ -116,4 +120,11 @@ public class CityController extends DefaultController {
         return fields;
     }
 
+    public static void setFields(Field[][] fields) {
+        CityController.fields = fields;
+    }
+
+    public static CitySimMap getMap() {
+        return map;
+    }
 }

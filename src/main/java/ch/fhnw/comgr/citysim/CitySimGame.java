@@ -40,6 +40,8 @@ public final class CitySimGame {
 	public static int time;
 	public static IScene scene;
 
+
+
 	public static void main(String[] args) {
 		new CitySimGame();
 	}
@@ -58,7 +60,7 @@ public final class CitySimGame {
 			// Neues Config machen
 			IView view = new DefaultView(controller, 100, 100, 800, 600, new IView.Config(ViewType.INTERACTIVE_VIEW, 0, new IView.ViewFlag[0]), "City Sim");
 			ICamera camera = new Camera(new Vec3(0, 5, 5), Vec3.ZERO);
-			FrameCameraControl fcc = new FrameCameraControl(camera, PathAlgorithm.getNodes());
+			FrameCameraControl fcc = new FrameCameraControl(camera, CityController.getMap().getDijkstraPath().getNodes());
 			fcc.frame();
 
 			// Create scene and add triangle
@@ -72,15 +74,18 @@ public final class CitySimGame {
 
 			/////// CITY ////////
 
-			for (int i = 0; i < PathAlgorithm.getFields().length; i++) {
-				for (int j = 0; j < PathAlgorithm.getFields()[0].length; j++) {
-					scene.add3DObject(PathAlgorithm.getFields()[i][j]);
+			for (int i = 0; i < CityController.getFields().length; i++) {
+				for (int j = 0; j < CityController.getFields()[0].length; j++) {
+					scene.add3DObject(CityController.getFields()[i][j]);
 				}
 			}
 
+			CitySimMap map = CitySimMap.getInstance();
+
 			/////// Taxi //////////
 
-			Taxi taxi = new Taxi(TaxiType.YELLOW_CAB);
+
+			Taxi taxi = new Taxi(TaxiType.YELLOW_CAB, map.getDijkstraPath());
 			taxi.setTransform(Mat4.translate(1, 0, 0));
 
 			DriveAnimation drive = new DriveAnimation(taxi, controller);
@@ -142,7 +147,7 @@ public final class CitySimGame {
 			scene.add3DObject(light2);
 
 
-			CitySimMap map = CitySimMap.getInstance();
+
 
 			map.createRandomTrafficLights(4);
 
