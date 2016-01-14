@@ -42,7 +42,6 @@ public class InteractionObject extends LayerObject {
 
         setBaseTransformations();
 
-        CitySimGame.scene.add3DObjects(staticMeshes);
         CitySimGame.scene.add3DObjects(deactivatedMeshes);
     }
 

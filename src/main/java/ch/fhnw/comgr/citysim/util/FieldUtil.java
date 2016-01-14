@@ -1,11 +1,11 @@
-package ch.fhnw.comgr.citysim;
+package ch.fhnw.comgr.citysim.util;
 
 import ch.fhnw.ether.scene.mesh.geometry.DefaultGeometry;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry.Primitive;
 import ch.fhnw.util.math.geometry.GeometryUtilities;
 
-public class Util {
+public class FieldUtil {
 
 	public static float[] vertices = { 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1,
 			1, 0, 0, 1, 0 };

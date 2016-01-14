@@ -6,6 +6,7 @@ import ch.fhnw.comgr.citysim.model.Field;
 import ch.fhnw.comgr.citysim.model.map.CitySimMap;
 import ch.fhnw.comgr.citysim.pathAlgorithm.DijkstraAlgorithm;
 import ch.fhnw.comgr.citysim.ui.InstructionField;
+import ch.fhnw.comgr.citysim.util.FieldUtil;
 import ch.fhnw.ether.controller.DefaultController;
 import ch.fhnw.ether.image.Frame;
 import ch.fhnw.ether.scene.mesh.geometry.IGeometry;
@@ -43,8 +44,8 @@ public class CityController extends DefaultController {
             }
         }
 
-        this.map = CitySimMap.getInstance();
-        CitySimMap.getInstance().setDijkstra(new DijkstraAlgorithm(getFields()));
+        CityController.map = CitySimMap.getInstance();
+        CityController.map.setDijkstra(new DijkstraAlgorithm(getFields()));
 
     }
 
@@ -112,7 +113,7 @@ public class CityController extends DefaultController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        IGeometry g = Util.getDefaultField();
+        IGeometry g = FieldUtil.getDefaultField();
         return new Field(m, g);
     }
 

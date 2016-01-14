@@ -1,5 +1,6 @@
 package ch.fhnw.comgr.citysim.model.map.layer;
 
+import ch.fhnw.comgr.citysim.CityController;
 import ch.fhnw.comgr.citysim.CitySimGame;
 import ch.fhnw.ether.scene.IScene;
 import ch.fhnw.ether.scene.mesh.IMesh;
@@ -11,11 +12,8 @@ import java.util.List;
 
 public abstract class LayerObject {
 
-  private final List<IMesh> mesh;
+  protected final List<IMesh> mesh;
   protected final List<Mat4> baseTransformations;
-
-  private int fieldX;
-  private int fieldY;
 
   public LayerObject(IMesh mesh) {
 
@@ -24,7 +22,6 @@ public abstract class LayerObject {
 
     baseTransformations = new ArrayList<>();
     baseTransformations.add(mesh.getTransform());
-
     CitySimGame.scene.add3DObjects(mesh);
   }
 
@@ -41,6 +38,7 @@ public abstract class LayerObject {
       baseTransformations.add(i, mesh.get(i).getTransform());
       System.out.println("added base transformation");
     }
+    CitySimGame.scene.add3DObjects(mesh);
   }
 
   public List<IMesh> getMesh() {
@@ -57,11 +55,5 @@ public abstract class LayerObject {
         m.setTransform(baseTransformations.get(i));
       }
     }
-  }
-
-  public void setPosition(int fieldX, int fieldY) {
-
-    this.fieldX = fieldX;
-    this.fieldY = fieldY;
   }
 }

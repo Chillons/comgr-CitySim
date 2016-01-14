@@ -6,6 +6,7 @@ import ch.fhnw.comgr.citysim.model.Field;
 import ch.fhnw.comgr.citysim.model.Taxi;
 import ch.fhnw.comgr.citysim.model.map.CitySimMap;
 import ch.fhnw.comgr.citysim.model.map.layer.InteractionObject;
+import ch.fhnw.comgr.citysim.model.map.layer.StaticObject;
 import ch.fhnw.comgr.citysim.tool.GameTool;
 import ch.fhnw.comgr.citysim.tool.TaxiMoverTool;
 import ch.fhnw.comgr.citysim.ui.InstructionField;
@@ -145,7 +146,11 @@ public final class CitySimGame {
 			ILight light2 = new DirectionalLight(new Vec3(-10,-10,5), RGB.WHITE, RGB.WHITE);
 			scene.add3DObject(light);
 			scene.add3DObject(light2);
-
+			final List<IMesh> treeMesh = AssetsLoader.getObject("tree/Tree1");
+			Mat4 trans = Mat4.multiply(Mat4.rotate(90, 1,0,0),Mat4.rotate(90, 0,1,0) ,Mat4.translate(new Vec3(0.82, 0, 0.31)),Mat4.scale(0.005f));
+			treeMesh.forEach(t -> t.setTransform(trans));
+			StaticObject tree = new StaticObject(treeMesh, 10, 11);
+			map.addObjectToLayer(tree);
 
 
 

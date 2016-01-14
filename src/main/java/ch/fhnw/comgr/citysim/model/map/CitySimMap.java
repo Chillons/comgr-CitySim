@@ -78,7 +78,7 @@ public class CitySimMap {
             {T_E, E_W, E_W, E_W, T_N, E_W, E_W, E_W, CRO, E_W, E_W, E_W, E_W, CRO, E_W, E_W, E_W, CRO, E_W, E_W, E_W, E_W, T_W},
             {N_S, H1S, GRA, H1S, GRA, H0S, H1S, GRA, N_S, H1S, GRA, H0S, H0S, N_S, H1S, GRA, H0S, N_S, H0S, H0S, H1S, GRA, N_S},
             {N_S, H0S, H0S, H0S, H1S, GRA, H0S, H0S, N_S, H0S, H1S, GRA, H0S, N_S, H0S, H1S, GRA, N_S, H0S, H0S, H1S, GRA, N_S},
-            {T_E, E_W, E_W, E_W, T_S, E_W, E_W, E_W, T_N, E_W, E_W, E_W, E_W, CRO, E_W, E_W, E_W, CRO, E_W, E_W, E_W, E_W, T_W},
+            {T_E, E_W, E_W, E_W, T_S, E_W, E_W, E_W, N_W, GRA, GRA, GRA, GRA, T_E, E_W, E_W, E_W, CRO, E_W, E_W, E_W, E_W, T_W},
             {N_S, H1S, GRA, H0S, N_S, H0S, H1S, GRA, H1S, GRA, H0S, H0S, H0S, N_S, H1S, GRA, H0S, N_S, H1S, GRA, H0S, H0S, N_S},
             {N_S, H0S, H1S, GRA, N_S, H1S, GRA, H0S, H0S, H0S, H1S, GRA, H0S, N_S, H1S, GRA, H0S, N_S, H0S, H0S, H1S, GRA, N_S},
             {T_E, E_W, E_W, E_W, CRO, E_W, E_W, E_W, T_S, E_W, E_W, E_W, E_W, CRO, E_W, E_W, E_W, CRO, E_W, E_W, E_W, E_W, T_W},
